@@ -1,21 +1,23 @@
 // Audio systems for ChromaShift: TTS narration and music player.
 import { sleep, triggerRealityFlash, triggerEyeBlink } from './chromashift-state-ui.js';
-// import { ensureWebsimAvailable } from './chromashift-engine-helpers.js';
 
-// --- Global TTS toggle state (default: ON) ---
+// --- Global TTS toggle state ---
 let ttsEnabled = true;
-export function isTTSEnabled() {
-    return ttsEnabled;
-}
 
-// --- Simplified Background Music System ---
+/**
+ * Checks if Text-to-Speech (TTS) is currently enabled.
+ * @returns {boolean} True if TTS is enabled, false otherwise.
+ */
+export const isTTSEnabled = () => ttsEnabled;
 
+// --- Music Player State and Playlist ---
 let backgroundMusic = null;
 let audioIsReady = false;
+let currentTrackIndex = 0;
+let shuffledPlaylist = [];
 
-// FULL PLAYLIST: All confirmed MP3 files are included here.
 const musicPlaylist = [
-    '/Journey to the interweb.mp3',                // primary intro track
+    '/Journey to the interweb.mp3',
     '/Rhythm of the Reef.mp3',
     '/WhoIsThisDiva.mp3',
     '/BratSummer.mp3',
@@ -82,410 +84,370 @@ const musicPlaylist = [
     '/Beyond the Ordinary.mp3',
     '/AñoNuevo.mp3'
 ];
-let currentTrackIndex = 0;
-let shuffledPlaylist = [];
 
 /**
  * Shuffles the music playlist using the Fisher-Yates algorithm.
- * @returns {void}
+ * @private
  */
-function shufflePlaylist() {
+const shufflePlaylist = () => {
     shuffledPlaylist = [...musicPlaylist];
     for (let i = shuffledPlaylist.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffledPlaylist[i], shuffledPlaylist[j]] = [shuffledPlaylist[j], shuffledPlaylist[i]];
     }
-}
+};
 
 /**
  * Selects the next track from the shuffled playlist.
  * @returns {number} The new track index.
+ * @private
  */
-function getNextTrackIndex() {
+const getNextTrackIndex = () => {
     if (shuffledPlaylist.length === 0) {
         shufflePlaylist();
     }
     const nextTrack = shuffledPlaylist.pop();
     return musicPlaylist.indexOf(nextTrack);
-}
+};
 
-// Shared helper to update play/pause button + body class (Unchanged)
-function updatePlayPauseIcon() {
+/**
+ * Updates the play/pause button icon and body class based on the music player's state.
+ * @private
+ */
+const updatePlayPauseIcon = () => {
     const playPauseBtn = document.getElementById('music-play-pause');
     if (!playPauseBtn || !backgroundMusic) return;
     const isPlaying = !backgroundMusic.paused;
     playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+    document.body.classList.toggle('music-playing', isPlaying);
+};
 
-    const body = document.body;
-    if (isPlaying) {
-        body.classList.add('music-playing');
-    } else {
-        body.classList.remove('music-playing');
-    }
-}
-
-// NEW: Helper to format and display the current song title
-function updateSongTitle() {
+/**
+ * Formats and displays the current song title.
+ * @private
+ */
+const updateSongTitle = () => {
     const titleEl = document.getElementById('song-title');
     if (!titleEl || !backgroundMusic || !backgroundMusic.src) return;
 
     try {
         const url = new URL(backgroundMusic.src);
-        let filename = url.pathname.split('/').pop();
-        filename = decodeURIComponent(filename);
-        const title = filename.replace(/\.mp3$/i, '');
-        titleEl.textContent = title;
+        const filename = decodeURIComponent(url.pathname.split('/').pop());
+        titleEl.textContent = filename.replace(/\.mp3$/i, '');
     } catch (e) {
         console.warn('Could not parse song title from src:', backgroundMusic.src, e);
         titleEl.textContent = 'Unknown Track';
     }
-}
+};
 
-// Shared helper to play the current track index (Unchanged)
-async function playCurrentTrack() {
+/**
+ * Plays the track at the current index.
+ * @returns {Promise<void>} A promise that resolves when playback starts or rejects on error.
+ * @private
+ */
+const playCurrentTrack = async () => {
     if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
-
     backgroundMusic.src = musicPlaylist[currentTrackIndex];
-    updateSongTitle(); // Update the title when the track is set
-    backgroundMusic.currentTime = 0; // ensure track restarts cleanly
+    updateSongTitle();
+    backgroundMusic.currentTime = 0;
     try {
         await backgroundMusic.play();
         updatePlayPauseIcon();
-    } catch (e) {
-        console.warn('Failed to start track playback:', e);
+    } catch (error) {
+        console.error('Failed to start track playback:', error);
+        throw error;
     }
-}
+};
 
-// NEW: helper to advance to the next track in sequence (with optional autoplay)
-async function goToNextTrack(autoPlay = true) {
+/**
+ * Advances to the next track in the playlist.
+ * @param {boolean} [autoPlay=true] - Whether to automatically play the next track.
+ * @returns {Promise<void>} A promise that resolves when the track is changed.
+ * @private
+ */
+const goToNextTrack = async (autoPlay = true) => {
     if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
-
     currentTrackIndex = getNextTrackIndex();
     backgroundMusic.src = musicPlaylist[currentTrackIndex];
-    updateSongTitle(); // Update the title when the track is set
+    updateSongTitle();
     backgroundMusic.currentTime = 0;
-
     if (autoPlay) {
         try {
             await backgroundMusic.play();
-        } catch (e) {
-            console.warn('Failed to auto-play next track:', e);
+        } catch (error) {
+            console.warn('Failed to auto-play next track:', error);
         }
     }
     updatePlayPauseIcon();
-}
+};
 
-// NEW: helper to make sure music is running whenever narration happens
-async function ensureMusicForNarration() {
-    if (!audioIsReady || !backgroundMusic) return;
-    if (!backgroundMusic.paused) return;
+/**
+ * Ensures background music is playing, primarily for accompanying narration.
+ * @returns {Promise<void>}
+ * @private
+ */
+const ensureMusicForNarration = async () => {
+    if (!audioIsReady || !backgroundMusic || !backgroundMusic.paused) return;
     try {
         await backgroundMusic.play();
         updatePlayPauseIcon();
-    } catch (e) {
-        console.warn('[Music] Could not resume background music for narration:', e);
+    } catch (error) {
+        console.warn('[Music] Could not resume background music for narration:', error);
     }
-}
+};
 
-// Initialize the audio element
-export function initMusicPlayer() {
-    if (backgroundMusic) return;
+/**
+ * Attaches event listeners to the music player controls.
+ * @private
+ */
+const setupMusicControls = () => {
+    const playPauseBtn = document.getElementById('music-play-pause');
+    const volDownBtn = document.getElementById('music-vol-down');
+    const volUpBtn = document.getElementById('music-vol-up');
+    const nextBtn = document.getElementById('music-next');
 
-    backgroundMusic = document.getElementById('main-audio');
-
-    if (backgroundMusic) {
-        backgroundMusic.loop = false;
-        backgroundMusic.volume = 0.5;
-        audioIsReady = true;
-        console.log('Audio Player initialized and ready.');
-        
-        // --- FIX: Ensure 'Journey to the interweb.mp3' is played first ---
-        const firstTrackName = '/Journey to the interweb.mp3';
-        const index = musicPlaylist.indexOf(firstTrackName);
-        if (index !== -1) {
-            currentTrackIndex = index;
+    playPauseBtn?.addEventListener('click', async () => {
+        if (!audioIsReady || !backgroundMusic) return;
+        if (backgroundMusic.paused) {
+            await playCurrentTrack();
         } else {
-            // Fallback to the very first song in the list if the desired one isn't found.
-            currentTrackIndex = 0; 
+            backgroundMusic.pause();
+            updatePlayPauseIcon();
         }
-        // -----------------------------------------------------------------
+    });
 
-        if (musicPlaylist.length > 0) {
-            backgroundMusic.src = musicPlaylist[currentTrackIndex];
-        }
+    volDownBtn?.addEventListener('click', () => {
+        if (!audioIsReady || !backgroundMusic) return;
+        backgroundMusic.volume = Math.max(0, backgroundMusic.volume - 0.1);
+    });
 
-        const playPauseBtn = document.getElementById('music-play-pause');
-        const volDownBtn = document.getElementById('music-vol-down');
-        const volUpBtn = document.getElementById('music-vol-up');
-        const nextBtn = document.getElementById('music-next');
-        const ttsToggleBtn = document.getElementById('tts-toggle');
+    volUpBtn?.addEventListener('click', () => {
+        if (!audioIsReady || !backgroundMusic) return;
+        backgroundMusic.volume = Math.min(1, backgroundMusic.volume + 0.1);
+    });
 
-        if (playPauseBtn) {
-            playPauseBtn.addEventListener('click', async () => {
-                if (!audioIsReady || !backgroundMusic) return;
-                if (backgroundMusic.paused) {
-                    await playCurrentTrack();
-                } else {
-                    backgroundMusic.pause();
-                    updatePlayPauseIcon();
-                }
-            });
-        }
+    nextBtn?.addEventListener('click', () => goToNextTrack(true));
+};
 
-        if (volDownBtn) {
-            volDownBtn.addEventListener('click', () => {
-                if (!audioIsReady || !backgroundMusic) return;
-                backgroundMusic.volume = Math.max(0, backgroundMusic.volume - 0.1);
-            });
-        }
+/**
+ * Attaches event listeners to the TTS toggle button.
+ * @private
+ */
+const setupTTSControls = () => {
+    const ttsToggleBtn = document.getElementById('tts-toggle');
+    if (!ttsToggleBtn) return;
 
-        if (volUpBtn) {
-            volUpBtn.addEventListener('click', () => {
-                if (!audioIsReady || !backgroundMusic) return;
-                backgroundMusic.volume = Math.min(1, backgroundMusic.volume + 0.1);
-            });
-        }
+    const updateButtonState = () => {
+        ttsToggleBtn.textContent = ttsEnabled ? '🔊 TTS' : '🔇 TTS';
+        document.body.classList.toggle('tts-muted', !ttsEnabled);
+    };
 
-        if (nextBtn) {
-            nextBtn.addEventListener('click', async () => {
-                if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
-                // UPDATED: Skip to a different random track and start playing it
-                await goToNextTrack(true);
-            });
-        }
+    updateButtonState();
 
-        // NEW: TTS toggle handler
-        if (ttsToggleBtn) {
-            // Set initial label
-            ttsToggleBtn.textContent = '🔊 TTS';
-            document.body.classList.remove('tts-muted');
+    ttsToggleBtn.addEventListener('click', () => {
+        ttsEnabled = !ttsEnabled;
+        updateButtonState();
+    });
+};
 
-            ttsToggleBtn.addEventListener('click', () => {
-                ttsEnabled = !ttsEnabled;
-                if (ttsEnabled) {
-                    ttsToggleBtn.textContent = '🔊 TTS';
-                    document.body.classList.remove('tts-muted');
-                } else {
-                    ttsToggleBtn.textContent = '🔇 TTS';
-                    document.body.classList.add('tts-muted');
-                }
-            });
-        }
-
-        // Auto-advance to the next track when one finishes.
-        backgroundMusic.addEventListener('ended', async () => {
-            if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
-            // UPDATED: Move to a different random track when the current one ends
-            await goToNextTrack(true);
-        });
-
-        backgroundMusic.addEventListener('play', updatePlayPauseIcon);
-        backgroundMusic.addEventListener('pause', updatePlayPauseIcon);
-    } else {
+/**
+ * Initializes the music player, sets up controls, and attaches event listeners.
+ * @export
+ */
+export const initMusicPlayer = () => {
+    if (backgroundMusic) return;
+    backgroundMusic = document.getElementById('main-audio');
+    if (!backgroundMusic) {
         console.error('Audio element with ID "main-audio" not found.');
+        return;
     }
-}
 
-// Dedicated, user-initiated function to start playback. (Unchanged)
-export function startDreamAudio() {
+    backgroundMusic.loop = false;
+    backgroundMusic.volume = 0.5;
+    audioIsReady = true;
+
+    const firstTrackName = '/Journey to the interweb.mp3';
+    const firstTrackIndex = musicPlaylist.indexOf(firstTrackName);
+    currentTrackIndex = firstTrackIndex !== -1 ? firstTrackIndex : 0;
+    if (musicPlaylist.length > 0) {
+        backgroundMusic.src = musicPlaylist[currentTrackIndex];
+    }
+
+    setupMusicControls();
+    setupTTSControls();
+
+    backgroundMusic.addEventListener('ended', () => goToNextTrack(true));
+    backgroundMusic.addEventListener('play', updatePlayPauseIcon);
+    backgroundMusic.addEventListener('pause', updatePlayPauseIcon);
+
+    console.log('Audio Player initialized and ready.');
+};
+
+/**
+ * Starts the background music, initiating it if necessary.
+ * This function is intended to be called by a user gesture.
+ * @export
+ */
+export const startDreamAudio = () => {
     if (!backgroundMusic) {
         initMusicPlayer();
     }
-
-    if (!audioIsReady || !backgroundMusic) {
+    if (!audioIsReady) {
         console.error("Audio not initialized or ready.");
         return;
     }
-
     playCurrentTrack()
-        .then(() => {
-            console.log("Audio playback successfully started by user action.");
-        })
-        .catch(error => {
-            console.warn("Audio playback was blocked by the browser. User intervention may be required.", error);
-        });
-}
+        .then(() => console.log("Audio playback successfully started by user action."))
+        .catch(error => console.warn("Audio playback was blocked by the browser.", error));
+};
 
-// --- TTS and Countdown Logic (UPDATED) ---
+// --- TTS System ---
 let ttsAudio = null;
-export async function playTTS(text) {
-    if (!text) return;
 
-    // Respect player TTS mute preference
-    if (!ttsEnabled) {
-        console.log('[TTS] Skipped: player has muted narration.');
-        return;
-    }
-
-    // Ensure background music is running alongside narration
-    await ensureMusicForNarration();
-
-    // Sanitize: strip any HTML/markup so TTS reads only the visible white narrative text
-    let plainText = String(text)
-        .replace(/<[^>]*>/g, ' ')   // remove HTML tags
-        .replace(/\s+/g, ' ')       // collapse whitespace
+/**
+ * Sanitizes text for TTS by removing HTML and collapsing whitespace.
+ * @param {string} text - The text to sanitize.
+ * @returns {string} The sanitized text.
+ * @private
+ */
+const sanitizeTextForTTS = (text) => {
+    return String(text)
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/^Narrative Description:\s*/i, '')
         .trim();
+};
 
-    // Special-case: strip any "Narrative Description:" prefix if present
-    plainText = plainText.replace(/^Narrative Description:\s*/i, '').trim();
+/**
+ * Shows or hides the TTS loading indicator.
+ * @param {boolean} visible - Whether the indicator should be visible.
+ * @private
+ */
+const setTTSIndicatorVisible = (visible) => {
+    const indicator = document.getElementById('tts-indicator');
+    if (indicator) {
+        indicator.hidden = !visible;
+    }
+};
 
-    if (!plainText) return;
-
-    const ttsIndicator = document.getElementById('tts-indicator');
-
-    const showIndicator = () => ttsIndicator && ttsIndicator.removeAttribute('hidden');
-    const hideIndicator = () => ttsIndicator && ttsIndicator.setAttribute('hidden', 'true');
-
-    // Helper: fallback to browser SpeechSynthesis if ElevenLabs/Websim fails
-    const fallbackWithSpeechSynthesis = async () => {
+/**
+ * A fallback TTS implementation using the browser's SpeechSynthesis API.
+ * @param {string} text - The text to speak.
+ * @returns {Promise<void>} A promise that resolves when the speech is finished.
+ * @private
+ */
+const fallbackWithSpeechSynthesis = (text) => {
+    return new Promise((resolve) => {
         try {
             if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
                 console.error('[TTS] Browser speechSynthesis API not available.');
+                setTTSIndicatorVisible(false);
+                resolve();
                 return;
             }
-            const utterance = new SpeechSynthesisUtterance(plainText);
+            const utterance = new SpeechSynthesisUtterance(text);
             const voices = window.speechSynthesis.getVoices();
-            const femaleVoice = voices.find(v =>
-                /female|woman|zira|allison|susan|salli|amy|emma/i.test(v.name)
-            );
+            const femaleVoice = voices.find(v => /female|woman|zira|allison|susan|salli|amy|emma/i.test(v.name));
             if (femaleVoice) utterance.voice = femaleVoice;
 
-            return new Promise((resolve) => {
-                utterance.onend = () => {
-                    hideIndicator();
-                    resolve();
-                };
-                utterance.onerror = () => {
-                    hideIndicator();
-                    resolve();
-                };
-                // Start visual rhythm when speech starts
-                triggerRealityFlash();
-                triggerEyeBlink();
-                window.speechSynthesis.speak(utterance);
-            });
-        } catch (e) {
-            console.error('[TTS] SpeechSynthesis fallback failed:', e);
-            hideIndicator();
-        }
-    };
+            utterance.onstart = () => setTTSIndicatorVisible(false);
+            utterance.onend = resolve;
+            utterance.onerror = (e) => {
+                console.error('[TTS] SpeechSynthesis error:', e);
+                setTTSIndicatorVisible(false);
+                resolve();
+            };
 
-    try {
-        showIndicator();
-        // DIRECT WEBISM/ELEVENLABS ACCESS (NO HELPER):
-        // Try both `websim` and `window.websim` to maximize compatibility.
-        const websimRef =
-            (typeof websim !== 'undefined' && websim) ||
-            (typeof window !== 'undefined' && window.websim) ||
-            null;
-
-        if (!websimRef || typeof websimRef.textToSpeech !== 'function') {
-            console.error('[TTS] websim.textToSpeech is not available, using SpeechSynthesis fallback.');
-            await fallbackWithSpeechSynthesis();
-            return;
-        }
-
-        console.log('[TTS] Requesting speech for:', plainText);
-
-        // Call Websim/ElevenLabs exactly as in the documentation
-        const result = await websimRef.textToSpeech({
-            text: plainText,
-            voice: 'en-female'
-        });
-
-        // Support multiple possible return shapes:
-        // - string URL
-        // - { url: "..." }
-        // - { audioUrl: "..." }
-        let audioUrl = null;
-        if (typeof result === 'string') {
-            audioUrl = result;
-        } else if (result && typeof result === 'object') {
-            audioUrl = result.url || result.audioUrl || null;
-        }
-
-        if (!audioUrl) {
-            console.error('[TTS] No audio URL returned from textToSpeech, using SpeechSynthesis fallback:', result);
-            await fallbackWithSpeechSynthesis();
-            return;
-        }
-
-        if (!ttsAudio) {
-            ttsAudio = new Audio();
-        }
-
-        ttsAudio.src = audioUrl;
-        ttsAudio.preload = 'auto';
-
-        let finalResolve;
-        const sequencePromise = new Promise((resolve) => {
-            finalResolve = resolve;
-        });
-
-        let nextStepTimeout = null;
-
-        function stepEffects() {
-            // Visual rhythm: flash + blink in a gentle beat during narration
             triggerRealityFlash();
             triggerEyeBlink();
-            nextStepTimeout = setTimeout(stepEffects, 1500);
+            window.speechSynthesis.speak(utterance);
+        } catch(e) {
+             console.error('[TTS] SpeechSynthesis failed catastrophically:', e);
+             setTTSIndicatorVisible(false);
+             resolve();
+        }
+    });
+};
+
+/**
+ * Plays the given text as audio using a TTS service (e.g., ElevenLabs via Websim).
+ * @param {string} text - The text to be converted to speech.
+ * @returns {Promise<void>} A promise that resolves when TTS playback is complete.
+ * @export
+ */
+export const playTTS = async (text) => {
+    const plainText = sanitizeTextForTTS(text);
+    if (!plainText || !ttsEnabled) {
+        if (!ttsEnabled) console.log('[TTS] Skipped: player has muted narration.');
+        return;
+    }
+
+    await ensureMusicForNarration();
+    setTTSIndicatorVisible(true);
+
+    try {
+        const websimRef = (typeof websim !== 'undefined' && websim) || (typeof window !== 'undefined' && window.websim);
+        if (!websimRef?.textToSpeech) {
+            console.error('[TTS] websim.textToSpeech is not available, using SpeechSynthesis fallback.');
+            await fallbackWithSpeechSynthesis(plainText);
+            return;
         }
 
-        const handleAudioEnd = () => {
-            if (nextStepTimeout) clearTimeout(nextStepTimeout);
-            console.log('[TTS] Playback ended.');
-            // small buffer so visuals can settle
-            setTimeout(() => {
-                finalResolve();
-            }, 500);
+        const result = await websimRef.textToSpeech({ text: plainText, voice: 'en-female' });
+        const audioUrl = typeof result === 'string' ? result : result?.url || result?.audioUrl;
+
+        if (!audioUrl) {
+            console.error('[TTS] No audio URL returned, using fallback.', result);
+            await fallbackWithSpeechSynthesis(plainText);
+            return;
+        }
+
+        if (!ttsAudio) ttsAudio = new Audio();
+        ttsAudio.src = audioUrl;
+
+        let stepEffectsTimeout;
+        const stepEffects = () => {
+            triggerRealityFlash();
+            triggerEyeBlink();
+            stepEffectsTimeout = setTimeout(stepEffects, 1500);
         };
 
-        // Remove previous listeners to avoid stacking them
-        ttsAudio.onended = null;
-        ttsAudio.onerror = null;
-        ttsAudio.onloadeddata = null;
-
-        ttsAudio.onended = handleAudioEnd;
-        ttsAudio.onerror = async (err) => {
-            console.error('[TTS] Audio playback error, using SpeechSynthesis fallback:', err);
-            if (nextStepTimeout) clearTimeout(nextStepTimeout);
-            hideIndicator();
-            await fallbackWithSpeechSynthesis();
-            handleAudioEnd();
-        };
-
-        ttsAudio.onloadeddata = () => {
-            hideIndicator();
-            ttsAudio.play()
-                .then(() => {
-                    console.log('[TTS] Playback started.');
-                    // Kick off the flashing/blinking loop
-                    stepEffects();
-                })
-                .catch(async (e) => {
-                    console.warn('[TTS] Playback was blocked by the browser, using SpeechSynthesis fallback:', e);
-                    if (nextStepTimeout) clearTimeout(nextStepTimeout);
-                    hideIndicator();
-                    await fallbackWithSpeechSynthesis();
-                    handleAudioEnd();
-                });
-        };
+        const audioPromise = new Promise((resolve, reject) => {
+            ttsAudio.onplaying = () => {
+                setTTSIndicatorVisible(false);
+                console.log('[TTS] Playback started.');
+                stepEffects();
+            };
+            ttsAudio.onended = () => {
+                clearTimeout(stepEffectsTimeout);
+                resolve();
+            };
+            ttsAudio.onerror = (err) => {
+                clearTimeout(stepEffectsTimeout);
+                reject(err);
+            };
+        });
 
         ttsAudio.load();
+        await audioPromise;
 
-        await sequencePromise;
     } catch (error) {
-        console.error('TTS execution failed (Websim/ElevenLabs error), using SpeechSynthesis fallback:', error);
-        await fallbackWithSpeechSynthesis();
-        // Brief pause so the rest of the sequence timing isn't broken completely
-        await sleep(500);
+        console.error('TTS execution failed, using fallback:', error);
+        await fallbackWithSpeechSynthesis(plainText);
     }
-}
+};
 
-export async function startNarrator(narrativeText) {
+
+/**
+ * Sets the narrative text in a hidden element and starts TTS playback.
+ * @param {string} narrativeText - The text to be spoken.
+ * @returns {Promise<void>}
+ * @export
+ */
+export const startNarrator = async (narrativeText) => {
     const sourceEl = document.getElementById('narrative-audio-source');
     if (sourceEl) {
         sourceEl.textContent = narrativeText || '';
     }
     await playTTS(narrativeText);
-}
+};
