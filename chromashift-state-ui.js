@@ -11,6 +11,11 @@ export const gameState = {
         coherence: 30,
         perception: 75
     },
+    statBoosts: {
+        lucidity: 0,
+        coherence: 0,
+        perception: 0
+    },
     chromaKeys: 0,
     startTime: Date.now(),
     conversationHistory: [],
@@ -20,7 +25,8 @@ export const gameState = {
     lastSceneShownAt: null,
     isProcessing: false,
     // Reduced minimum display time so manifest/choices feel more responsive
-    minDisplayTimeMs: 10000
+    minDisplayTimeMs: 10000,
+    sceneIdCounter: 0
 };
 
 // --- NEW: Intro click gate setup ---
@@ -129,7 +135,18 @@ export function updateStats(lucidity, coherence, perception, chromaKeys) {
     gameState.stats.lucidity = lucidity;
     gameState.stats.coherence = coherence;
     gameState.stats.perception = perception;
-    gameState.chromaKeys = chromaKeys;
+
+    // --- PACING MECHANISM INTEGRATION ---
+    // If the number of keys has changed, apply the permanent stat boosts.
+    if (chromaKeys !== gameState.chromaKeys) {
+        gameState.chromaKeys = chromaKeys;
+        applyChromaKeyStatBoost(chromaKeys);
+    }
+    // --- END PACING MECHANISM ---
+
+    const finalLucidity = Math.min(100, gameState.stats.lucidity + gameState.statBoosts.lucidity);
+    const finalCoherence = Math.min(100, gameState.stats.coherence + gameState.statBoosts.coherence);
+    const finalPerception = Math.min(100, gameState.stats.perception + gameState.statBoosts.perception);
 
     const lucBar = document.getElementById('lucidity-bar');
     const lucVal = document.getElementById('lucidity-value');
@@ -138,12 +155,12 @@ export function updateStats(lucidity, coherence, perception, chromaKeys) {
     const perBar = document.getElementById('perception-bar');
     const perVal = document.getElementById('perception-value');
 
-    if (lucBar) lucBar.style.width = lucidity + '%';
-    if (lucVal) lucVal.textContent = lucidity + '%';
-    if (cohBar) cohBar.style.width = coherence + '%';
-    if (cohVal) cohVal.textContent = coherence + '%';
-    if (perBar) perBar.style.width = perception + '%';
-    if (perVal) perVal.textContent = perception + '%';
+    if (lucBar) lucBar.style.width = finalLucidity + '%';
+    if (lucVal) lucVal.textContent = finalLucidity + '%';
+    if (cohBar) cohBar.style.width = finalCoherence + '%';
+    if (cohVal) cohVal.textContent = finalCoherence + '%';
+    if (perBar) perBar.style.width = finalPerception + '%';
+    if (perVal) perVal.textContent = finalPerception + '%';
 
     const chromaProgress = Math.min(5, gameState.chromaKeys);
     const chromaPercent = (chromaProgress / 5) * 100;
@@ -160,6 +177,20 @@ export function updateStats(lucidity, coherence, perception, chromaKeys) {
         if (saveButton) {
             saveButton.classList.remove('hidden');
         }
+    }
+}
+
+export function applyChromaKeyStatBoost(keyCount) {
+    // Reset boosts to ensure idempotency if this function were ever re-run
+    gameState.statBoosts.lucidity = 0;
+    gameState.statBoosts.coherence = 0;
+    gameState.statBoosts.perception = 0;
+
+    for (let i = 1; i <= keyCount; i++) {
+        const boostAmount = 5;
+        // This rotation ensures the first key boosts Lucidity, the second Perception, the third Coherence, and so on.
+        const statToBoost = ['lucidity', 'perception', 'coherence'][(i - 1) % 3];
+        gameState.statBoosts[statToBoost] += boostAmount;
     }
 }
 
