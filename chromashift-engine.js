@@ -517,6 +517,11 @@ export async function initialize() {
         });
     }
 
+    const saveStoryButton = document.getElementById('save-story-button');
+    if (saveStoryButton) {
+        saveStoryButton.addEventListener('click', saveStoryAsZip);
+    }
+
     const initialScene = {
         title: 'THE LIVING ROOM [STATIC INTRUSION]',
         narrativeDescription: 'Narrative Description: You are sitting in your familiar, slightly worn living room. The large CRT television in front of you glows with violent static, pulsing the room\'s colors with neon corruption. The static screams, not with sound, but with pure, intrusive thought: "The quest for the Chroma Award has commenced." The Chroma Award is the final prize of consciousness. To begin, you must first gather the tools of lucidity. Escape the mundane, and the Chroma-Dream will open before you. Your first Chroma-Key awaits.',
@@ -558,4 +563,89 @@ export async function initialize() {
 
     await executeTransitionSequence(initialScene, true);
     gameState.hasStarted = true;
+}
+
+async function saveStoryAsZip() {
+    showLoading();
+    try {
+        const zip = new JSZip();
+        const imageUrls = [...new Set(gameState.gameHistory.map(entry => entry.imageURL))];
+        const urlToExtension = {};
+
+        // 3. Fetch and Add Images
+        const imagePromises = imageUrls.map(async (url, index) => {
+            if (!url) return;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+                const blob = await response.blob();
+                const extension = blob.type.split('/')[1] || 'jpg';
+                urlToExtension[url] = extension;
+                zip.file(`images/image_${index + 1}.${extension}`, blob);
+            } catch (error) {
+                console.error(`Could not fetch or add image ${url}:`, error);
+            }
+        });
+        await Promise.all(imagePromises);
+
+        // 1. Generate HTML Transcript
+        const htmlContent = generateTranscriptHTML(urlToExtension);
+        zip.file('DreamJourney.html', htmlContent);
+
+        // 2. Generate Prompts File
+        const promptsContent = gameState.gameHistory.map(entry => entry.imagePromptUsed).join('\n\n');
+        zip.file('prompts.txt', promptsContent);
+
+        // 4. Generate and Download Zip
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        saveAs(zipBlob, `DreamJourney_${date}.zip`);
+        showToast('Download initiated! Check your downloads folder.');
+
+    } catch (error) {
+        console.error('Error creating story zip:', error);
+        showToast('Error saving story. Please try again.');
+    } finally {
+        hideLoading();
+    }
+}
+
+function generateTranscriptHTML(urlToExtension) {
+    let html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>ChromaShift - Your Dream Journey</title>
+            <style>
+                body { font-family: sans-serif; line-height: 1.6; padding: 20px; background-color: #f0f0f0; }
+                .entry { margin-bottom: 40px; border-left: 3px solid #ccc; padding-left: 20px; }
+                .prompt { font-family: monospace; font-size: 0.9em; background-color: #e0e0e0; padding: 5px; border-radius: 3px; }
+                img { max-width: 100%; height: auto; border-radius: 5px; }
+            </style>
+        </head>
+        <body>
+            <h1>Your Dream Journey</h1>
+    `;
+
+    gameState.gameHistory.forEach((entry, index) => {
+        const extension = urlToExtension[entry.imageURL] || 'jpg';
+        const imageName = `image_${[...new Set(gameState.gameHistory.map(e => e.imageURL))].indexOf(entry.imageURL) + 1}.${extension}`;
+        html += `
+            <div class="entry">
+                <h2>Step ${entry.stepId}: ${entry.choiceMade}</h2>
+                <p>${entry.narrativeText}</p>
+                <img src="images/${imageName}" alt="Scene for step ${entry.stepId}">
+                <p><strong>Image Prompt:</strong> <span class="prompt">${entry.imagePromptUsed}</span></p>
+                <p><strong>Stats:</strong> Lucidity: ${entry.playerStats.lucidity}%, Coherence: ${entry.playerStats.coherence}%, Perception: ${entry.playerStats.perception}%</p>
+            </div>
+        `;
+    });
+
+    html += `
+        </body>
+        </html>
+    `;
+    return html;
 }
