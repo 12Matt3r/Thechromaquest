@@ -24,6 +24,7 @@ import {
     pushToConversation,
     ensureWebsimAvailable
 } from './chromashift-engine-helpers.js';
+import { checkForNarrativeLoop } from './chromashift-pacing.js';
 
 // NEW: lightweight in-memory cache for generated panorama images keyed by imagePrompt
 const imageCache = new Map();
@@ -81,6 +82,12 @@ function updateScene(sceneData) {
 
     if (titleEl) titleEl.textContent = safeTitle;
     if (tickerEl) tickerEl.textContent = safeTicker;
+
+    // --- PACING MECHANISM: SCENE ID ---
+    // Assign a unique, incrementing ID to every scene for loop detection.
+    gameState.sceneIdCounter++;
+    sceneData.sceneId = gameState.sceneIdCounter;
+    // --- END PACING MECHANISM ---
 
     const nextLucidity = clampStat(
         sceneData.lucidity ?? gameState.stats.lucidity
@@ -381,6 +388,30 @@ The JSON you output MUST strictly follow this schema (no extra fields):
             showToast('The vision failed to fully manifest, but the dream continues.');
         }
         nextScene.panoramaUrl = panoUrl || nextScene.panoramaUrl || '';
+
+        // --- PACING MECHANISM: LOOP DETECTION & INTERVENTION ---
+        if (checkForNarrativeLoop(gameState.gameHistory)) {
+            showToast('The dream echoes... a familiar path reveals a new secret.');
+            nextScene.narrativeDescription = `A shadowy figure coalesces from the static. "You walk in circles, Chromatist," it whispers, its voice like crackling embers. "The path you haven't taken is the one that glitters. Seek a new reflection."`;
+            nextScene.choices = [
+                { text: "Manifest a 'shattered mirror'" },
+                { text: 'Ask the figure "What reflection?"' },
+                { text: 'Ignore the echo and walk away' },
+                { text: 'Attack the shadow with pure lucidity' }
+            ];
+        }
+        // --- END PACING MECHANISM ---
+
+        // --- PACING MECHANISM: HISTORY LOGGING ---
+        gameState.gameHistory.push({
+            sceneId: nextScene.sceneId,
+            choiceMade: action,
+            narrativeText: nextScene.narrativeDescription,
+            imageURL: nextScene.panoramaUrl,
+            imagePromptUsed: nextScene.imagePrompt,
+            playerStats: { ...gameState.stats } // shallow copy
+        });
+        // --- END PACING MECHANISM ---
 
         await executeTransitionSequence(nextScene);
     } catch (error) {

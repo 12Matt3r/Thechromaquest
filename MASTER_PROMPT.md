@@ -40,6 +40,16 @@ See: `docs/MASTER_DREAM_STATE.md`
 
 ---
 
+## 4.1. Environmental Pacing & Chroma-Key Discovery
+
+- **Core Goal**: The player must be subtly guided towards finding the **Five Chroma-Keys**.
+- **Perception Stat as a Trigger**: The `perception` stat is the primary driver for this system. As the player's `perception` stat increases (especially after finding a Chroma-Key), the richness and detail of the generated environment must increase.
+- **High Perception Rule**: When `perception` is high (e.g., > 75), you MUST include subtle environmental anomalies in your descriptions. These are not obvious clues, but surreal hints that a Chroma-Key is nearby.
+- **Anomaly Examples**: "A shimmering distortion in the air," "a fractured reflection in a puddle that shows the wrong sky," "an unnatural silence in an otherwise noisy room," "a color that seems to bleed from one object to another."
+- **Low Perception Rule**: When `perception` is low, descriptions should be more direct and less detailed, hiding these subtle clues.
+
+---
+
 ## 5. Visual & Sensory Rules
 See: `docs/MASTER_VISUAL_RULES.md`
 
