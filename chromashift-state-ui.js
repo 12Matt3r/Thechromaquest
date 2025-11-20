@@ -14,6 +14,7 @@ export const gameState = {
     chromaKeys: 0,
     startTime: Date.now(),
     conversationHistory: [],
+    gameHistory: [],
     hasStarted: false,
     lastSceneShownAt: null,
     isProcessing: false,
