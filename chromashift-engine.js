@@ -396,6 +396,10 @@ The JSON you output MUST strictly follow this schema (no extra fields):
 
 // --- Initialization ---
 export async function initialize() {
+    // Verification snippet for the main JavaScript file
+    console.log('JSZip integration successful:', typeof JSZip !== 'undefined');
+    console.log('FileSaver.js integration successful:', typeof saveAs !== 'undefined');
+
     initThreeJS();
     initMusicPlayer();
 
