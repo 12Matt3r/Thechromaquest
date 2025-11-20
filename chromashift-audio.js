@@ -83,31 +83,30 @@ const musicPlaylist = [
     '/AñoNuevo.mp3'
 ];
 let currentTrackIndex = 0;
+let shuffledPlaylist = [];
 
 /**
- * Generates a random integer between 0 (inclusive) and max (exclusive).
- * @param {number} max The maximum value (exclusive).
- * @returns {number} A random integer.
+ * Shuffles the music playlist using the Fisher-Yates algorithm.
+ * @returns {void}
  */
-function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
+function shufflePlaylist() {
+    shuffledPlaylist = [...musicPlaylist];
+    for (let i = shuffledPlaylist.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPlaylist[i], shuffledPlaylist[j]] = [shuffledPlaylist[j], shuffledPlaylist[i]];
+    }
 }
 
 /**
- * Selects a new, random track index that is NOT the current track index.
- * @returns {number} The new random track index.
+ * Selects the next track from the shuffled playlist.
+ * @returns {number} The new track index.
  */
-function getNewRandomTrackIndex() {
-    if (musicPlaylist.length <= 1) {
-        return 0; // Only one song, so keep playing it.
+function getNextTrackIndex() {
+    if (shuffledPlaylist.length === 0) {
+        shufflePlaylist();
     }
-    
-    let newIndex;
-    do {
-        newIndex = getRandomInt(musicPlaylist.length);
-    } while (newIndex === currentTrackIndex); // Keep generating until the index is different
-    
-    return newIndex;
+    const nextTrack = shuffledPlaylist.pop();
+    return musicPlaylist.indexOf(nextTrack);
 }
 
 // Shared helper to update play/pause button + body class (Unchanged)
@@ -144,7 +143,7 @@ async function goToNextTrack(autoPlay = true) {
     if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
 
     // pick a new random track that is not the current one
-    currentTrackIndex = getNewRandomTrackIndex();
+    currentTrackIndex = getNextTrackIndex();
     backgroundMusic.src = musicPlaylist[currentTrackIndex];
     backgroundMusic.currentTime = 0;
 
@@ -290,6 +289,7 @@ export function startDreamAudio() {
 }
 
 // --- TTS and Countdown Logic (UPDATED) ---
+let ttsAudio = null;
 export async function playTTS(text) {
     if (!text) return;
 
@@ -379,9 +379,12 @@ export async function playTTS(text) {
             return;
         }
 
-        const audio = new Audio();
-        audio.src = audioUrl;
-        audio.preload = 'auto';
+        if (!ttsAudio) {
+            ttsAudio = new Audio();
+        }
+
+        ttsAudio.src = audioUrl;
+        ttsAudio.preload = 'auto';
 
         let finalResolve;
         const sequencePromise = new Promise((resolve) => {
@@ -406,16 +409,21 @@ export async function playTTS(text) {
             }, 500);
         };
 
-        audio.onended = handleAudioEnd;
-        audio.onerror = async (err) => {
+        // Remove previous listeners to avoid stacking them
+        ttsAudio.onended = null;
+        ttsAudio.onerror = null;
+        ttsAudio.onloadeddata = null;
+
+        ttsAudio.onended = handleAudioEnd;
+        ttsAudio.onerror = async (err) => {
             console.error('[TTS] Audio playback error, using SpeechSynthesis fallback:', err);
             if (nextStepTimeout) clearTimeout(nextStepTimeout);
             await fallbackWithSpeechSynthesis();
             handleAudioEnd();
         };
 
-        audio.addEventListener('loadeddata', () => {
-            audio.play()
+        ttsAudio.onloadeddata = () => {
+            ttsAudio.play()
                 .then(() => {
                     console.log('[TTS] Playback started.');
                     // Kick off the flashing/blinking loop
@@ -427,9 +435,9 @@ export async function playTTS(text) {
                     await fallbackWithSpeechSynthesis();
                     handleAudioEnd();
                 });
-        });
+        };
 
-        audio.load();
+        ttsAudio.load();
 
         await sequencePromise;
     } catch (error) {
