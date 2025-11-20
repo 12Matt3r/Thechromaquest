@@ -1,6 +1,7 @@
 // Core game state and shared UI utilities for ChromaShift.
 
 import { setBubbleAnchors } from './threeScene.js';
+import { triggerFinalNarrativeSequence } from './chromashift-engine.js';
 // import { startDreamAudio } from './chromashift-audio.js';
 
 // --- Global Game State ---
@@ -11,12 +12,7 @@ export const gameState = {
         coherence: 30,
         perception: 75
     },
-    statBoosts: {
-        lucidity: 0,
-        coherence: 0,
-        perception: 0
-    },
-    chromaKeys: 0,
+    chromaKeysCollected: [],
     startTime: Date.now(),
     conversationHistory: [],
     gameHistory: [],
@@ -131,18 +127,10 @@ export function showSceneLockFeedback() {
     }
 }
 
-export function updateStats(lucidity, coherence, perception, chromaKeys) {
+export function updateStats(lucidity, coherence, perception) {
     gameState.stats.lucidity = lucidity;
     gameState.stats.coherence = coherence;
     gameState.stats.perception = perception;
-
-    // --- PACING MECHANISM INTEGRATION ---
-    // If the number of keys has changed, apply the permanent stat boosts.
-    if (chromaKeys !== gameState.chromaKeys) {
-        gameState.chromaKeys = chromaKeys;
-        applyChromaKeyStatBoost(chromaKeys);
-    }
-    // --- END PACING MECHANISM ---
 
     const finalLucidity = Math.min(100, gameState.stats.lucidity + gameState.statBoosts.lucidity);
     const finalCoherence = Math.min(100, gameState.stats.coherence + gameState.statBoosts.coherence);
@@ -162,21 +150,13 @@ export function updateStats(lucidity, coherence, perception, chromaKeys) {
     if (perBar) perBar.style.width = finalPerception + '%';
     if (perVal) perVal.textContent = finalPerception + '%';
 
-    const chromaProgress = Math.min(5, gameState.chromaKeys);
+    const chromaProgress = Math.min(5, gameState.chromaKeysCollected.length);
     const chromaPercent = (chromaProgress / 5) * 100;
     const chromaBar = document.getElementById('chroma-bar');
     const chromaValue = document.getElementById('chroma-value');
     if (chromaBar && chromaValue) {
         chromaBar.style.width = chromaPercent + '%';
         chromaValue.textContent = `${chromaProgress} / 5`;
-    }
-
-    if (chromaKeys >= 5 && gameState.gameStatus !== 'WON') {
-        gameState.gameStatus = 'WON';
-        const saveButton = document.getElementById('save-story-button');
-        if (saveButton) {
-            saveButton.classList.remove('hidden');
-        }
     }
 }
 
@@ -191,6 +171,53 @@ export function applyChromaKeyStatBoost(keyCount) {
         // This rotation ensures the first key boosts Lucidity, the second Perception, the third Coherence, and so on.
         const statToBoost = ['lucidity', 'perception', 'coherence'][(i - 1) % 3];
         gameState.statBoosts[statToBoost] += boostAmount;
+    }
+}
+
+/**
+ * Acquires a new Chroma-Key, ensuring it is unique, and updates the game state.
+ * This is the central function for managing the player's progress towards the win condition.
+ * @param {string} keyId - A unique identifier for the Chroma-Key being acquired.
+ */
+export function acquireChromaKey(keyId) {
+    if (!keyId) {
+        console.warn('acquireChromaKey called with an invalid keyId.');
+        return;
+    }
+
+    // Prevent duplicate keys from being added.
+    if (gameState.chromaKeysCollected.includes(keyId)) {
+        showToast('Duplicate Chroma-Key found and ignored.');
+        return;
+    }
+
+    gameState.chromaKeysCollected.push(keyId);
+    const keyCount = gameState.chromaKeysCollected.length;
+
+    // Provide immediate feedback to the player.
+    showToast(`Chroma-Key Acquired! [${keyCount}/5]`);
+
+    // Apply the permanent stat boosts associated with collecting a key.
+    applyChromaKeyStatBoost(keyCount);
+
+    // Manually trigger a stat update to refresh the UI with the new boost.
+    updateStats(gameState.stats.lucidity, gameState.stats.coherence, gameState.stats.perception);
+
+    // Check for the win condition.
+    if (keyCount >= 5 && gameState.gameStatus !== 'WON') {
+        gameState.gameStatus = 'WON';
+        // This function will be implemented in a subsequent step.
+        // For now, this serves as a placeholder for the final narrative trigger.
+        if (typeof triggerFinalNarrativeSequence === 'function') {
+            triggerFinalNarrativeSequence();
+        } else {
+            console.log('Win condition met, but triggerFinalNarrativeSequence is not yet defined.');
+            // Fallback for now: reveal the save button directly.
+            const saveButton = document.getElementById('save-story-button');
+            if (saveButton) {
+                saveButton.classList.remove('hidden');
+            }
+        }
     }
 }
 
