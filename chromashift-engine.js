@@ -159,6 +159,7 @@ async function executeTransitionSequence(sceneData, isInitial = false) {
 
                     try {
                         startDreamAudio();
+                        setInteractionEnabled(true); // Enable controls as soon as music starts
                     } catch (e) {
                         console.warn('Failed to start music on power click:', e);
                     }
