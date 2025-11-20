@@ -25,6 +25,7 @@ import {
     ensureWebsimAvailable
 } from './chromashift-engine-helpers.js';
 import { checkForNarrativeLoop } from './chromashift-pacing.js';
+import { initKeyboardShortcuts } from './chromashift-keyboard.js';
 
 // NEW: lightweight in-memory cache for generated panorama images keyed by imagePrompt
 const imageCache = new Map();
@@ -98,12 +99,8 @@ function updateScene(sceneData) {
     const nextPerception = clampStat(
         sceneData.perception ?? gameState.stats.perception
     );
-    const nextChromaKeys =
-        typeof sceneData.chromaKeys === 'number'
-            ? sceneData.chromaKeys
-            : gameState.chromaKeys;
 
-    updateStats(nextLucidity, nextCoherence, nextPerception, nextChromaKeys);
+    updateStats(nextLucidity, nextCoherence, nextPerception);
 
     updatePanorama(sceneData.panoramaUrl); 
 
@@ -429,6 +426,7 @@ The JSON you output MUST strictly follow this schema (no extra fields):
 export async function initialize() {
     initThreeJS();
     initMusicPlayer();
+    initKeyboardShortcuts();
 
     const cmdInput = document.getElementById('command-input');
     const cmdButton = document.getElementById('command-submit');
@@ -594,6 +592,26 @@ export async function initialize() {
 
     await executeTransitionSequence(initialScene, true);
     gameState.hasStarted = true;
+}
+
+/**
+ * Placeholder for the final narrative sequence trigger.
+ * This function will be called when the player has collected all five Chroma-Keys.
+ * It is intended to be the hook for the final, concluding part of the game's story.
+ */
+export function triggerFinalNarrativeSequence() {
+    console.log('--- WIN CONDITION MET ---');
+    console.log('Triggering the final narrative sequence...');
+    // In a future implementation, this function would call generateScene
+    // with the specific content of the game's conclusion.
+    // For now, it will simply log to the console and reveal the save button.
+
+    const saveButton = document.getElementById('save-story-button');
+    if (saveButton) {
+        saveButton.classList.remove('hidden');
+    }
+
+    showToast("You have collected all the Chroma-Keys! The final sequence begins...", 5000);
 }
 
 async function saveStoryAsZip() {
