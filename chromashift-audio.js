@@ -16,6 +16,12 @@ let audioIsReady = false;
 let currentTrackIndex = 0;
 let shuffledPlaylist = [];
 
+// --- NEW: Audio Preloading Cache ---
+let preloadedAudioUrl = null;
+let preloadedTrackPath = null;
+let lastPreloadedObjectUrl = null;
+
+
 const musicPlaylist = [
     '/Journey to the interweb.mp3',
     '/Rhythm of the Reef.mp3',
@@ -147,12 +153,23 @@ const updateSongTitle = () => {
  */
 const playCurrentTrack = async () => {
     if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
-    backgroundMusic.src = musicPlaylist[currentTrackIndex];
+
+    const trackPath = musicPlaylist[currentTrackIndex];
+
+    if (preloadedTrackPath === trackPath && preloadedAudioUrl) {
+        backgroundMusic.src = preloadedAudioUrl;
+        preloadedAudioUrl = null;
+        preloadedTrackPath = null;
+    } else {
+        backgroundMusic.src = trackPath;
+    }
+
     updateSongTitle();
     backgroundMusic.currentTime = 0;
     try {
         await backgroundMusic.play();
         updatePlayPauseIcon();
+        preloadNextTrack(); // Preload the next track
     } catch (error) {
         console.error('Failed to start track playback:', error);
         throw error;
@@ -168,17 +185,62 @@ const playCurrentTrack = async () => {
 const goToNextTrack = async (autoPlay = true) => {
     if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
     currentTrackIndex = getNextTrackIndex();
-    backgroundMusic.src = musicPlaylist[currentTrackIndex];
+
+    const trackPath = musicPlaylist[currentTrackIndex];
+
+    if (preloadedTrackPath === trackPath && preloadedAudioUrl) {
+        backgroundMusic.src = preloadedAudioUrl;
+        preloadedAudioUrl = null;
+        preloadedTrackPath = null;
+    } else {
+        backgroundMusic.src = trackPath;
+    }
+
     updateSongTitle();
     backgroundMusic.currentTime = 0;
     if (autoPlay) {
         try {
             await backgroundMusic.play();
+            preloadNextTrack(); // Preload the next track
         } catch (error) {
             console.warn('Failed to auto-play next track:', error);
         }
     }
     updatePlayPauseIcon();
+};
+
+/**
+ * Asynchronously fetches the next track's audio data and caches it as a blob URL.
+ * Manages the cache to ensure only one track is preloaded at a time.
+ * @private
+ */
+const preloadNextTrack = async () => {
+    if (shuffledPlaylist.length === 0) {
+        shufflePlaylist();
+    }
+    const nextTrackPath = shuffledPlaylist[shuffledPlaylist.length - 1];
+
+    try {
+        const response = await fetch(nextTrackPath);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const blob = await response.blob();
+
+        if (lastPreloadedObjectUrl) {
+            URL.revokeObjectURL(lastPreloadedObjectUrl);
+        }
+
+        preloadedAudioUrl = URL.createObjectURL(blob);
+        preloadedTrackPath = nextTrackPath;
+        lastPreloadedObjectUrl = preloadedAudioUrl;
+
+        console.log(`[Preload] Successfully preloaded: ${nextTrackPath}`);
+    } catch (error) {
+        console.error(`[Preload] Failed to preload track ${nextTrackPath}:`, error);
+        preloadedAudioUrl = null;
+        preloadedTrackPath = null;
+    }
 };
 
 /**
@@ -281,6 +343,7 @@ export const initMusicPlayer = () => {
     backgroundMusic.addEventListener('pause', updatePlayPauseIcon);
 
     console.log('Audio Player initialized and ready.');
+    preloadNextTrack();
 };
 
 /**
