@@ -15,6 +15,7 @@ export const gameState = {
     startTime: Date.now(),
     conversationHistory: [],
     gameHistory: [],
+    gameStatus: 'PLAYING',
     hasStarted: false,
     lastSceneShownAt: null,
     isProcessing: false,
@@ -151,6 +152,14 @@ export function updateStats(lucidity, coherence, perception, chromaKeys) {
     if (chromaBar && chromaValue) {
         chromaBar.style.width = chromaPercent + '%';
         chromaValue.textContent = `${chromaProgress} / 5`;
+    }
+
+    if (chromaKeys >= 5 && gameState.gameStatus !== 'WON') {
+        gameState.gameStatus = 'WON';
+        const saveButton = document.getElementById('save-story-button');
+        if (saveButton) {
+            saveButton.classList.remove('hidden');
+        }
     }
 }
 
