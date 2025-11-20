@@ -105,14 +105,20 @@
             <input type="text" id="command-input" placeholder="TYPE YOUR IMPOSSIBLE ACTION...">
             <button id="command-submit">MANIFEST</button>
             <button id="credits-button" title="Credits & Inspiration">◎</button>
-            <!-- MUSIC PLAYER CONTROLS -->
+        </div>
+
+        <!-- RESTRUCTURED: Music player and TTS controls -->
+        <div id="media-controls">
+            <div id="song-title"></div>
             <div id="music-controls" aria-label="Music player controls">
                 <button id="music-play-pause" title="Play/Pause music">▶</button>
                 <button id="music-next" title="Skip to next track">⏭</button>
                 <button id="music-vol-down" title="Turn volume down">➖</button>
                 <button id="music-vol-up" title="Turn volume up">➕</button>
-                <!-- NEW: TTS toggle button -->
+            </div>
+            <div id="tts-controls">
                 <button id="tts-toggle" title="Toggle narration (TTS)">🔊 TTS</button>
+                <div id="tts-indicator" hidden></div>
             </div>
         </div>
     </div>

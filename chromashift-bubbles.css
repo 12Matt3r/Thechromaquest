@@ -21,6 +21,7 @@
     border-radius: 20px;
     border: 2px solid var(--consciousness-purple);
     color: var(--ghost-white);
+    mix-blend-mode: difference;
     font-size: 13px;
     line-height: 1.4;
     box-shadow:

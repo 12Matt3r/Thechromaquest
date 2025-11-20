@@ -124,11 +124,29 @@ function updatePlayPauseIcon() {
     }
 }
 
+// NEW: Helper to format and display the current song title
+function updateSongTitle() {
+    const titleEl = document.getElementById('song-title');
+    if (!titleEl || !backgroundMusic || !backgroundMusic.src) return;
+
+    try {
+        const url = new URL(backgroundMusic.src);
+        let filename = url.pathname.split('/').pop();
+        filename = decodeURIComponent(filename);
+        const title = filename.replace(/\.mp3$/i, '');
+        titleEl.textContent = title;
+    } catch (e) {
+        console.warn('Could not parse song title from src:', backgroundMusic.src, e);
+        titleEl.textContent = 'Unknown Track';
+    }
+}
+
 // Shared helper to play the current track index (Unchanged)
 async function playCurrentTrack() {
     if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
 
     backgroundMusic.src = musicPlaylist[currentTrackIndex];
+    updateSongTitle(); // Update the title when the track is set
     backgroundMusic.currentTime = 0; // ensure track restarts cleanly
     try {
         await backgroundMusic.play();
@@ -142,9 +160,9 @@ async function playCurrentTrack() {
 async function goToNextTrack(autoPlay = true) {
     if (!audioIsReady || !backgroundMusic || musicPlaylist.length === 0) return;
 
-    // pick a new random track that is not the current one
     currentTrackIndex = getNextTrackIndex();
     backgroundMusic.src = musicPlaylist[currentTrackIndex];
+    updateSongTitle(); // Update the title when the track is set
     backgroundMusic.currentTime = 0;
 
     if (autoPlay) {
@@ -313,6 +331,11 @@ export async function playTTS(text) {
 
     if (!plainText) return;
 
+    const ttsIndicator = document.getElementById('tts-indicator');
+
+    const showIndicator = () => ttsIndicator && ttsIndicator.removeAttribute('hidden');
+    const hideIndicator = () => ttsIndicator && ttsIndicator.setAttribute('hidden', 'true');
+
     // Helper: fallback to browser SpeechSynthesis if ElevenLabs/Websim fails
     const fallbackWithSpeechSynthesis = async () => {
         try {
@@ -328,8 +351,14 @@ export async function playTTS(text) {
             if (femaleVoice) utterance.voice = femaleVoice;
 
             return new Promise((resolve) => {
-                utterance.onend = () => resolve();
-                utterance.onerror = () => resolve();
+                utterance.onend = () => {
+                    hideIndicator();
+                    resolve();
+                };
+                utterance.onerror = () => {
+                    hideIndicator();
+                    resolve();
+                };
                 // Start visual rhythm when speech starts
                 triggerRealityFlash();
                 triggerEyeBlink();
@@ -337,10 +366,12 @@ export async function playTTS(text) {
             });
         } catch (e) {
             console.error('[TTS] SpeechSynthesis fallback failed:', e);
+            hideIndicator();
         }
     };
 
     try {
+        showIndicator();
         // DIRECT WEBISM/ELEVENLABS ACCESS (NO HELPER):
         // Try both `websim` and `window.websim` to maximize compatibility.
         const websimRef =
@@ -418,11 +449,13 @@ export async function playTTS(text) {
         ttsAudio.onerror = async (err) => {
             console.error('[TTS] Audio playback error, using SpeechSynthesis fallback:', err);
             if (nextStepTimeout) clearTimeout(nextStepTimeout);
+            hideIndicator();
             await fallbackWithSpeechSynthesis();
             handleAudioEnd();
         };
 
         ttsAudio.onloadeddata = () => {
+            hideIndicator();
             ttsAudio.play()
                 .then(() => {
                     console.log('[TTS] Playback started.');
@@ -432,6 +465,7 @@ export async function playTTS(text) {
                 .catch(async (e) => {
                     console.warn('[TTS] Playback was blocked by the browser, using SpeechSynthesis fallback:', e);
                     if (nextStepTimeout) clearTimeout(nextStepTimeout);
+                    hideIndicator();
                     await fallbackWithSpeechSynthesis();
                     handleAudioEnd();
                 });
