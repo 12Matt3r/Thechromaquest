@@ -1,0 +1,77 @@
+/* Top and bottom bars, scene title/ticker, and general layout */
+
+#top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8vh;
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.55));
+    backdrop-filter: blur(14px) saturate(130%);
+    border-bottom: 2px solid var(--neon-pink);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    z-index: 100;
+    box-shadow:
+        0 4px 20px rgba(255, 0, 255, 0.35),
+        0 0 40px rgba(0, 0, 0, 0.9);
+}
+
+#scene-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--dream-gold);
+    text-shadow: 0 0 10px var(--dream-gold);
+    animation: title-glitch 3s infinite;
+}
+
+@keyframes title-glitch {
+    0%, 96%, 100% { opacity: 1; }
+    97% { opacity: 0.8; transform: translateX(-2px); }
+    98% { opacity: 0.9; transform: translateX(2px); }
+    99% { opacity: 1; transform: translateX(0); }
+}
+
+#wtf-ticker {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+    color: var(--electric-cyan);
+    animation: ticker-pulse 2s infinite;
+    padding: 0 20px;
+}
+
+@keyframes ticker-pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; text-shadow: 0 0 15px var(--electric-cyan); }
+}
+
+#dream-time {
+    font-size: 20px;
+    color: var(--consciousness-purple);
+    font-weight: bold;
+}
+
+/* Bottom Bar - Fixed height 10vh to prevent scrolling */
+#bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10vh;
+    background:
+        linear-gradient(to top, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.55));
+    backdrop-filter: blur(14px) saturate(130%);
+    border-top: 2px solid var(--neon-pink);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 30px;
+    z-index: 100;
+    box-shadow:
+        0 -4px 20px rgba(255, 0, 255, 0.35),
+        0 0 40px rgba(0, 0, 0, 0.9);
+}
