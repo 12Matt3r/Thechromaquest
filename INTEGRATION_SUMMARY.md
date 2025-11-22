@@ -1,4 +1,91 @@
-# 🌌 ChromaShift Anomaly System Integration Summary
+# 🌌 ChromaShift Systems Integration Summary
+
+## 🆕 Monkey Paw System Integration
+
+I've successfully integrated a **cursed Monkey Paw wish system** into ChromaShift as a mystical dream artifact that appears randomly in surreal dreamscapes. This creates a meta-layer of AI-powered wish-granting that fits perfectly with the game's aesthetic while maintaining all existing functionality.
+
+### 🐾 New Monkey Paw Files
+
+5. **`chromashift-monkeypaw-api.js`** (236 lines)
+   - AI-powered wish processing and consequence generation
+   - Integration with WebSim API for malevolent wish interpretation
+   - Dream-contextualized wish transformation
+   - Consequence evaluation and scoring system
+
+6. **`chromashift-monkeypaw.js`** (845 lines)  
+   - Complete Monkey Paw game class with dual-mode system
+   - Wisher mode (make wishes) and Paw mode (craft consequences)
+   - UI management and event handling
+   - Integration with ChromaShift engine and anomaly system
+
+7. **`chromashift-monkeypaw.css`** (560 lines)
+   - Dream-suitable styling matching ChromaShift's aesthetic
+   - Animated paw manifestations and energy effects
+   - Modal systems for wish results
+   - Mobile-responsive design
+
+8. **`monkey-paw-demo.html`** (178 lines)
+   - Standalone demo showing integration features
+   - Interactive testing of monkey paw functionality
+   - Demonstration of dream appearance mechanics
+
+9. **`MONKEY_PAW_INTEGRATION.md`** (229 lines)
+   - Comprehensive documentation of monkey paw system
+   - Usage instructions and developer guides
+   - Technical details and troubleshooting
+
+### 🔧 Enhanced Files (Monkey Paw Integration)
+
+3. **`chromashift-engine.js`**
+   - Added monkey paw system import and initialization
+   - Integrated random appearance checking (5% chance per scene)
+   - Added monkey paw button to command interface
+   - Scene transition integration for paw manifestation
+
+4. **`index.html`**
+   - Added monkey paw CSS import
+   - Integrated 🐾 button in command interface  
+   - Added monkey paw interface container
+   - Seamless layout integration
+
+## 🌌 Integrated System Features
+
+### 🐾 **Monkey Paw Wish System**
+
+#### **Random Dream Manifestation**
+- 5% chance to appear in any dream scene as a cursed artifact
+- 10-scene cooldown between appearances
+- Special animation effects when manifesting
+- Automatically logged as dream anomalies
+
+#### **Dual Mode Gameplay**
+- **👤 Wisher Mode**: Make wishes to the cursed monkey paw
+  - AI generates malevolent interpretations
+  - Dreams provide surreal, dream-logic consequences
+  - Maximum 5 wishes per session
+  - Automatic logging as anomalies after granted
+
+- **🐾 Paw Mode**: Become the malevolent entity
+  - AI generates desperate wishes to curse
+  - Player crafts twisted consequences
+  - Scoring system (0-100) evaluates malevolent creativity
+  - Grade-based feedback (A-F) on effectiveness
+
+#### **AI-Powered Processing**
+- **Wish Analysis**: Identifies loopholes and ambiguities
+- **Consequence Generation**: Creates logically consistent dark outcomes  
+- **Dream Translation**: Converts consequences into surreal dream imagery
+- **Safety Checking**: Analyzes wishes and suggests improvements
+- **Summary Generation**: Creates simple explanations of dark twists
+
+#### **Seamless Integration**
+- Matches ChromaShift's purple/gold aesthetic
+- Positioned as floating panel (top-right corner)
+- Uses existing ChromaShift fonts and styling
+- Integrates with anomaly system for shared experiences
+- Maintains accessibility features (keyboard shortcuts, ARIA labels)
+
+### 📋 **Anomaly System Integration**
 
 ## 📋 What Was Added
 
@@ -194,6 +281,14 @@ ChromaShift Anomaly System
 
 ---
 
-**The dream evolves. The anomalies persist. The shared consciousness grows.**
+**The dream evolves. The anomalies persist. The cursed wishes echo through shared consciousness.**
 
-Your ChromaShift now contains a living, breathing anomaly ecosystem that grows more surreal and interconnected with every player's journey through the Chroma-Dream.
+Your ChromaShift now contains:
+- **Living Anomaly Ecosystem**: Shared surreal experiences that influence other players
+- **Cursed Wish System**: AI-powered malevolent wish-granting with dual gameplay modes
+- **Cross-System Integration**: Monkey paw appearances become anomalies, anomalies influence wishes
+- **Infinite Possibility Layer**: Every player adds to the collective dream consciousness
+
+The Chroma-Dream has become a meta-simulation where wishes have consequences, anomalies shape reality, and every journey contributes to an ever-growing shared surreal landscape. Players can now not only explore the infinite dreamscape but also become active participants in crafting the malevolent wishes that define its dark logic.
+
+**The curse spreads. The anomalies multiply. The dream becomes self-aware.**

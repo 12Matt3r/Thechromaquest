@@ -1,0 +1,560 @@
+/* chromashift-monkeypaw.css */
+/* Styling for Monkey Paw integration in ChromaShift Dreamscape */
+
+/* Main container for monkey paw interface */
+#monkey-paw-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 400px;
+    max-height: 80vh;
+    background: linear-gradient(145deg, rgba(139, 0, 255, 0.95), rgba(75, 0, 130, 0.95));
+    border: 2px solid var(--dream-gold, #FFD700);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 0 30px rgba(139, 0, 255, 0.6),
+        inset 0 0 20px rgba(255, 215, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#monkey-paw-container.hidden {
+    opacity: 0;
+    transform: translateX(100%) scale(0.8);
+    pointer-events: none;
+}
+
+/* Monkey paw visual element */
+#monkey-paw-visual {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+}
+
+.monkey-paw {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(139, 0, 255, 0.8));
+}
+
+.monkey-paw:hover {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9));
+}
+
+.monkey-paw.appearing {
+    animation: pawManifestation 2s ease-out;
+}
+
+.monkey-paw.fist {
+    transform: rotate(-10deg) scale(0.9);
+    filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.9));
+}
+
+@keyframes pawManifestation {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(180deg);
+        filter: drop-shadow(0 0 0 transparent);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.3) rotate(90deg);
+        filter: drop-shadow(0 0 40px rgba(139, 0, 255, 1));
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 15px rgba(139, 0, 255, 0.8));
+    }
+}
+
+/* Paw visual representation using CSS */
+.monkey-paw::before {
+    content: '🐾';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+}
+
+.paw-energy {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(139, 0, 255, 0.3) 0%, 
+        rgba(255, 215, 0, 0.2) 50%, 
+        transparent 100%);
+    animation: energyPulse 3s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes energyPulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.2); opacity: 0.6; }
+}
+
+/* Controls section */
+#monkey-paw-controls {
+    padding: 20px;
+    max-height: calc(80vh - 120px);
+    overflow-y: auto;
+}
+
+/* Wish input styling */
+#wish-input {
+    width: 100%;
+    min-height: 80px;
+    max-height: 120px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+    color: var(--dream-gold, #FFD700);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+#wish-input:focus {
+    outline: none;
+    border-color: var(--dream-gold, #FFD700);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#wish-input::placeholder {
+    color: rgba(255, 215, 0, 0.6);
+    font-style: italic;
+}
+
+/* Button styling */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #8B00FF, #4B0082);
+    color: var(--dream-gold, #FFD700);
+    border: 2px solid var(--dream-gold, #FFD700);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(45deg, #9A20FF, #5A1092);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 0, 255, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(75, 0, 130, 0.8);
+    color: rgba(255, 215, 0, 0.9);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: rgba(85, 10, 140, 0.9);
+    transform: translateY(-1px);
+}
+
+.btn-tertiary {
+    background: rgba(0, 0, 0, 0.6);
+    color: rgba(255, 215, 0, 0.7);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Mode controls */
+#mode-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.mode-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(139, 0, 255, 0.3);
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    color: var(--dream-gold, #FFD700);
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.mode-toggle:hover {
+    background: rgba(139, 0, 255, 0.5);
+    border-color: var(--dream-gold, #FFD700);
+}
+
+#mode-indicator {
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+#wishes-left-text, #paw-score {
+    text-align: center;
+    color: var(--dream-gold, #FFD700);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* Current wish display */
+#current-wish-display {
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(75, 0, 130, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+#current-wish-display h4 {
+    color: var(--dream-gold, #FFD700);
+    margin: 0 0 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#current-wish-text {
+    color: rgba(255, 215, 0, 0.9);
+    font-style: italic;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+/* Consequences log */
+#consequences-log {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#consequences-log h4 {
+    color: var(--dream-gold, #FFD700);
+    margin: 0 0 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: sticky;
+    top: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.log-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.log-entry {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(139, 0, 255, 0.3);
+    border-radius: 6px;
+    color: rgba(255, 215, 0, 0.9);
+    font-size: 12px;
+    line-height: 1.3;
+    transition: all 0.3s ease;
+}
+
+.log-entry:hover {
+    background: rgba(139, 0, 255, 0.2);
+    border-color: rgba(255, 215, 0, 0.5);
+}
+
+.log-entry strong {
+    color: var(--dream-gold, #FFD700);
+}
+
+.dream-echo {
+    color: rgba(0, 255, 255, 0.8);
+    font-style: italic;
+    display: block;
+    margin: 5px 0;
+}
+
+.summary {
+    color: rgba(255, 215, 0, 0.7);
+    font-size: 11px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Modal styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: linear-gradient(145deg, rgba(139, 0, 255, 0.95), rgba(75, 0, 130, 0.95));
+    border: 3px solid var(--dream-gold, #FFD700);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.modal.visible .modal-content {
+    transform: scale(1);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: var(--dream-gold, #FFD700);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #FF0000;
+    transform: scale(1.2);
+}
+
+#result-title {
+    color: var(--dream-gold, #FFD700);
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+#result-title.flicker {
+    animation: titleFlicker 2s ease-in-out infinite;
+}
+
+@keyframes titleFlicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+#result-text {
+    color: rgba(255, 215, 0, 0.9);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.consequence-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.consequence-section:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.dream-section {
+    background: rgba(0, 255, 255, 0.1);
+    border-left: 4px solid rgba(0, 255, 255, 0.5);
+}
+
+.consequence-title {
+    color: var(--dream-gold, #FFD700);
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.dark-consequence {
+    color: rgba(255, 100, 100, 0.9);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.dream-consequence {
+    color: rgba(0, 255, 255, 0.9);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+#summary-text {
+    color: rgba(255, 215, 0, 0.8);
+    font-style: italic;
+    font-size: 14px;
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    border-left: 4px solid var(--dream-gold, #FFD700);
+}
+
+.loading-text {
+    text-align: center;
+    color: rgba(255, 215, 0, 0.7);
+    font-style: italic;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* Media controls */
+#media-controls-paw {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+#media-controls-paw button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    padding: 0;
+}
+
+/* Wish granted states */
+.monkey-paw.wished-1::after { content: '⚡'; position: absolute; top: -10px; right: -10px; font-size: 20px; animation: wishEffect 1s ease-out; }
+.monkey-paw.wished-2::after { content: '🔥'; position: absolute; top: -10px; right: -10px; font-size: 20px; animation: wishEffect 1s ease-out; }
+.monkey-paw.wished-3::after { content: '💀'; position: absolute; top: -10px; right: -10px; font-size: 20px; animation: wishEffect 1s ease-out; }
+.monkey-paw.wished-4::after { content: '🌪️'; position: absolute; top: -10px; right: -10px; font-size: 20px; animation: wishEffect 1s ease-out; }
+.monkey-paw.wished-5::after { content: '💫'; position: absolute; top: -10px; right: -10px; font-size: 20px; animation: wishEffect 1s ease-out; }
+
+@keyframes wishEffect {
+    0% { transform: scale(0) rotate(180deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(0deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #monkey-paw-container {
+        width: calc(100vw - 40px);
+        top: 10px;
+        right: 20px;
+        left: 20px;
+        max-height: 70vh;
+    }
+    
+    .modal-content {
+        margin: 20px;
+        max-width: calc(100vw - 40px);
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    #wish-input {
+        min-height: 60px;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .monkey-paw,
+    .modal,
+    .modal-content,
+    button,
+    .log-entry,
+    #monkey-paw-container {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    #monkey-paw-container {
+        border-width: 3px;
+        border-color: #FFFFFF;
+    }
+    
+    #wish-input {
+        border-color: #FFFFFF;
+        color: #FFFFFF;
+    }
+    
+    button {
+        border-width: 2px;
+    }
+    
+    .log-entry {
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+}

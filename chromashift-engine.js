@@ -27,6 +27,7 @@ import {
 import { checkForNarrativeLoop } from './chromashift-pacing.js';
 import { initKeyboardShortcuts } from './chromashift-keyboard.js';
 import { chromaRecords, initAnomalySystem } from './chromashift-records.js';
+import { initChromaShiftMonkeyPaw } from './chromashift-monkeypaw.js';
 
 // NEW: lightweight in-memory cache for generated panorama images keyed by imagePrompt
 const imageCache = new Map();
@@ -462,6 +463,18 @@ The JSON you output MUST strictly follow this schema (no extra fields):
         }
         // --- END ANOMALY SYSTEM ---
 
+        // --- MONKEY PAW SYSTEM INTEGRATION ---
+        // Check if the monkey paw should appear in this scene
+        try {
+            const { chromaShiftMonkeyPaw } = await import('./chromashift-monkeypaw.js');
+            if (chromaShiftMonkeyPaw && typeof chromaShiftMonkeyPaw.checkForPawAppearance === 'function') {
+                chromaShiftMonkeyPaw.checkForPawAppearance();
+            }
+        } catch (error) {
+            console.warn('Failed to check for monkey paw appearance:', error);
+        }
+        // --- END MONKEY PAW INTEGRATION ---
+
         await executeTransitionSequence(nextScene);
     } catch (error) {
         console.error('Error processing action:', error);
@@ -484,8 +497,12 @@ export async function initialize() {
     // Initialize anomaly system
     initAnomalySystem();
 
+    // Initialize monkey paw system
+    initChromaShiftMonkeyPaw();
+
     const cmdInput = document.getElementById('command-input');
     const cmdButton = document.getElementById('command-submit');
+    const monkeyPawBtn = document.getElementById('monkey-paw-btn');
 
     function showInputError() {
         if (!cmdInput) return;
@@ -496,6 +513,18 @@ export async function initialize() {
             cmdInput.classList.remove('input-error');
             cmdInput.placeholder = originalPlaceholder || 'TYPE YOUR IMPOSSIBLE ACTION...';
         }, 1200);
+    }
+
+    // Monkey paw button event listener
+    if (monkeyPawBtn) {
+        monkeyPawBtn.addEventListener('click', () => {
+            // Get the monkey paw instance and toggle interface
+            import('./chromashift-monkeypaw.js').then(({ chromaShiftMonkeyPaw }) => {
+                if (chromaShiftMonkeyPaw) {
+                    chromaShiftMonkeyPaw.togglePawInterface();
+                }
+            });
+        });
     }
 
     if (cmdButton) {

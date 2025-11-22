@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="chromashift-crt.css">
     <!-- Anomaly System Styles -->
     <link rel="stylesheet" href="chromashift-anomalies.css">
+    <!-- Monkey Paw System Styles -->
+    <link rel="stylesheet" href="chromashift-monkeypaw.css">
 
     <!-- NEW: Import map to resolve Three.js module -->
     <script type="importmap">
@@ -106,6 +108,7 @@
         <div id="command-interface">
             <input type="text" id="command-input" placeholder="TYPE YOUR IMPOSSIBLE ACTION...">
             <button id="command-submit">MANIFEST</button>
+            <button id="monkey-paw-btn" title="The Cursed Monkey's Paw">🐾</button>
             <button id="credits-button" title="Credits & Inspiration">◎</button>
         </div>
 
@@ -136,6 +139,9 @@
 
     <!-- Lightweight toast for UX feedback -->
     <div id="toast" aria-live="polite"></div>
+
+    <!-- Monkey Paw Interface Container -->
+    <div id="monkey-paw-interface"></div>
 
     <!-- Global loading overlay for async operations -->
     <div id="global-loading" aria-hidden="true">

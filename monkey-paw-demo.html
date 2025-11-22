@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaShift Monkey Paw Demo</title>
+    <link rel="stylesheet" href="chromashift.css">
+    <link rel="stylesheet" href="chromashift-crt.css">
+    <link rel="stylesheet" href="chromashift-anomalies.css">
+    <link rel="stylesheet" href="chromashift-monkeypaw.css">
+    
+    <style>
+        /* Demo-specific styles */
+        .demo-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--dream-gold, #FFD700);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid var(--dream-gold, #FFD700);
+            max-width: 300px;
+            font-family: 'Courier New', monospace;
+            z-index: 2000;
+        }
+        
+        .demo-actions {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .demo-btn {
+            padding: 8px 12px;
+            background: rgba(139, 0, 255, 0.3);
+            border: 1px solid var(--dream-gold, #FFD700);
+            color: var(--dream-gold, #FFD700);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .demo-btn:hover {
+            background: rgba(139, 0, 255, 0.5);
+        }
+        
+        body {
+            background: radial-gradient(ellipse at center, #1a0033 0%, #000000 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-info">
+        <h3>🐾 Monkey Paw Integration Demo</h3>
+        <p>This demo shows how the Monkey Paw system integrates with ChromaShift's surreal dreamscape.</p>
+        
+        <div class="demo-actions">
+            <button class="demo-btn" onclick="spawnMonkeyPaw()">Spawn Monkey Paw</button>
+            <button class="demo-btn" onclick="toggleMonkeyPaw()">Toggle Interface</button>
+            <button class="demo-btn" onclick="testWishModes()">Test Wish Modes</button>
+            <button class="demo-btn" onclick="simulateDreamScene()">Simulate Dream Scene</button>
+        </div>
+        
+        <div style="margin-top: 10px; font-size: 11px; opacity: 0.8;">
+            <strong>Features:</strong><br>
+            • Auto-appearance in dreams<br>
+            • Wisher and Paw modes<br>
+            • AI-powered wish fulfillment<br>
+            • Anomaly system integration<br>
+            • Dream-contextualized consequences
+        </div>
+    </div>
+
+    <!-- Initialize monkey paw interface -->
+    <div id="monkey-paw-interface"></div>
+
+    <!-- Demo toast container -->
+    <div id="demo-toast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2000;"></div>
+
+    <script type="module">
+        // Import the monkey paw system
+        import { initChromaShiftMonkeyPaw, chromaShiftMonkeyPaw } from './chromashift-monkeypaw.js';
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🐾 ChromaShift Monkey Paw Demo Initializing...');
+            
+            // Initialize the monkey paw system
+            const pawInstance = initChromaShiftMonkeyPaw();
+            
+            // Make it available globally for demo functions
+            window.chromaShiftMonkeyPaw = pawInstance;
+            
+            console.log('✅ Monkey Paw system initialized!');
+        });
+        
+        // Demo functions
+        window.spawnMonkeyPaw = function() {
+            if (window.chromaShiftMonkeyPaw) {
+                window.chromaShiftMonkeyPaw.spawnPawInDream();
+                showDemoToast('🐾 The cursed monkey\'s paw manifests in the dream!');
+            } else {
+                showDemoToast('❌ Monkey Paw not initialized yet');
+            }
+        };
+        
+        window.toggleMonkeyPaw = function() {
+            if (window.chromaShiftMonkeyPaw) {
+                window.chromaShiftMonkeyPaw.togglePawInterface();
+                const state = window.chromaShiftMonkeyPaw.getState();
+                showDemoToast(`🔄 Interface ${state.isVisible ? 'opened' : 'closed'}`);
+            } else {
+                showDemoToast('❌ Monkey Paw not initialized yet');
+            }
+        };
+        
+        window.testWishModes = function() {
+            if (window.chromaShiftMonkeyPaw) {
+                // Toggle between wisher and paw mode
+                window.chromaShiftMonkeyPaw.toggleMode();
+                const state = window.chromaShiftMonkeyPaw.getState();
+                showDemoToast(`🎭 Switched to ${state.isWisherMode ? 'Wisher' : 'Paw'} Mode`);
+            } else {
+                showDemoToast('❌ Monkey Paw not initialized yet');
+            }
+        };
+        
+        window.simulateDreamScene = function() {
+            if (window.chromaShiftMonkeyPaw) {
+                // Simulate checking for paw appearance in a dream scene
+                window.chromaShiftMonkeyPaw.checkForPawAppearance();
+                showDemoToast('🌙 Simulated dream scene - checking for paw appearance...');
+            } else {
+                showDemoToast('❌ Monkey Paw not initialized yet');
+            }
+        };
+        
+        function showDemoToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                background: rgba(0, 0, 0, 0.9);
+                color: var(--dream-gold, #FFD700);
+                padding: 12px 20px;
+                border-radius: 8px;
+                border: 2px solid var(--dream-gold, #FFD700);
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                margin: 5px;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s ease;
+                text-align: center;
+            `;
+            toast.textContent = message;
+            
+            const container = document.getElementById('demo-toast');
+            container.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
