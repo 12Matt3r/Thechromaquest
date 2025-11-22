@@ -26,9 +26,29 @@ import {
 } from './chromashift-engine-helpers.js';
 import { checkForNarrativeLoop } from './chromashift-pacing.js';
 import { initKeyboardShortcuts } from './chromashift-keyboard.js';
+import { chromaRecords, initAnomalySystem } from './chromashift-records.js';
 
 // NEW: lightweight in-memory cache for generated panorama images keyed by imagePrompt
 const imageCache = new Map();
+
+// Helper function to determine if a scene is anomalous enough to log
+function isAnomalousScene(scene, action) {
+    const anomalyKeywords = [
+        'liquid', 'melting', 'floating', 'whisper', 'echo', 'mirror', 'shadow',
+        'distorted', 'pulsing', 'shimmering', 'glowing', 'transcendent',
+        'impossible', 'unreal', 'dream', 'consciousness', 'reality'
+    ];
+    
+    const text = `${scene.title} ${scene.narrativeDescription} ${action}`.toLowerCase();
+    const keywordCount = anomalyKeywords.filter(keyword => text.includes(keyword)).length;
+    
+    // Log if scene has multiple surreal keywords or contains rare terms
+    return keywordCount >= 3 || 
+           text.includes('baby dolphin') || 
+           text.includes('impossible geometry') ||
+           text.includes('temporal') ||
+           text.includes('consciousness stream');
+}
 
 // NEW: helper to fetch or reuse a panorama image for a given prompt
 async function getPanoramaForPrompt(imagePrompt) {
@@ -291,6 +311,20 @@ export async function processPlayerAction(action, options = {}) {
     try {
         pushToConversation('user', action);
 
+        // --- ANOMALY SYSTEM INTEGRATION ---
+        // Check if any existing anomalies should influence this scene
+        const influences = chromaRecords.checkForInfluences(action);
+        
+        // Get a random influencing anomaly to potentially inject
+        const influencingAnomaly = chromaRecords.getRandomInfluencingAnomaly();
+        
+        // Add anomaly context to the action for more immersive narrative generation
+        let enhancedAction = action;
+        if (influencingAnomaly && Math.random() < 0.3) { // 30% chance of influence
+            enhancedAction = `${action}. The air shimmers with memories of ${influencingAnomaly.title.toLowerCase()}.`;
+        }
+        // --- END ANOMALY INTEGRATION ---
+
         const completion = await websim.chat.completions.create({
             messages: [
                 {
@@ -326,7 +360,9 @@ You must only output a single JSON object that perfectly matches the required sc
 Do NOT include any markdown code fences, comments, or additional text outside the JSON object.
 Use the most current state (Lucidity, Coherence, Perception) to calculate the new values (0–100) for the generated scene, following Rule 5 (Lucidity/Tier tracking) and the rules for Stats Impact.
 
-Player MANIFESTATION COMMAND (Intent): "${action}"
+Player MANIFESTATION COMMAND (Intent): "${enhancedAction}"
+
+${influencingAnomaly ? `DREAM ECHO: Other dreamers have experienced "${influencingAnomaly.title}" - consider incorporating this shared anomaly: "${influencingAnomaly.text}"` : ''}
 
 The JSON you output MUST strictly follow this schema (no extra fields):
 
@@ -410,6 +446,22 @@ The JSON you output MUST strictly follow this schema (no extra fields):
         });
         // --- END PACING MECHANISM ---
 
+        // --- ANOMALY SYSTEM: AUTO-DISCOVERY DETECTION ---
+        // Auto-log interesting/anomalous scenes as discoveries
+        try {
+            const isDiscovery = isAnomalousScene(nextScene, action);
+            if (isDiscovery && Math.random() < 0.4) { // 40% chance to log
+                await chromaRecords.createAnomaly({
+                    title: `Scene Discovery: ${nextScene.title}`,
+                    text: `Player action: "${action}" led to: ${nextScene.narrativeDescription.substring(0, 200)}...`,
+                    anomaly_type: 'discovery'
+                });
+            }
+        } catch (anomalyError) {
+            console.warn('Failed to auto-log anomaly:', anomalyError);
+        }
+        // --- END ANOMALY SYSTEM ---
+
         await executeTransitionSequence(nextScene);
     } catch (error) {
         console.error('Error processing action:', error);
@@ -424,9 +476,13 @@ The JSON you output MUST strictly follow this schema (no extra fields):
 
 // --- Initialization ---
 export async function initialize() {
+    // Initialize core systems
     initThreeJS();
     initMusicPlayer();
     initKeyboardShortcuts();
+    
+    // Initialize anomaly system
+    initAnomalySystem();
 
     const cmdInput = document.getElementById('command-input');
     const cmdButton = document.getElementById('command-submit');

@@ -1,0 +1,368 @@
+/* chromashift-anomalies.css */
+/* Styling for the persistent anomaly system */
+
+/* Anomaly Feed */
+.anomaly-feed {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--neon-pink, #FF10F0);
+    border-radius: 8px;
+    padding: 16px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(255, 16, 240, 0.3);
+}
+
+.anomaly-feed h4 {
+    color: var(--dream-gold, #FFD700);
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.anomaly-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 16, 240, 0.3);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.anomaly-card:hover {
+    border-color: var(--electric-cyan, #00FFFF);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.anomaly-card.injection {
+    border-left: 4px solid var(--dream-gold, #FFD700);
+}
+
+.anomaly-card.discovery {
+    border-left: 4px solid var(--neon-pink, #FF10F0);
+}
+
+.anomaly-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.anomaly-header h4 {
+    color: var(--electric-cyan, #00FFFF);
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.anomaly-time {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 11px;
+}
+
+.anomaly-content {
+    margin-bottom: 8px;
+}
+
+.anomaly-content p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.anomaly-image {
+    max-width: 100%;
+    border-radius: 4px;
+    margin: 8px 0;
+    border: 1px solid rgba(255, 16, 240, 0.3);
+}
+
+.anomaly-audio {
+    width: 100%;
+    margin-top: 8px;
+    filter: sepia(1) hue-rotate(320deg) saturate(2);
+}
+
+.anomaly-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+}
+
+.anomaly-type {
+    color: var(--dream-gold, #FFD700);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.influence-count {
+    color: var(--electric-cyan, #00FFFF);
+}
+
+/* Anomaly Modal */
+.anomaly-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.anomaly-modal-content {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
+    border: 2px solid var(--neon-pink, #FF10F0);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 40px rgba(255, 16, 240, 0.4);
+}
+
+.anomaly-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 16, 240, 0.3);
+}
+
+.anomaly-modal-header h3 {
+    color: var(--dream-gold, #FFD700);
+    margin: 0;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.anomaly-modal-close {
+    background: none;
+    border: none;
+    color: var(--electric-cyan, #00FFFF);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.anomaly-modal-close:hover {
+    background: rgba(255, 16, 240, 0.2);
+    color: var(--neon-pink, #FF10F0);
+}
+
+/* Anomaly Form */
+.anomaly-form {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    color: var(--electric-cyan, #00FFFF);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 16, 240, 0.3);
+    border-radius: 6px;
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--electric-cyan, #00FFFF);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.anomaly-submit {
+    background: linear-gradient(45deg, var(--neon-pink, #FF10F0), var(--electric-cyan, #00FFFF));
+    border: none;
+    color: black;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 14px;
+}
+
+.anomaly-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 16, 240, 0.4);
+}
+
+#anomaly-feedback {
+    margin-top: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+#anomaly-feedback.success {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00FF00;
+    border: 1px solid #00FF00;
+}
+
+#anomaly-feedback.error {
+    background: rgba(255, 0, 0, 0.2);
+    color: #FF0000;
+    border: 1px solid #FF0000;
+}
+
+/* Anomaly Info */
+.anomaly-info {
+    padding: 0 20px 20px;
+    border-top: 1px solid rgba(255, 16, 240, 0.2);
+    margin-top: 20px;
+}
+
+.anomaly-info p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.anomaly-info strong {
+    color: var(--dream-gold, #FFD700);
+}
+
+/* Anomaly Toggle Button */
+#anomaly-toggle {
+    background: rgba(255, 16, 240, 0.1);
+    border: 1px solid var(--neon-pink, #FF10F0);
+    color: var(--neon-pink, #FF10F0);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#anomaly-toggle:hover {
+    background: rgba(255, 16, 240, 0.2);
+    border-color: var(--electric-cyan, #00FFFF);
+    color: var(--electric-cyan, #00FFFF);
+    box-shadow: 0 0 10px rgba(255, 16, 240, 0.3);
+}
+
+/* Scrollbar Styling */
+.anomaly-feed::-webkit-scrollbar,
+.anomaly-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.anomaly-feed::-webkit-scrollbar-track,
+.anomaly-modal-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.anomaly-feed::-webkit-scrollbar-thumb,
+.anomaly-modal-content::-webkit-scrollbar-thumb {
+    background: var(--neon-pink, #FF10F0);
+    border-radius: 3px;
+}
+
+.anomaly-feed::-webkit-scrollbar-thumb:hover,
+.anomaly-modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--electric-cyan, #00FFFF);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .anomaly-feed {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-height: 200px;
+    }
+    
+    .anomaly-modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .anomaly-modal-header,
+    .anomaly-form,
+    .anomaly-info {
+        padding: 15px;
+    }
+}
+
+/* Integration with existing ChromaShift aesthetics */
+.anomaly-card,
+.anomaly-modal-content,
+.anomaly-form input,
+.anomaly-form textarea {
+    font-family: 'Courier New', monospace;
+}
+
+/* Subtle glitch effect for injected anomalies */
+.anomaly-card.injection {
+    animation: anomalyGlitch 3s infinite;
+}
+
+@keyframes anomalyGlitch {
+    0%, 90%, 100% {
+        border-left-color: var(--dream-gold, #FFD700);
+    }
+    5%, 10% {
+        border-left-color: var(--neon-pink, #FF10F0);
+    }
+    15%, 20% {
+        border-left-color: var(--electric-cyan, #00FFFF);
+    }
+}

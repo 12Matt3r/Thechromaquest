@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaShift Anomaly System Demo</title>
+    <link rel="stylesheet" href="chromashift-anomalies.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a1a 100%);
+            color: white;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border: 2px solid #FF10F0;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .demo-header h1 {
+            color: #FFD700;
+            font-size: 28px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid rgba(255, 16, 240, 0.3);
+            border-radius: 8px;
+            background: rgba(20, 20, 20, 0.8);
+        }
+        .demo-section h2 {
+            color: #00FFFF;
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            text-transform: uppercase;
+        }
+        .anomaly-demo-feed {
+            position: relative;
+            margin: 20px 0;
+        }
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .demo-btn {
+            background: linear-gradient(45deg, #FF10F0, #00FFFF);
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 16, 240, 0.4);
+        }
+        .demo-btn.secondary {
+            background: rgba(255, 16, 240, 0.1);
+            border: 1px solid #FF10F0;
+            color: #FF10F0;
+        }
+        .demo-btn.secondary:hover {
+            background: rgba(255, 16, 240, 0.2);
+            color: #00FFFF;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #00FFFF;
+            text-transform: uppercase;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 16, 240, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .feature-list li:before {
+            content: "🌌 ";
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>ChromaShift Anomaly System Demo</h1>
+            <p>Experience the persistent dreamscape without the full game</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>System Status</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalAnomalies">0</div>
+                    <div class="stat-label">Total Anomalies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeAnomalies">0</div>
+                    <div class="stat-label">Active Influences</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="playerInjections">0</div>
+                    <div class="stat-label">Player Injections</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="autoDiscoveries">0</div>
+                    <div class="stat-label">Auto Discoveries</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Quick Demo Actions</h2>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="createBabyDolphin()">🐬 Create Baby Dolphin Anomaly</button>
+                <button class="demo-btn" onclick="createMeltingClock()">⏰ Create Melting Clock</button>
+                <button class="demo-btn" onclick="createLiquidFloor()">🌊 Create Liquid Floor</button>
+                <button class="demo-btn secondary" onclick="simulateInfluence()">🔄 Simulate Dream Influence</button>
+                <button class="demo-btn secondary" onclick="clearAll()">🗑️ Clear All Data</button>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Features</h2>
+            <ul class="feature-list">
+                <li><strong>Auto-Discovery:</strong> System automatically logs anomalous scenes</li>
+                <li><strong>Player Injection:</strong> Create custom anomalies with images and descriptions</li>
+                <li><strong>Dream Influence:</strong> Anomalies influence future narrative generation</li>
+                <li><strong>Shared Memory:</strong> All players contribute to collective dreamscape</li>
+                <li><strong>Influence Tracking:</strong> Anomalies grow stronger with encounters</li>
+                <li><strong>Contextual Integration:</strong> Subtle integration with ChromaShift narrative</li>
+                <li><strong>Privacy-First:</strong> Local storage, no server required</li>
+                <li><strong>Seamless UI:</strong> Matches ChromaShift's surreal aesthetic</li>
+            </ul>
+        </div>
+
+        <div class="demo-section">
+            <h2>How It Works in the Full Game</h2>
+            <p><strong>Integration Points:</strong></p>
+            <ul style="color: rgba(255,255,255,0.8); line-height: 1.6;">
+                <li>📋 "Log Anomaly" button appears in command interface</li>
+                <li>🔄 Auto-detects and logs 40% of surreal scenes during gameplay</li>
+                <li>🌊 30% chance of anomaly influence in narrative generation</li>
+                <li>📊 Bottom-right feed shows recent discoveries and injections</li>
+                <li>🎨 Styled to match ChromaShift's neon aesthetic</li>
+            </ul>
+        </div>
+
+        <!-- Anomaly Feed Container -->
+        <div class="demo-section anomaly-demo-feed">
+            <h2>Live Anomaly Feed</h2>
+            <div id="anomaly-feed" class="anomaly-feed">
+                <p style="color: rgba(255,255,255,0.6); text-align: center;">
+                    Anomalies will appear here as you create them...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { chromaRecords, renderAnomaliesUI } from './chromashift-records.js';
+
+        // Demo functions
+        window.createBabyDolphin = async function() {
+            const anomaly = await chromaRecords.injectAnomaly({
+                title: "Baby Dolphins in the Meat Cooler",
+                text: "Small, innocent baby dolphins swimming through the refrigerated air, their clicks echoing off the frozen meat hooks. They're back again, multiplying in the cold like they always do during temporal storms.",
+                image_url: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMwMEZGRkYiIHN0cm9rZS13aWR0aD0iNCIvPjxjaXJjbGUgY3g9IjgwIiBjeT0iODAiIHI9IjEwIiBmaWxsPSIjMDBGRkZGIi8+PGNpcmNsZSBjeD0iMTIwIiBjeT0iODAiIHI9IjEwIiBmaWxsPSIjMDBGRkZGIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTIwIiByPSI4IiBmaWxsPSIjMDBGRkZGIi8+PHBhdGggZD0iTTEwMCA2MEwyMDAgMTAwTDEwMCAyMDBMMDAgMTAwWiIgZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlPSIjMDBGRkZGIiBzdHJva2Utd2lkdGg9IjMiLz48L3N2Zz4="
+            });
+            updateStats();
+            renderAnomaliesUI(chromaRecords.getAnomalies());
+        };
+
+        window.createMeltingClock = async function() {
+            const anomaly = await chromaRecords.injectAnomaly({
+                title: "Temporal Clock Radio Melt",
+                text: "Digital clock dripping like melting plastic, LED numbers flowing like mercury. The time reading shows 25:87:∞, and each drip creates ripples in the space-time continuum around the meat cooler.",
+                image_url: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgeD0iMjAiIHk9IjIwIiBmaWxsPSIjMzMzMzMzIiByeD0iMTAiIHN0cm9rZT0iI0ZGMDAwMCIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI2MCIgZmlsbD0iI0ZGRjAwMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSIxMDAiIHk9IjEwNSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSI0OCIgZmlsbD0iIzAwRkYwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MjU6ODc64oC8PC90ZXh0PjxwYXRoIGQ9Ik0xMDAgNDBMMTAwIDEyME0xMDAgMTAwTDgwIDEyME0xMDAgMTAwTDEyMCAxMjAiIHN0cm9rZT0iIzAwRkYwMCIgc3Ryb2tlLXdpZHRoPSI0Ii8+PC9zdmc+"
+            });
+            updateStats();
+            renderAnomaliesUI(chromaRecords.getAnomalies());
+        };
+
+        window.createLiquidFloor = async function() {
+            const anomaly = await chromaRecords.injectAnomaly({
+                title: "Mercury Memory Floor",
+                text: "The supermarket floor has liquefied into thick, mirror-bright mercury. Each step creates ripples that reflect not just your image, but memories of who you used to be before entering the Chroma-Dream.",
+                image_url: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeT0iNTAiIGZpbGw9IiNDMEMwQzAiIHN0cm9rZT0iIzAwRkZGRiIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGVsbGlwc2UgY3g9IjEwMCIgY3k9Ijc1IiByeD0iMjAiIHJ5PSIxMCIgZmlsbD0iIzAwRkZGRiIgb3BhY2l0eT0iMC41Ii8+PGVsbGlwc2UgY3g9IjUwIiBjeT0iODAiIHJ5PSI4IiByeT0iNCIgZmlsbD0iIzAwRkZGRiIgb3BhY2l0eT0iMC43Ii8+PGVsbGlwc2UgY3g9IjE1MCIgY3k9IjY1IiByeD0iNiIgcnk9IjMiIGZpbGw9IiMwMEZGRkYiIG9wYWNpdHk9IjAuNiIvPjwvc3ZnPg=="
+            });
+            updateStats();
+            renderAnomaliesUI(chromaRecords.getAnomalies());
+        };
+
+        window.simulateInfluence = function() {
+            const anomaly = chromaRecords.getRandomInfluencingAnomaly();
+            if (anomaly) {
+                const influence = chromaRecords.generateInfluence(anomaly, "Player action simulation");
+                alert(`🎭 Dream Influence Detected:\n\n"${influence}"\n\nAnomaly: ${anomaly.title}\nInfluence Strength: ${(anomaly.influence_strength * 100).toFixed(0)}%`);
+            } else {
+                alert("No active anomalies available for influence. Create some anomalies first!");
+            }
+        };
+
+        window.clearAll = function() {
+            if (confirm("Clear all anomaly data? This cannot be undone.")) {
+                localStorage.removeItem('chromashift_anomalies');
+                location.reload();
+            }
+        };
+
+        function updateStats() {
+            const anomalies = chromaRecords.getAnomalies();
+            const injections = anomalies.filter(a => a.anomaly_type === 'injection');
+            const discoveries = anomalies.filter(a => a.anomaly_type === 'discovery');
+            const active = anomalies.filter(a => a.status === 'active');
+
+            document.getElementById('totalAnomalies').textContent = anomalies.length;
+            document.getElementById('activeAnomalies').textContent = active.length;
+            document.getElementById('playerInjections').textContent = injections.length;
+            document.getElementById('autoDiscoveries').textContent = discoveries.length;
+        }
+
+        // Initialize demo
+        updateStats();
+        
+        // Load any existing anomalies
+        setTimeout(() => {
+            renderAnomaliesUI(chromaRecords.getAnomalies());
+            updateStats();
+        }, 500);
+    </script>
+</body>
+</html>
