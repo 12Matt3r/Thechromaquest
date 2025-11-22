@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaShift Player Features Demo</title>
+    <link rel="stylesheet" href="chromashift-player-ui.css">
+    <style>
+        body {
+            background: linear-gradient(45deg, #000011, #001122, #000033);
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .demo-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #ff00ff;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .demo-header h1 {
+            color: #ff00ff;
+            margin-bottom: 10px;
+        }
+        .demo-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            background: rgba(0, 255, 136, 0.1);
+        }
+        .demo-section h2 {
+            color: #ff00ff;
+            margin-bottom: 15px;
+        }
+        .demo-button {
+            background: rgba(255, 0, 255, 0.3);
+            border: 2px solid #ff00ff;
+            color: #ff00ff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            margin: 5px;
+            transition: all 0.2s ease;
+        }
+        .demo-button:hover {
+            background: rgba(255, 0, 255, 0.6);
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+        }
+        .demo-input {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 5px;
+            width: 200px;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #ff00ff;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>🎮 ChromaShift Player Features Demo</h1>
+        <p>Test all new player enhancement features</p>
+        <div>
+            <button class="demo-button" onclick="showAllFeatures()">Show All Features</button>
+            <button class="demo-button" onclick="runAutoDemo()">Auto Demo</button>
+        </div>
+    </div>
+
+    <div class="demo-grid">
+        <div>
+            <div class="demo-section">
+                <h2>📺 Bottom Left TV</h2>
+                <p>Click the TV to expand and test narrative viewing</p>
+                <div id="tv-demo-container"></div>
+            </div>
+
+            <div class="demo-section">
+                <h2>🎤 Voice Input</h2>
+                <p>Test speech-to-text functionality</p>
+                <button class="demo-button" onclick="toggleVoiceDemo()">Toggle Voice Input</button>
+                <div id="voice-status">Voice input: Inactive</div>
+            </div>
+
+            <div class="demo-section">
+                <h2>🎵 Custom Radio</h2>
+                <p>Create and test custom radio stations</p>
+                <button class="demo-button" onclick="openRadioManager()">Open Radio Manager</button>
+                <div id="radio-stations-list">
+                    <p style="color: #888;">No custom stations yet</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="demo-section">
+                <h2>📊 Player Stats</h2>
+                <p>Real-time player statistics tracking</p>
+                <button class="demo-button" onclick="toggleStatsPanel()">Toggle Stats Panel</button>
+                <div id="stats-demo-placeholder">
+                    <p style="color: #888;">Stats panel will appear in top-right</p>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h2>🔄 Key Reset System</h2>
+                <p>Test the automatic reset after key collection</p>
+                <button class="demo-button" onclick="simulateKeyCollection()">Collect Key & Reset</button>
+                <div id="reset-status">Ready to collect keys</div>
+            </div>
+
+            <div class="demo-section">
+                <h2>📱 Responsive Testing</h2>
+                <p>Test different screen sizes</p>
+                <button class="demo-button" onclick="testMobile()">Mobile View</button>
+                <button class="demo-button" onclick="testDesktop()">Desktop View</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🎯 Feature Testing</h2>
+        <ul class="feature-list">
+            <li><strong>Collective Playtime:</strong> Track how long all players have played</li>
+            <li><strong>Key Reset:</strong> Automatic game reset after key collection</li>
+            <li><strong>Narrative TV:</strong> Collapsible TV showing past narratives</li>
+            <li><strong>Voice Input:</strong> Speech-to-text for game actions</li>
+            <li><strong>Custom Radio:</strong> Upload and create your own radio stations</li>
+            <li><strong>Real-time Stats:</strong> Live player statistics and progress</li>
+            <li><strong>Data Export:</strong> Download player data and radio stations</li>
+            <li><strong>Keyboard Shortcuts:</strong> Ctrl+T (TV), Ctrl+V (Voice), Ctrl+S (Stats)</li>
+        </ul>
+    </div>
+
+    <!-- Include all the new systems -->
+    <script type="module" src="./chromashift-player-tracker.js"></script>
+    <script type="module" src="./chromashift-custom-radio.js"></script>
+    <script type="module" src="./chromashift-player-ui.js"></script>
+
+    <script>
+        let demoVoiceActive = false;
+
+        // Demo functions
+        function showAllFeatures() {
+            alert(`
+🎮 CHROMASHIFT PLAYER FEATURES:
+
+✅ Collective Playtime Tracking
+✅ Key Reset System (Fair Play)
+✅ Bottom Left Collapsible TV
+✅ Voice Input (Speech-to-Text)
+✅ Custom Radio Stations
+✅ Real-time Player Stats
+✅ Data Export/Import
+✅ Keyboard Shortcuts
+✅ Mobile Responsive Design
+
+All features are now active in the demo!
+            `);
+        }
+
+        function runAutoDemo() {
+            // Add some sample narratives
+            const narratives = [
+                "You find yourself in a strange, pulsing room where the walls breathe like living tissue.",
+                "A mysterious figure approaches, its face shifting between familiar and unknown.",
+                "The floor beneath your feet transforms into liquid light, reflecting infinite possibilities.",
+                "You hear whispers from another dimension, speaking words you've never heard but somehow understand."
+            ];
+
+            let index = 0;
+            const addNarrative = () => {
+                if (index < narratives.length) {
+                    playerUI.recordNarrative(narratives[index]);
+                    index++;
+                    setTimeout(addNarrative, 2000);
+                } else {
+                    // Auto-expand TV to show narratives
+                    setTimeout(() => playerUI.toggleTV(), 500);
+                }
+            };
+
+            addNarrative();
+        }
+
+        function toggleVoiceDemo() {
+            if (window.playerUI) {
+                window.playerUI.toggleVoiceInput();
+                demoVoiceActive = !demoVoiceActive;
+                document.getElementById('voice-status').textContent = 
+                    demoVoiceActive ? 'Voice input: Active (speak now)' : 'Voice input: Inactive';
+            }
+        }
+
+        function simulateKeyCollection() {
+            if (window.playerUI) {
+                window.playerUI.recordKeyCollection();
+                document.getElementById('reset-status').textContent = 'Key collected! Game reset triggered.';
+                
+                setTimeout(() => {
+                    document.getElementById('reset-status').textContent = 'Ready to collect keys';
+                }, 3000);
+            }
+        }
+
+        function openRadioManager() {
+            if (window.openRadioManager) {
+                window.openRadioManager();
+            } else {
+                alert('Radio Manager: Click "Open Radio Manager" to create custom stations');
+            }
+        }
+
+        function toggleStatsPanel() {
+            if (window.playerUI) {
+                window.playerUI.toggleStatsPanel();
+            }
+        }
+
+        function testMobile() {
+            document.body.style.maxWidth = '768px';
+            document.body.style.margin = '0 auto';
+            alert('Switched to mobile view - resize window to test responsiveness');
+        }
+
+        function testDesktop() {
+            document.body.style.maxWidth = 'none';
+            document.body.style.margin = '0';
+            alert('Switched to desktop view');
+        }
+
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Demo loaded - initializing player systems...');
+            
+            // Initialize player systems
+            if (window.playerTracker) {
+                await window.playerTracker.init();
+            }
+            if (window.customRadioManager) {
+                await window.customRadioManager.init();
+            }
+            if (window.playerUI) {
+                await window.playerUI.init();
+            }
+
+            // Add some initial demo data
+            setTimeout(() => {
+                playerUI.recordNarrative("Welcome to the ChromaShift Player Features Demo!");
+                playerUI.recordNarrative("This system tracks collective playtime and provides fair resets.");
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -29,6 +29,11 @@ import { initKeyboardShortcuts } from './chromashift-keyboard.js';
 import { chromaRecords, initAnomalySystem } from './chromashift-records.js';
 import { initChromaShiftMonkeyPaw } from './chromashift-monkeypaw.js';
 
+// NEW: Player tracking and UI systems
+import { playerTracker } from './chromashift-player-tracker.js';
+import { customRadioManager } from './chromashift-custom-radio.js';
+import { playerUI } from './chromashift-player-ui.js';
+
 // NEW: lightweight in-memory cache for generated panorama images keyed by imagePrompt
 const imageCache = new Map();
 
@@ -199,6 +204,10 @@ async function executeTransitionSequence(sceneData, isInitial = false) {
                         prologTextEl.innerHTML = prologContent;
                     }
 
+                    // Track narrative display
+                    playerUI.recordNarrative(sceneData.narrativeDescription || '');
+                    playerUI.recordSceneVisit();
+
                     await startNarrator(sceneData.narrativeDescription || '');
 
                     powerBtn.disabled = false;
@@ -241,6 +250,10 @@ async function executeTransitionSequence(sceneData, isInitial = false) {
             `;
         }
         prologTextEl.innerHTML = augmentedContent;
+
+        // Track narrative display for non-initial screens
+        playerUI.recordNarrative(sceneData.narrativeDescription || '');
+        playerUI.recordSceneVisit();
     }
 
     let waitingForDismiss = true;
@@ -499,6 +512,11 @@ export async function initialize() {
 
     // Initialize monkey paw system
     initChromaShiftMonkeyPaw();
+
+    // Initialize player tracking and UI systems
+    await playerTracker.init();
+    await customRadioManager.init();
+    await playerUI.init();
 
     // Initialize DreamOS Windows 97 system
     try {

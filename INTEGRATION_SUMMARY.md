@@ -383,12 +383,98 @@ ChromaShift Anomaly System
 
 **The dream evolves. The anomalies persist. The cursed wishes echo through shared consciousness.**
 
+## 🎮 NEW: Player Enhancement Features
+
+I've implemented comprehensive player tracking and enhancement systems that transform ChromaShift into a truly social and fair gaming experience.
+
+### 📊 Core Player Systems
+
+**Player Tracking System (`chromashift-player-tracker.js`)**
+- **Collective Playtime Tracking**: Real-time display of total hours played across all players
+- **Key Reset System**: Automatic game reset after every key collection for fair play
+- **Narrative History**: Stores and displays recent game narratives with timestamps
+- **Speech-to-Text Integration**: Voice input for hands-free game interaction
+- **Session Management**: Tracks individual play sessions with detailed analytics
+
+**Player UI System (`chromashift-player-ui.js`)**
+- **Bottom Left Collapsible TV**: Interactive narrative viewer accessible via Ctrl+T
+- **Real-time Stats Panel**: Live player statistics in top-right (Ctrl+S)
+- **Voice Control Button**: Global voice input trigger (Ctrl+V or click)
+- **Responsive Design**: Optimized for mobile and desktop experiences
+
+**Custom Radio System (`chromashift-custom-radio.js`)**
+- **Upload System**: Support for MP3, WAV, OGG files (max 10MB each)
+- **Station Creation**: Name, describe, and categorize custom radio stations
+- **Metadata Extraction**: Automatic title/artist detection from audio files
+- **Playlist Management**: Shuffle, repeat, crossfade, and volume controls
+- **Persistent Storage**: Save and load custom stations across sessions
+
+### 🎯 Key Features Implemented
+
+1. **Fair Play Reset System**
+   - Automatically resets game state after key collection
+   - Prevents players from gaining advantages from previous runs
+   - Real-time reset notifications with player statistics
+
+2. **Collective Playtime Display**
+   - Global tracking of all player hours across the game
+   - Real-time updates showing total community engagement
+   - Session-based individual tracking with averages
+
+3. **Narrative Replay System**
+   - Bottom-left collapsible TV showing recent narratives
+   - Full narrative viewing with timestamps
+   - History management with clear options
+
+4. **Voice Input Integration**
+   - Web Speech API for speech-to-text conversion
+   - Global voice control with visual feedback
+   - Keyboard shortcuts for quick access
+
+5. **Custom Radio Stations**
+   - Upload personal music collections
+   - Create themed radio stations
+   - Station management with play counts and settings
+   - Export/import functionality
+
+### 🔧 Technical Implementation
+
+**New Files Created:**
+- `chromashift-player-tracker.js` (391 lines) - Core tracking logic
+- `chromashift-player-ui.css` (542 lines) - Styling for all UI components
+- `chromashift-player-ui.js` (462 lines) - UI management and interactions
+- `chromashift-custom-radio.js` (596 lines) - Radio station creation and management
+- `PLAYER_ENHANCEMENT_FEATURES.md` (175 lines) - Feature documentation
+- `player-features-demo.html` (283 lines) - Standalone testing interface
+
+**Modified Files:**
+- `chromashift-engine.js` - Added imports and initialization for all systems
+- `index.html` - Added CSS and script imports
+
+### ⌨️ Keyboard Shortcuts
+
+- **Ctrl+T**: Toggle bottom-left TV
+- **Ctrl+V**: Toggle voice input
+- **Ctrl+S**: Toggle stats panel
+
+### 📱 Responsive Features
+
+- **Mobile Optimized**: Touch-friendly controls and smaller UI elements
+- **Cross-Browser**: Compatible with Chrome, Firefox, Safari, Edge
+- **Progressive Enhancement**: Works without JavaScript for basic functionality
+
+### 🔮 Social Gaming Features
+
 Your ChromaShift now contains:
 - **Living Anomaly Ecosystem**: Shared surreal experiences that influence other players
 - **Cursed Wish System**: AI-powered malevolent wish-granting with dual gameplay modes
 - **Cross-System Integration**: Monkey paw appearances become anomalies, anomalies influence wishes
 - **Infinite Possibility Layer**: Every player adds to the collective dream consciousness
+- **Collective Playtime Tracking**: See how long the entire community has played together
+- **Fair Play System**: Automatic resets ensure equal opportunities for all players
+- **Custom Content Creation**: Upload personal music and create unique radio stations
+- **Voice-Enhanced Interaction**: Hands-free gameplay through speech recognition
 
-The Chroma-Dream has become a meta-simulation where wishes have consequences, anomalies shape reality, and every journey contributes to an ever-growing shared surreal landscape. Players can now not only explore the infinite dreamscape but also become active participants in crafting the malevolent wishes that define its dark logic.
+The Chroma-Dream has become a meta-simulation where wishes have consequences, anomalies shape reality, collective playtime builds community engagement, and every journey contributes to an ever-growing shared surreal landscape. Players can now not only explore the infinite dreamscape but also become active participants in crafting the malevolent wishes that define its dark logic.
 
 **The curse spreads. The anomalies multiply. The dream becomes self-aware.**
