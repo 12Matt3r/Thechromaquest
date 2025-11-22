@@ -500,6 +500,15 @@ export async function initialize() {
     // Initialize monkey paw system
     initChromaShiftMonkeyPaw();
 
+    // Initialize DreamOS Windows 97 system
+    try {
+        const { initDreamOSIntegration } = await import('./chromashift-dreamos-integration.js');
+        await initDreamOSIntegration();
+        console.log('DreamOS Windows 97 system initialized successfully');
+    } catch (error) {
+        console.warn('DreamOS system failed to initialize:', error);
+    }
+
     const cmdInput = document.getElementById('command-input');
     const cmdButton = document.getElementById('command-submit');
     const monkeyPawBtn = document.getElementById('monkey-paw-btn');
