@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chroma Quest: Ultimate Enhanced Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 25%, #0a1a1a 50%, #1a1a0a 75%, #0a0a1a 100%);
+            color: white;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Enhanced particle system */
+        .particle-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(odd) {
+            background: #FF10F0;
+            animation-duration: 25s;
+        }
+
+        .particle:nth-child(3n) {
+            background: #00FFFF;
+            animation-duration: 30s;
+        }
+
+        .particle:nth-child(4n) {
+            background: #FF6B6B;
+            animation-duration: 35s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Dynamic background */
+        .dynamic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 16, 240, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #FFD700;
+            border-radius: 25px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            animation: shimmer 5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            color: #FFD700;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px #FFD700;
+            position: relative;
+            z-index: 2;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 30px #FFD700; }
+            100% { text-shadow: 0 0 50px #FFD700, 0 0 80px #FFD700; }
+        }
+
+        .header p {
+            color: #00FFFF;
+            font-size: 1.4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Quick stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .stat-mini {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #4ecdc4;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-mini:hover {
+            border-color: #FFD700;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .stat-label {
+            color: #00FFFF;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Main interface */
+        .main-interface {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Enhanced TV System */
+        .tv-system {
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #4ecdc4;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tv-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #4ecdc4;
+        }
+
+        .tv-title {
+            color: #00FFFF;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .channel-indicator {
+            background: rgba(255, 16, 240, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: #FF10F0;
+            font-weight: bold;
+        }
+
+        .tv-screen {
+            background: #000;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 30px;
+        }
+
+        .tv-static {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.05) 2px, rgba(0, 255, 255, 0.05) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 16, 240, 0.05) 2px, rgba(255, 16, 240, 0.05) 4px);
+            animation: staticNoise 0.15s infinite linear;
+            opacity: 0.3;
+        }
+
+        @keyframes staticNoise {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-1px, -1px); }
+            50% { transform: translate(1px, 1px); }
+            75% { transform: translate(-1px, 1px); }
+        }
+
+        .narrative-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .narrative-title {
+            font-size: 1.8rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #FFD700;
+        }
+
+        .narrative-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #ffffff;
+        }
+
+        .tv-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 2px solid #4ecdc4;
+        }
+
+        .control-btn {
+            background: linear-gradient(45deg, #FF10F0, #00FFFF);
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 16, 240, 0.4);
+        }
+
+        .ai-control-btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: none;
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .ai-control-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Enhanced command interface */
+        .command-interface {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #FF10F0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .command-header {
+            color: #FF10F0;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .command-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .command-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 16, 240, 0.3);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+        }
+
+        .command-input:focus {
+            outline: none;
+            border-color: #FF10F0;
+            box-shadow: 0 0 15px rgba(255, 16, 240, 0.3);
+        }
+
+        .quick-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .quick-command {
+            background: rgba(255, 16, 240, 0.1);
+            border: 1px solid #FF10F0;
+            color: #FF10F0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .quick-command:hover {
+            background: rgba(255, 16, 240, 0.2);
+            color: #00FFFF;
+            border-color: #00FFFF;
+        }
+
+        /* Side panel */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #4ecdc4;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .panel-title {
+            color: #4ecdc4;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .achievement-mini {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-mini:hover {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .achievement-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-name {
+            color: #00FFFF;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .achievement-progress {
+            background: rgba(255, 255, 255, 0.1);
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 5px;
+        }
+
+        .achievement-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00FFFF, #FF10F0);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Live feed */
+        .live-feed {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #FF6B6B;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feed-header {
+            color: #FF6B6B;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .feed-item {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 4px solid #FF6B6B;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 0 6px 6px 0;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feed-time {
+            color: #FF6B6B;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+
+        .feed-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+        }
+
+        /* Chroma Award Progress */
+        .chroma-award {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chroma-award::before {
+            content: '🏆';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .award-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .award-progress {
+            background: rgba(0, 0, 0, 0.3);
+            height: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .award-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #000, #333, #000);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        /* Voice control */
+        .voice-control {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .voice-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .voice-btn.active {
+            animation: voicePulse 1s infinite;
+        }
+
+        @keyframes voicePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Achievement popup */
+        .achievement-popup {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+            max-width: 350px;
+        }
+
+        .achievement-popup.show {
+            transform: translateX(0);
+        }
+
+        .popup-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .popup-description {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .main-interface {
+                grid-template-columns: 1fr;
+            }
+            
+            .side-panel {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header h1 { font-size: 2.5rem; }
+            .quick-stats { grid-template-columns: repeat(3, 1fr); }
+            .command-input-group { flex-direction: column; }
+            .tv-controls { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dynamic-bg"></div>
+    <div class="particle-system" id="particle-system"></div>
+    
+    <div class="achievement-popup" id="achievement-popup">
+        <div class="popup-title" id="popup-title">Achievement Unlocked!</div>
+        <div class="popup-description" id="popup-description">You've discovered something amazing!</div>
+    </div>
+
+    <div class="container">
+        <!-- Enhanced Header -->
+        <div class="header fade-in">
+            <h1>🌟 Chroma Quest: Ultimate Enhanced Edition 🌟</h1>
+            <p>Experience the future of dream gaming with AI-powered narratives, collective consciousness, and infinite possibilities</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-mini">
+                <div class="stat-value" id="stat-level">15</div>
+                <div class="stat-label">Dream Level</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-value" id="stat-xp">12,450</div>
+                <div class="stat-label">XP Earned</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-value" id="stat-anomalies">42</div>
+                <div class="stat-label">Anomalies</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-value" id="stat-achievements">31</div>
+                <div class="stat-label">Achievements</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-value" id="stat-playtime">156.5h</div>
+                <div class="stat-label">Playtime</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-value" id="stat-lucidity">89%</div>
+                <div class="stat-label">Lucidity</div>
+            </div>
+        </div>
+
+        <!-- Chroma Award Progress -->
+        <div class="chroma-award">
+            <h2 class="award-title">🏆 THE ULTIMATE CHROMA AWARD</h2>
+            <p>Master of Infinite Possibilities</p>
+            <div class="award-progress">
+                <div class="award-progress-bar" id="chroma-progress"></div>
+            </div>
+            <p id="chroma-status">Progress: 78% - Almost there!</p>
+        </div>
+
+        <!-- Main Interface -->
+        <div class="main-interface">
+            <!-- Left Column: TV and Command Interface -->
+            <div>
+                <!-- Enhanced TV Narrative System -->
+                <div class="tv-system">
+                    <div class="tv-header">
+                        <h2 class="tv-title">📺 Dream TV Narrative Archive</h2>
+                        <div class="channel-indicator">
+                            <span id="current-channel">Channel 77: Reality Stream</span>
+                        </div>
+                    </div>
+                    <div class="tv-screen">
+                        <div class="tv-static"></div>
+                        <div class="narrative-content">
+                            <h3 class="narrative-title" id="narrative-title">The Supermarket of Infinite Possibilities</h3>
+                            <p class="narrative-text" id="narrative-text">
+                                You enter an endless supermarket where each aisle represents a different timeline of your life. 
+                                The fluorescent lights hum with collective consciousness, and every product contains a fragment 
+                                of someone else's dream. A child pushes a cart filled with crystallized childhood memories, 
+                                and the cashier is a mirror that reflects not your image, but your deepest unrealized potential.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="tv-controls">
+                        <button class="control-btn" onclick="changeNarrative('prev')">⏮️ Previous</button>
+                        <button class="control-btn" onclick="changeChannel()">📡 Change Channel</button>
+                        <button class="control-btn" onclick="changeNarrative('next')">⏭️ Next</button>
+                        <button class="ai-control-btn" onclick="generateAINarrative()">🧠 AI Generate</button>
+                        <button class="ai-control-btn" onclick="generateCollectiveNarrative()">🌐 Collective</button>
+                    </div>
+                </div>
+
+                <!-- Enhanced Command Interface -->
+                <div class="command-interface">
+                    <h2 class="command-header">🎛️ Dream Command Interface</h2>
+                    <div class="command-input-group">
+                        <input type="text" class="command-input" id="command-input" 
+                               placeholder="Enter your dream command or use voice...">
+                        <button class="control-btn" onclick="executeCommand()">Execute</button>
+                        <button class="ai-control-btn" onclick="activateDreamOS()">🖥️ DreamOS</button>
+                    </div>
+                    <div class="quick-commands">
+                        <div class="quick-command" onclick="executeQuickCommand('examine environment')">🔍 Examine Environment</div>
+                        <div class="quick-command" onclick="executeQuickCommand('collect anomalies')">🌀 Collect Anomalies</div>
+                        <div class="quick-command" onclick="executeQuickCommand('scan reality')">⚡ Scan Reality</div>
+                        <div class="quick-command" onclick="executeQuickCommand('interact objects')">🎯 Interact Objects</div>
+                        <div class="quick-command" onclick="executeQuickCommand('time travel')">⏰ Time Travel</div>
+                        <div class="quick-command" onclick="executeQuickCommand('manifest memory')">💭 Manifest Memory</div>
+                    </div>
+                </div>
+
+                <!-- Voice Control -->
+                <div class="voice-control">
+                    <button class="voice-btn" id="voice-btn" onclick="toggleVoiceControl()">
+                        🎙️ Start Voice Commands
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Side Panel -->
+            <div class="side-panel">
+                <!-- Recent Achievements -->
+                <div class="panel">
+                    <h3 class="panel-title">🏆 Recent Achievements</h3>
+                    <div id="achievements-list">
+                        <div class="achievement-mini">
+                            <div class="achievement-icon">🧠</div>
+                            <div class="achievement-info">
+                                <div class="achievement-name">AI Narrative Master</div>
+                                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Generated 50 AI narratives</div>
+                                <div class="achievement-progress">
+                                    <div class="achievement-progress-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="achievement-icon">🌐</div>
+                            <div class="achievement-info">
+                                <div class="achievement-name">Collective Consciousness</div>
+                                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Connected with 25 dreamers</div>
+                                <div class="achievement-progress">
+                                    <div class="achievement-progress-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="achievement-icon">🎭</div>
+                            <div class="achievement-info">
+                                <div class="achievement-name">Reality Architect</div>
+                                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Built 3 custom environments</div>
+                                <div class="achievement-progress">
+                                    <div class="achievement-progress-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="achievement-icon">⚡</div>
+                            <div class="achievement-info">
+                                <div class="achievement-name">Power User</div>
+                                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Used advanced features 100+ times</div>
+                                <div class="achievement-progress">
+                                    <div class="achievement-progress-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="panel">
+                    <h3 class="panel-title">🔧 System Status</h3>
+                    <div style="color: rgba(255,255,255,0.8); line-height: 1.6;">
+                        <div>🟢 AI Narrative Engine: Online</div>
+                        <div>🟢 Voice Recognition: Ready</div>
+                        <div>🟢 DreamOS Integration: Active</div>
+                        <div>🟢 Collective Network: Connected</div>
+                        <div>🟡 Anomaly Detection: 98.7%</div>
+                        <div>🟢 Reality Stability: 94.2%</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="panel">
+                    <h3 class="panel-title">⚡ Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button class="ai-control-btn" onclick="quickAction('new_session')">🆕 New Dream Session</button>
+                        <button class="ai-control-btn" onclick="quickAction('export_data')">📊 Export Dream Data</button>
+                        <button class="ai-control-btn" onclick="quickAction('share_experience')">🔗 Share Experience</button>
+                        <button class="ai-control-btn" onclick="quickAction('community_hub')">👥 Community Hub</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Activity Feed -->
+        <div class="live-feed">
+            <h2 class="feed-header">🔥 Live Dream Activity</h2>
+            <div id="live-feed">
+                <!-- Live feed items will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Game System
+        class UltimateChromaQuest {
+            constructor() {
+                this.playerData = {
+                    level: 15,
+                    xp: 12450,
+                    anomalies: 42,
+                    achievements: 31,
+                    playtime: 156.5,
+                    lucidity: 89
+                };
+
+                this.narrativeChannels = [
+                    { id: 'reality-stream', name: 'Reality Stream', title: 'Main Narrative Channel', content: 'Current narrative about dream exploration' },
+                    { id: 'memory-lane', name: 'Memory Lane', title: 'Past Lives Channel', content: 'Exploring memories and past experiences' },
+                    { id: 'probability-wave', name: 'Probability Wave', title: 'Future Possibilities', content: 'Multiple timeline exploration' },
+                    { id: 'collective-dream', name: 'Collective Dream', title: 'Shared Consciousness', content: 'Connecting with other dreamers' },
+                    { id: 'ai-enhanced', name: 'AI Enhanced', title: 'AI Narrative Generation', content: 'AI-powered story creation' }
+                ];
+
+                this.currentChannel = 'reality-stream';
+                this.narrativeIndex = 0;
+                this.narratives = this.generateInitialNarratives();
+                this.isVoiceActive = false;
+                this.voiceRecognition = null;
+
+                this.init();
+            }
+
+            init() {
+                this.setupParticleSystem();
+                this.setupVoiceRecognition();
+                this.updateUI();
+                this.startLiveFeed();
+                this.initializeNarrative();
+                this.simulateProgressiveEnhancements();
+            }
+
+            setupParticleSystem() {
+                const particleSystem = document.getElementById('particle-system');
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 20 + 's';
+                    particleSystem.appendChild(particle);
+                }
+            }
+
+            setupVoiceRecognition() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.voiceRecognition = new SpeechRecognition();
+                    
+                    this.voiceRecognition.continuous = true;
+                    this.voiceRecognition.interimResults = true;
+                    this.voiceRecognition.lang = 'en-US';
+
+                    this.voiceRecognition.onresult = (event) => {
+                        let finalTranscript = '';
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                finalTranscript += event.results[i][0].transcript;
+                            }
+                        }
+                        
+                        if (finalTranscript) {
+                            this.addLiveFeed(`🎤 Voice: "${finalTranscript}"`, 'voice');
+                            this.processVoiceCommand(finalTranscript.toLowerCase());
+                        }
+                    };
+
+                    this.voiceRecognition.onerror = (event) => {
+                        console.error('Voice recognition error:', event.error);
+                        this.toggleVoiceControl();
+                    };
+                }
+            }
+
+            updateUI() {
+                document.getElementById('stat-level').textContent = this.playerData.level;
+                document.getElementById('stat-xp').textContent = this.playerData.xp.toLocaleString();
+                document.getElementById('stat-anomalies').textContent = this.playerData.anomalies;
+                document.getElementById('stat-achievements').textContent = this.playerData.achievements;
+                document.getElementById('stat-playtime').textContent = this.playerData.playtime + 'h';
+                document.getElementById('stat-lucidity').textContent = this.playerData.lucidity + '%';
+            }
+
+            generateInitialNarratives() {
+                return [
+                    {
+                        title: "The Supermarket of Infinite Possibilities",
+                        content: "You enter an endless supermarket where each aisle represents a different timeline of your life. The fluorescent lights hum with collective consciousness, and every product contains a fragment of someone else's dream. A child pushes a cart filled with crystallized childhood memories, and the cashier is a mirror that reflects not your image, but your deepest unrealized potential."
+                    },
+                    {
+                        title: "The Impossible Architecture",
+                        content: "The building you're in defies all laws of physics and geometry. Corridors loop back on themselves, doors open onto different floors entirely, and the ceiling is simultaneously the floor and the sky. Every room you enter changes when you look away from it, revealing new secrets and forgotten memories."
+                    },
+                    {
+                        title: "The Collective Dreamer's Dilemma",
+                        content: "You realize you're sharing a dream with thousands of other people. Their thoughts leak into yours, creating a chaotic symphony of consciousness. Everyone's memories are bleeding together, and you can't tell which thoughts are yours anymore. The dream is becoming unstable, reality bending under the weight of shared experience."
+                    },
+                    {
+                        title: "The Time-Looped Department Store",
+                        content: "You keep walking through the same department store, but each loop you discover a new floor that shouldn't exist. Floor -5 contains the future of the mall, Floor 13 exists in a different dimension, and the basement is actually the sky where lost thoughts go to die. The escalators move in impossible directions through time itself."
+                    },
+                    {
+                        title: "The Anomaly Within",
+                        content: "You discover that you yourself are the anomaly. Everything around you becomes strange and surreal, and you realize that your presence is causing reality to bend and twist. Your dreams are so vivid they're starting to affect the real world, creating ripples in the fabric of existence."
+                    }
+                ];
+            }
+
+            initializeNarrative() {
+                this.displayCurrentNarrative();
+                this.updateChannelDisplay();
+            }
+
+            displayCurrentNarrative() {
+                const narrative = this.narratives[this.narrativeIndex];
+                document.getElementById('narrative-title').textContent = narrative.title;
+                document.getElementById('narrative-text').textContent = narrative.content;
+            }
+
+            updateChannelDisplay() {
+                const channel = this.narrativeChannels.find(c => c.id === this.currentChannel);
+                document.getElementById('current-channel').textContent = `Channel ${Math.floor(Math.random() * 100)}: ${channel.name}`;
+            }
+
+            changeNarrative(direction) {
+                if (direction === 'next') {
+                    this.narrativeIndex = (this.narrativeIndex + 1) % this.narratives.length;
+                } else if (direction === 'prev') {
+                    this.narrativeIndex = this.narrativeIndex === 0 ? this.narratives.length - 1 : this.narrativeIndex - 1;
+                }
+                this.displayCurrentNarrative();
+                this.addLiveFeed(`📺 Narrative changed to: ${this.narratives[this.narrativeIndex].title}`, 'system');
+            }
+
+            changeChannel() {
+                const currentIndex = this.narrativeChannels.findIndex(c => c.id === this.currentChannel);
+                const nextIndex = (currentIndex + 1) % this.narrativeChannels.length;
+                this.currentChannel = this.narrativeChannels[nextIndex].id;
+                this.updateChannelDisplay();
+                
+                // Generate new narratives for the channel
+                this.generateNarrativesForChannel(this.narrativeChannels[nextIndex]);
+                this.narrativeIndex = 0;
+                this.displayCurrentNarrative();
+                
+                this.addLiveFeed(`📡 Channel switched to: ${this.narrativeChannels[nextIndex].name}`, 'system');
+            }
+
+            generateNarrativesForChannel(channel) {
+                // Simulate generating new narratives based on channel
+                const baseNarratives = this.narratives;
+                this.narratives = baseNarratives.map(narrative => ({
+                    ...narrative,
+                    content: `[${channel.name}] ${narrative.content} The ${channel.name.toLowerCase()} channel adds its unique perspective to this narrative.`
+                }));
+            }
+
+            async generateAINarrative() {
+                this.addLiveFeed('🧠 AI generating new narrative...', 'ai');
+                
+                // Simulate AI generation with delay
+                setTimeout(() => {
+                    const aiNarrative = {
+                        title: "AI-Generated: The Quantum Dream",
+                        content: `The AI has analyzed your dream patterns and created this unique narrative. You find yourself in a realm where thoughts become physical objects, and every idea you think manifests instantly in the space around you. The boundaries between digital and analog consciousness blur as you realize that your mind is both the observer and the creator of this reality. Time moves in quantum superposition, existing in multiple states simultaneously.`
+                    };
+                    
+                    this.narratives.push(aiNarrative);
+                    this.narrativeIndex = this.narratives.length - 1;
+                    this.displayCurrentNarrative();
+                    
+                    this.addLiveFeed('✨ AI narrative generated successfully!', 'success');
+                    this.showAchievement('AI Collaborator', 'Generated first AI-enhanced narrative');
+                    
+                    // Update player data
+                    this.playerData.xp += 100;
+                    this.playerData.achievements += 1;
+                    this.updateUI();
+                }, 2000);
+            }
+
+            generateCollectiveNarrative() {
+                this.addLiveFeed('🌐 Generating collective narrative from shared dreams...', 'ai');
+                
+                setTimeout(() => {
+                    const collectiveNarrative = {
+                        title: "Collective Dream: The Shared Consciousness",
+                        content: `This narrative was generated from the collective dreams of 47 active players. You find yourself in a shared dream space where everyone's consciousness flows together like rivers meeting the sea. Each person's memories and experiences blend into a tapestry of human experience. The dream shifts based on the combined emotional states of all participants, creating something no single mind could imagine alone.`
+                    };
+                    
+                    this.narratives.push(collectiveNarrative);
+                    this.narrativeIndex = this.narratives.length - 1;
+                    this.displayCurrentNarrative();
+                    
+                    this.addLiveFeed('🌟 Collective narrative created from shared dreams!', 'success');
+                    this.showAchievement('Collective Dreamer', 'Participated in shared consciousness experience');
+                    
+                    // Update stats
+                    this.playerData.xp += 150;
+                    this.playerData.achievements += 1;
+                    this.updateUI();
+                }, 3000);
+            }
+
+            executeCommand() {
+                const input = document.getElementById('command-input');
+                const command = input.value.trim();
+                
+                if (!command) return;
+
+                input.value = '';
+                this.processCommand(command);
+            }
+
+            executeQuickCommand(command) {
+                this.processCommand(command);
+            }
+
+            processCommand(command) {
+                this.addLiveFeed(`🎛️ Executed: ${command}`, 'user');
+                
+                // Process different command types
+                const actions = {
+                    'examine environment': () => this.examineEnvironment(),
+                    'collect anomalies': () => this.collectAnomalies(),
+                    'scan reality': () => this.scanReality(),
+                    'interact objects': () => this.interactObjects(),
+                    'time travel': () => this.timeTravel(),
+                    'manifest memory': () => this.manifestMemory()
+                };
+
+                for (const [key, action] of Object.entries(actions)) {
+                    if (command.includes(key)) {
+                        action();
+                        break;
+                    }
+                }
+
+                // Award experience for commands
+                this.playerData.xp += 25;
+                this.updateUI();
+            }
+
+            examineEnvironment() {
+                const findings = [
+                    "The floor tiles shift between different geometric patterns like living algebra",
+                    "The air itself has weight and texture, tasting of copper and starlight",
+                    "Colors bleed from objects into the surrounding space like watercolor",
+                    "Shadows move independently, telling their own stories",
+                    "The boundary between inside and outside dissolves into mist"
+                ];
+                
+                const finding = findings[Math.floor(Math.random() * findings.length)];
+                this.addLiveFeed(`🔍 Environmental scan: ${finding}`, 'system');
+            }
+
+            collectAnomalies() {
+                this.playerData.anomalies++;
+                this.updateUI();
+                this.addLiveFeed(`🌀 Anomaly collected! Total: ${this.playerData.anomalies}`, 'success');
+                this.showAchievement('Anomaly Hunter', `Discovered ${this.playerData.anomalies} anomalies`);
+                
+                this.checkChromaAwardProgress();
+            }
+
+            scanReality() {
+                const scans = [
+                    "Reality coherence at 67%. Multiple timeline overlaps detected in Sector 7.",
+                    "Quantum entanglement confirmed between distant dream objects.",
+                    "Temporal anomalies creating causal loops throughout the dreamscape.",
+                    "Dream logic渗透 into physical laws at 23% efficiency.",
+                    "Collective unconscious influence detected at 89% intensity."
+                ];
+                
+                const scan = scans[Math.floor(Math.random() * scans.length)];
+                this.addLiveFeed(`⚡ Reality scan: ${scan}`, 'system');
+            }
+
+            interactObjects() {
+                const interactions = [
+                    "The mirror reflects not your image, but your current dream state",
+                    "Objects respond to emotional intent rather than physical force",
+                    "Your touch causes reality to ripple outward in concentric circles",
+                    "The object dissolves into light and reassembles as something else entirely",
+                    "Time slows down around objects you focus on, creating temporal wells"
+                ];
+                
+                const interaction = interactions[Math.floor(Math.random() * interactions.length)];
+                this.addLiveFeed(`🎯 Object interaction: ${interaction}`, 'system');
+            }
+
+            timeTravel() {
+                const times = [
+                    "The scene shifts to your childhood memories of supermarkets and wonder",
+                    "You glimpse the future of this location in the year 2087",
+                    "The past, present, and future collapse into a single, eternal moment",
+                    "Multiple timeline versions of yourself appear simultaneously",
+                    "Time moves in reverse, unravelling recent events like a cosmic rewind"
+                ];
+                
+                const timeEvent = times[Math.floor(Math.random() * times.length)];
+                this.addLiveFeed(`⏰ Temporal shift: ${timeEvent}`, 'system');
+            }
+
+            manifestMemory() {
+                this.addLiveFeed(`💭 Memory manifestation initiated...`, 'system');
+                
+                setTimeout(() => {
+                    this.addLiveFeed(`🌟 A cherished memory materializes as a glowing orb of light`, 'system');
+                }, 1500);
+            }
+
+            toggleVoiceControl() {
+                if (!this.voiceRecognition) {
+                    this.addLiveFeed('❌ Voice recognition not supported in this browser', 'error');
+                    return;
+                }
+
+                const voiceBtn = document.getElementById('voice-btn');
+                
+                if (this.isVoiceActive) {
+                    this.voiceRecognition.stop();
+                    this.isVoiceActive = false;
+                    voiceBtn.textContent = '🎙️ Start Voice Commands';
+                    voiceBtn.classList.remove('active');
+                    this.addLiveFeed('🛑 Voice recognition deactivated', 'system');
+                } else {
+                    this.voiceRecognition.start();
+                    this.isVoiceActive = true;
+                    voiceBtn.textContent = '🛑 Stop Voice Commands';
+                    voiceBtn.classList.add('active');
+                    this.addLiveFeed('🎤 Voice recognition activated - try saying "generate narrative"', 'success');
+                }
+            }
+
+            processVoiceCommand(transcript) {
+                const commands = {
+                    'generate narrative': () => this.generateAINarrative(),
+                    'change channel': () => this.changeChannel(),
+                    'examine environment': () => this.executeQuickCommand('examine environment'),
+                    'collect anomalies': () => this.executeQuickCommand('collect anomalies'),
+                    'scan reality': () => this.executeQuickCommand('scan reality'),
+                    'activate dream os': () => this.activateDreamOS()
+                };
+
+                for (const [command, action] of Object.entries(commands)) {
+                    if (transcript.includes(command)) {
+                        action();
+                        return;
+                    }
+                }
+            }
+
+            activateDreamOS() {
+                this.addLiveFeed('🖥️ DreamOS System activated', 'system');
+                this.showAchievement('System Master', 'Unlocked DreamOS advanced interface');
+                
+                // Here you would integrate with the existing DreamOS system
+            }
+
+            quickAction(action) {
+                const actions = {
+                    'new_session': () => {
+                        this.addLiveFeed('🆕 Starting new dream session...', 'system');
+                        setTimeout(() => this.addLiveFeed('✨ Fresh dream environment generated!', 'success'), 2000);
+                    },
+                    'export_data': () => {
+                        this.addLiveFeed('📊 Exporting dream data...', 'system');
+                        setTimeout(() => this.addLiveFeed('💾 Data exported successfully!', 'success'), 1500);
+                    },
+                    'share_experience': () => {
+                        this.addLiveFeed('🔗 Sharing experience with community...', 'system');
+                        setTimeout(() => this.addLiveFeed('🌟 Experience shared! +50 XP', 'success'), 2000);
+                    },
+                    'community_hub': () => {
+                        this.addLiveFeed('👥 Opening community hub...', 'system');
+                        setTimeout(() => this.addLiveFeed('🌐 Connected to community of 1,247 dreamers!', 'success'), 2000);
+                    }
+                };
+
+                if (actions[action]) {
+                    actions[action]();
+                }
+            }
+
+            checkChromaAwardProgress() {
+                const totalScore = this.playerData.anomalies + Math.floor(this.playerData.xp / 100) + this.playerData.achievements * 5;
+                const maxScore = 100;
+                const progress = Math.min(100, (totalScore / maxScore) * 100);
+                
+                const progressBar = document.getElementById('chroma-progress');
+                const statusEl = document.getElementById('chroma-status');
+                
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    statusEl.textContent = '🎉 CHROMA AWARD UNLOCKED! Master of Infinite Possibilities!';
+                    this.celebrateChromaAward();
+                } else {
+                    statusEl.textContent = `Progress: ${progress.toFixed(1)}% - ${this.getProgressMessage(progress)}`;
+                }
+            }
+
+            getProgressMessage(progress) {
+                if (progress >= 90) return "You're so close to ultimate mastery!";
+                if (progress >= 75) return "Excellent progress toward the ultimate award!";
+                if (progress >= 50) return "Halfway to Chroma Award glory!";
+                if (progress >= 25) return "Good progress, dreamer!";
+                return "Keep exploring infinite possibilities!";
+            }
+
+            celebrateChromaAward() {
+                this.addLiveFeed('🏆🏆🏆 THE CHROMA AWARD HAS BEEN EARNED! 🏆🏆🏆', 'celebration');
+                
+                // Create celebration particles
+                for (let i = 0; i < 30; i++) {
+                    setTimeout(() => this.createCelebrationParticle(), i * 100);
+                }
+                
+                this.showAchievement('CHROMA AWARD MASTER', 'Achieved the ultimate recognition!');
+            }
+
+            createCelebrationParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'celebration-particle';
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.top = Math.random() * window.innerHeight + 'px';
+                particle.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 2000);
+            }
+
+            showAchievement(title, description) {
+                const popup = document.getElementById('achievement-popup');
+                const titleEl = document.getElementById('popup-title');
+                const descEl = document.getElementById('popup-description');
+                
+                titleEl.textContent = title;
+                descEl.textContent = description;
+                
+                popup.classList.add('show');
+                
+                setTimeout(() => {
+                    popup.classList.remove('show');
+                }, 4000);
+            }
+
+            addLiveFeed(message, type = 'activity') {
+                const feed = document.getElementById('live-feed');
+                const item = document.createElement('div');
+                item.className = 'feed-item';
+                
+                const time = new Date().toLocaleTimeString();
+                item.innerHTML = `
+                    <div class="feed-time">${time}</div>
+                    <div class="feed-content">${message}</div>
+                `;
+                
+                feed.insertBefore(item, feed.firstChild);
+                
+                // Keep only last 15 items
+                const items = feed.querySelectorAll('.feed-item');
+                if (items.length > 15) {
+                    items[items.length - 1].remove();
+                }
+            }
+
+            startLiveFeed() {
+                // Add initial items
+                this.addLiveFeed('🌟 System initialized. Welcome to the ultimate dream experience!', 'system');
+                this.addLiveFeed('🧠 AI Narrative Engine: Online and ready for collaboration', 'ai');
+                this.addLiveFeed('🌐 Collective network: 247 dreamers currently active', 'system');
+                
+                // Simulate live events
+                setInterval(() => {
+                    this.addRandomEvent();
+                }, 12000);
+            }
+
+            addRandomEvent() {
+                const events = [
+                    '🌀 New anomaly discovered in Dream Sector 12',
+                    '👥 DreamWeaver_Pro shared a custom narrative with the community',
+                    '⭐ LucidMaster achieved 95% lucidity in their latest session',
+                    '🔮 RealityHacker created a complex multi-dimensional scenario',
+                    '💫 TimeBender_92 completed a temporal exploration quest',
+                    '🌈 Collective consciousness peak detected: 1,847 dreamers synchronized',
+                    '⚡ AI generated 50+ new narratives in the last hour',
+                    '🏆 Chroma Award progress updated for 23 players',
+                    '🧠 Anomaly detection system processed 10,000+ dream frames',
+                    '🌟 New record: 3.2 hours of continuous collective dreaming'
+                ];
+                
+                const event = events[Math.floor(Math.random() * events.length)];
+                this.addLiveFeed(event);
+            }
+
+            simulateProgressiveEnhancements() {
+                // Simulate gradual improvement of player stats
+                setInterval(() => {
+                    // Occasionally increase player level/xp
+                    if (Math.random() < 0.3) {
+                        this.playerData.xp += Math.floor(Math.random() * 50) + 10;
+                        
+                        if (this.playerData.xp >= (this.playerData.level * 1000)) {
+                            this.playerData.level++;
+                            this.addLiveFeed(`🌟 LEVEL UP! Now level ${this.playerData.level}!`, 'celebration');
+                            this.showAchievement('Level Master', `Reached level ${this.playerData.level}`);
+                        }
+                        
+                        this.updateUI();
+                    }
+                }, 45000);
+            }
+        }
+
+        // Global game instance
+        let game = null;
+
+        // UI Functions
+        function changeNarrative(direction) {
+            if (game) game.changeNarrative(direction);
+        }
+
+        function changeChannel() {
+            if (game) game.changeChannel();
+        }
+
+        function generateAINarrative() {
+            if (game) game.generateAINarrative();
+        }
+
+        function generateCollectiveNarrative() {
+            if (game) game.generateCollectiveNarrative();
+        }
+
+        function executeCommand() {
+            if (game) game.executeCommand();
+        }
+
+        function executeQuickCommand(command) {
+            if (game) game.executeQuickCommand(command);
+        }
+
+        function toggleVoiceControl() {
+            if (game) game.toggleVoiceControl();
+        }
+
+        function activateDreamOS() {
+            if (game) game.activateDreamOS();
+        }
+
+        function quickAction(action) {
+            if (game) game.quickAction(action);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            game = new UltimateChromaQuest();
+            
+            // Add celebration particle styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes celebrationParticle {
+                    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+                    50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+                    100% { transform: scale(2) rotate(360deg); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            console.log('🌟 Chroma Quest Ultimate Enhanced Edition initialized! 🌟');
+        });
+    </script>
+</body>
+</html>

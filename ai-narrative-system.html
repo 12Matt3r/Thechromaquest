@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chroma Quest - Advanced AI Narrative System</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a1a 100%);
+            color: white;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #FF10F0;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .header h1 {
+            color: #FFD700;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .ai-panel {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00FFFF;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .ai-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .control-group {
+            background: rgba(255, 16, 240, 0.1);
+            border: 1px solid #FF10F0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .control-group h3 {
+            color: #00FFFF;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .ai-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00FFFF;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .ai-button {
+            background: linear-gradient(45deg, #FF10F0, #00FFFF);
+            border: none;
+            color: black;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .ai-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 16, 240, 0.4);
+        }
+
+        .ai-output {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #4ecdc4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 200px;
+        }
+
+        .output-title {
+            color: #4ecdc4;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .narrative-content {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .collective-feed {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #4ecdc4;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feed-header {
+            color: #4ecdc4;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .feed-item {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 4px solid #4ecdc4;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+            animation: fadeInSlide 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .user-indicator {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .ai-indicator {
+            color: #00FFFF;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #00FFFF;
+            text-transform: uppercase;
+        }
+
+        .voice-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .voice-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .voice-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .voice-button.recording {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .speech-recognition-panel {
+            background: rgba(255, 16, 240, 0.1);
+            border: 2px solid #FF10F0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .speech-recognition-panel.active {
+            display: block;
+        }
+
+        .recognized-text {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #FF10F0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #FF10F0;
+        }
+
+        .enhancement-features {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #FFD700;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .feature-item h4 {
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Chroma Quest AI Narrative System</h1>
+            <p>Advanced AI-powered storytelling with collective dream intelligence</p>
+        </div>
+
+        <!-- Collective Playtime Tracker -->
+        <div class="collective-feed">
+            <h2 class="feed-header">🌐 Collective Dream Intelligence</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="collective-playtime">247.5h</div>
+                    <div class="stat-label">Total Collective Playtime</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-players">42</div>
+                    <div class="stat-label">Currently Active Dreamers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="narratives-generated">1,847</div>
+                    <div class="stat-label">AI Narratives Created</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="collective-anomalies">156</div>
+                    <div class="stat-label">Shared Anomalies Discovered</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Speech-to-Text Integration -->
+        <div class="ai-panel">
+            <h2 style="color: #00FFFF; margin-bottom: 20px;">🎤 Voice Command Integration</h2>
+            
+            <div class="voice-controls">
+                <button class="voice-button" id="voice-toggle" onclick="toggleVoiceRecognition()">
+                    🎙️ Start Voice Commands
+                </button>
+            </div>
+
+            <div class="speech-recognition-panel" id="speech-panel">
+                <h3>Voice Commands Active</h3>
+                <p>Say commands like: "Generate new narrative", "Change channel", "Examine environment"</p>
+                <div class="recognized-text" id="recognized-text">
+                    Waiting for voice input...
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Narrative Generator -->
+        <div class="ai-panel">
+            <h2 style="color: #FF10F0; margin-bottom: 20px;">✨ AI Narrative Generation</h2>
+            
+            <div class="ai-controls">
+                <div class="control-group">
+                    <h3>🎭 Narrative Style</h3>
+                    <select class="ai-input" id="narrative-style">
+                        <option value="surreal">Surreal & Dreamlike</option>
+                        <option value="noir">Dark Noir Mystery</option>
+                        <option value="cosmic">Cosmic Horror</option>
+                        <option value="romantic">Dream Romance</option>
+                        <option value="adventure">Epic Adventure</option>
+                        <option value="philosophical">Philosophical Reflection</option>
+                    </select>
+                    
+                    <h3 style="margin-top: 20px;">🎨 Emotional Tone</h3>
+                    <select class="ai-input" id="emotional-tone">
+                        <option value="mysterious">Mysterious</option>
+                        <option value="ominous">Ominous</option>
+                        <option value="whimsical">Whimsical</option>
+                        <option value="melancholic">Melancholic</option>
+                        <option value="euphoric">Euphoric</option>
+                        <option value="contemplative">Contemplative</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <h3>🌟 Scene Elements</h3>
+                    <textarea class="ai-input" id="scene-elements" rows="4" placeholder="Describe specific elements to include in the narrative..."></textarea>
+                    
+                    <h3 style="margin-top: 20px;">🎬 Narrative Length</h3>
+                    <select class="ai-input" id="narrative-length">
+                        <option value="short">Short (1-2 paragraphs)</option>
+                        <option value="medium" selected>Medium (2-3 paragraphs)</option>
+                        <option value="long">Long (3-4 paragraphs)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <h3>🎯 Story Focus</h3>
+                    <select class="ai-input" id="story-focus">
+                        <option value="exploration">Dream Exploration</option>
+                        <option value="mystery">Mystery Solving</option>
+                        <option value="transformation">Personal Transformation</option>
+                        <option value="discovery">Discovery & Wonder</option>
+                        <option value="confrontation">Confronting Fears</option>
+                        <option value="connection">Human Connection</option>
+                    </select>
+                    
+                    <h3 style="margin-top: 20px;">⚡ Randomness</h3>
+                    <input type="range" class="ai-input" id="creativity-level" min="0" max="100" value="75">
+                    <p style="color: rgba(255,255,255,0.7); margin: 5px 0;">AI Creativity Level: <span id="creativity-display">75%</span></p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="ai-button" onclick="generateAINarrative()">🧠 Generate AI Narrative</button>
+                <button class="ai-button" onclick="enhanceExistingNarrative()">✨ Enhance Current Narrative</button>
+                <button class="ai-button" onclick="generateCollectiveNarrative()">🌐 Generate Collective Narrative</button>
+            </div>
+
+            <div class="ai-output">
+                <h3 class="output-title">Generated Narrative</h3>
+                <div class="narrative-content" id="ai-narrative-content">
+                    Click "Generate AI Narrative" to create a unique story using advanced AI storytelling algorithms...
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Features Showcase -->
+        <div class="enhancement-features">
+            <h2 style="color: #FFD700; margin-bottom: 20px;">🚀 Enhanced Features</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h4>🎭 Dynamic Narrative Generation</h4>
+                    <p>AI creates unique narratives based on player preferences, emotional state, and collective dream patterns.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🌐 Collective Intelligence</h4>
+                    <p>Learn from all players' experiences to create more engaging and diverse content.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎤 Voice Command Integration</h4>
+                    <p>Natural language processing for hands-free dream navigation.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📊 Real-time Adaptation</h4>
+                    <p>Stories adapt in real-time based on player choices and emotional responses.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🔗 Persistent Memory</h4>
+                    <p>AI remembers player preferences and creates increasingly personalized experiences.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎨 Creative Collaboration</h4>
+                    <p>Players can influence AI narrative generation through collaborative storytelling.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live AI Activity Feed -->
+        <div class="collective-feed">
+            <h2 class="feed-header">💬 Live AI Activity Feed</h2>
+            <div id="ai-activity-feed">
+                <div class="feed-item">
+                    <div class="ai-indicator">🤖 AI SYSTEM</div>
+                    <div>Narrative generation algorithms initialized. Ready for creative collaboration.</div>
+                </div>
+                <div class="feed-item">
+                    <div class="user-indicator">👤 DREAMER_001</div>
+                    <div>Requested surreal narrative with mysterious tone</div>
+                </div>
+                <div class="feed-item">
+                    <div class="ai-indicator">🤖 AI SYSTEM</div>
+                    <div>Collective playtime reached 247.5 hours across all dream sessions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Advanced AI Narrative Generation System
+        class AINarrativeGenerator {
+            constructor() {
+                this.narrativeTemplates = {
+                    surreal: [
+                        "The {location} defies all logic as {objects} float in defiance of gravity. {character} realizes that {revelation}.",
+                        "Time moves in circles here, and {event} has already happened three times. {character} must decide what to do.",
+                        "The boundaries between {concepts} dissolve completely. {character} becomes part of the {environment}.",
+                        "Dreams bleed into reality through {portal}, and {character} can taste the future on the wind."
+                    ],
+                    noir: [
+                        "In the shadows of {location}, {character} discovers {mystery}. The truth lies hidden beneath layers of deception.",
+                        "The neon lights reflect off wet pavement where {event} occurred. {character} follows the trail of clues.",
+                        "A whisper in the darkness reveals {secret}. {character} must choose between safety and truth.",
+                        "The city sleeps, but its dreams are filled with {nightmares}. {character} walks through them."
+                    ],
+                    cosmic: [
+                        "Beyond the veil of {reality}, {character} glimpses {cosmic_truth}. The universe holds its breath.",
+                        "Ancient {entities} stir in the void, and {character} realizes their small role in the cosmic drama.",
+                        "Stars burn out one by one as {character} witnesses the slow death of {dimension}.",
+                        "The {cosmic_force} whispers secrets that {character} was never meant to know."
+                    ]
+                };
+
+                this.characters = [
+                    "you", "a dream wanderer", "the silent observer", "a consciousness untethered", 
+                    "the memory keeper", "a soul adrift", "the reality weaver", "an echo from childhood"
+                ];
+
+                this.locations = [
+                    "an endless supermarket", "a library made of crystallized memories", "a city built on dreams",
+                    "a corridor that stretches infinitely", "a room that contains all other rooms",
+                    "a marketplace floating in nothingness", "a garden where thoughts grow as flowers",
+                    "a train station that travels through time"
+                ];
+
+                this.events = [
+                    "a child runs past carrying light instead of toys", "the walls begin to sing in harmony",
+                    "mirrors reflect not images but possibilities", "the floor becomes liquid starlight",
+                    "doors open onto the same room from different angles", "time hiccups and repeats itself",
+                    "colors start bleeding into each other", "reality glitches like a video file"
+                ];
+
+                this.revelations = [
+                    "nothing in this place is real", "you are the dreamer's dream",
+                    "reality is just a suggestion", "everyone you've met is a fragment of yourself",
+                    "the supermarket exists only in memory", "you create this world by observing it",
+                    "time moves backwards here", "every choice creates a new timeline"
+                ];
+
+                this.collectiveThemes = [];
+                this.playerPreferences = {};
+                this.narrativeHistory = [];
+            }
+
+            generateNarrative(style, tone, focus, elements, length, creativity) {
+                const templates = this.narrativeTemplates[style] || this.narrativeTemplates.surreal;
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                
+                // Insert random elements
+                let narrative = template
+                    .replace('{character}', this.getRandomElement(this.characters))
+                    .replace('{location}', this.getRandomElement(this.locations))
+                    .replace('{event}', this.getRandomElement(this.events))
+                    .replace('{revelation}', this.getRandomElement(this.revelations))
+                    .replace('{cosmic_truth}', 'ancient truths written in starlight')
+                    .replace('{entities}', 'beings older than time itself')
+                    .replace('{dimension}', 'reality as we know it')
+                    .replace('{cosmic_force}', 'the music of the spheres')
+                    .replace('{mystery}', 'a conspiracy that spans multiple lifetimes')
+                    .replace('{secret}', 'the location of the missing piece of reality')
+                    .replace('{nightmares}', 'fears that have never been named')
+                    .replace('{reality}', 'the mundane world of waking life')
+                    .replace('{portal}', 'cracks in the fabric of existence')
+                    .replace('{concepts}', 'what is and what might be')
+                    .replace('{environment}', 'the living tapestry of dreams');
+
+                // Add custom elements if provided
+                if (elements) {
+                    narrative += ` The presence of ${elements} adds another layer of complexity to this already impossible situation.`;
+                }
+
+                // Enhance based on emotional tone
+                narrative = this.applyEmotionalTone(narrative, tone);
+
+                // Expand based on length preference
+                narrative = this.expandNarrative(narrative, length);
+
+                // Add creativity elements
+                narrative = this.addCreativeElements(narrative, creativity);
+
+                // Store in history
+                this.narrativeHistory.push({
+                    style, tone, focus, elements, length, 
+                    creativity, narrative, timestamp: Date.now()
+                });
+
+                return narrative;
+            }
+
+            applyEmotionalTone(narrative, tone) {
+                const toneEnhancers = {
+                    mysterious: " Questions linger in the air like unanswered prayers.",
+                    ominous: " A sense of dread creeps through the scene like cold fog.",
+                    whimsical: " A touch of magic dances at the edges of perception.",
+                    melancholic: " Sadness permeates everything like morning mist.",
+                    euphoric: " Joy bubbles up from deep within the heart of this place.",
+                    contemplative: " Silence speaks volumes in this moment of reflection."
+                };
+
+                if (toneEnhancers[tone]) {
+                    narrative += toneEnhancers[tone];
+                }
+
+                return narrative;
+            }
+
+            expandNarrative(narrative, length) {
+                const expansions = {
+                    short: "",
+                    medium: " Each detail reveals another layer of meaning, and the scene shifts subtly as you observe it more closely.",
+                    long: " The atmosphere is thick with possibility, and every object, every shadow, every whisper seems to hold significance that grows with each passing moment. Time feels elastic here, bending to accommodate the depth of experience."
+                };
+
+                if (expansions[length]) {
+                    narrative += expansions[length];
+                }
+
+                return narrative;
+            }
+
+            addCreativeElements(narrative, creativity) {
+                const creativeElements = [
+                    " Colors that don't exist begin to appear.",
+                    " The air itself becomes tangible, like memory given form.",
+                    " Distant echoes of laughter from children who don't exist.",
+                    " Gravity suggests itself but never quite commits.",
+                    " Light and shadow dance together in impossible harmony.",
+                    " The boundaries between self and other dissolve completely."
+                ];
+
+                const numElements = Math.floor((creativity / 100) * 3); // 0-3 creative elements
+
+                for (let i = 0; i < numElements; i++) {
+                    narrative += this.getRandomElement(creativeElements);
+                }
+
+                return narrative;
+            }
+
+            getRandomElement(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+
+            generateCollectiveNarrative() {
+                // Combine elements from recent player activity
+                const recentActivities = this.getRecentActivities();
+                const combinedThemes = this.extractThemesFromActivities(recentActivities);
+                
+                const style = combinedThemes.dominantStyle || 'surreal';
+                const tone = combinedThemes.dominantTone || 'mysterious';
+                
+                return this.generateNarrative(style, tone, 'collective', 
+                    `Based on ${recentActivities.length} recent player activities`, 'long', 85);
+            }
+
+            getRecentActivities() {
+                // Simulate recent player activities
+                return [
+                    { style: 'surreal', tone: 'mysterious', theme: 'exploration' },
+                    { style: 'noir', tone: 'ominous', theme: 'mystery' },
+                    { style: 'cosmic', tone: 'contemplative', theme: 'discovery' }
+                ];
+            }
+
+            extractThemesFromActivities(activities) {
+                const themes = {};
+                activities.forEach(activity => {
+                    themes[activity.style] = (themes[activity.style] || 0) + 1;
+                    themes[activity.tone] = (themes[activity.tone] || 0) + 1;
+                });
+
+                return {
+                    dominantStyle: Object.keys(themes).find(key => 
+                        ['surreal', 'noir', 'cosmic', 'romantic', 'adventure', 'philosophical'].includes(key) &&
+                        themes[key] === Math.max(...Object.values(themes))
+                    ),
+                    dominantTone: Object.keys(themes).find(key => 
+                        ['mysterious', 'ominous', 'whimsical', 'melancholic', 'euphoric', 'contemplative'].includes(key) &&
+                        themes[key] === Math.max(...Object.values(themes))
+                    )
+                };
+            }
+        }
+
+        // Speech Recognition System
+        class VoiceCommandSystem {
+            constructor() {
+                this.recognition = null;
+                this.isListening = false;
+                this.commands = {
+                    'generate narrative': () => generateAINarrative(),
+                    'change channel': () => changeChannel(),
+                    'examine environment': () => executeQuickCommand('examine environment'),
+                    'collect anomalies': () => executeQuickCommand('collect anomalies'),
+                    'scan reality': () => executeQuickCommand('scan reality'),
+                    'activate dream os': () => activateDreamOS(),
+                    'new story': () => generateNewNarrative()
+                };
+
+                this.init();
+            }
+
+            init() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.recognition = new SpeechRecognition();
+                    
+                    this.recognition.continuous = true;
+                    this.recognition.interimResults = true;
+                    this.recognition.lang = 'en-US';
+
+                    this.recognition.onresult = (event) => {
+                        let finalTranscript = '';
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                finalTranscript += event.results[i][0].transcript;
+                            }
+                        }
+                        
+                        if (finalTranscript) {
+                            document.getElementById('recognized-text').textContent = `Recognized: "${finalTranscript}"`;
+                            this.processVoiceCommand(finalTranscript.toLowerCase());
+                        }
+                    };
+
+                    this.recognition.onerror = (event) => {
+                        console.error('Speech recognition error:', event.error);
+                        this.stopListening();
+                    };
+                }
+            }
+
+            startListening() {
+                if (this.recognition) {
+                    this.isListening = true;
+                    document.getElementById('voice-toggle').textContent = '🛑 Stop Voice Commands';
+                    document.getElementById('voice-toggle').classList.add('recording');
+                    document.getElementById('speech-panel').classList.add('active');
+                    
+                    this.recognition.start();
+                    this.addToFeed('Voice recognition activated', 'user');
+                } else {
+                    alert('Speech recognition not supported in this browser');
+                }
+            }
+
+            stopListening() {
+                if (this.recognition && this.isListening) {
+                    this.isListening = false;
+                    document.getElementById('voice-toggle').textContent = '🎙️ Start Voice Commands';
+                    document.getElementById('voice-toggle').classList.remove('recording');
+                    
+                    this.recognition.stop();
+                }
+            }
+
+            processVoiceCommand(transcript) {
+                // Look for command matches
+                for (const [command, action] of Object.entries(this.commands)) {
+                    if (transcript.includes(command)) {
+                        this.addToFeed(`Executed voice command: "${command}"`, 'ai');
+                        action();
+                        return;
+                    }
+                }
+
+                // If no exact match, try partial matches
+                this.addToFeed(`Voice input received: "${transcript}" - no direct command match found`, 'user');
+            }
+
+            addToFeed(message, sender) {
+                const feed = document.getElementById('ai-activity-feed');
+                const feedItem = document.createElement('div');
+                feedItem.className = 'feed-item';
+                
+                const indicator = sender === 'ai' ? '🤖 AI SYSTEM' : '🎤 VOICE COMMAND';
+                feedItem.innerHTML = `
+                    <div style="color: ${sender === 'ai' ? '#00FFFF' : '#FFD700'};">${indicator}</div>
+                    <div>${message}</div>
+                `;
+                
+                feed.insertBefore(feedItem, feed.firstChild);
+                
+                // Keep only last 10 items
+                const items = feed.querySelectorAll('.feed-item');
+                if (items.length > 10) {
+                    items[items.length - 1].remove();
+                }
+            }
+        }
+
+        // Global instances
+        let aiGenerator = null;
+        let voiceSystem = null;
+
+        // UI Functions
+        function generateAINarrative() {
+            const style = document.getElementById('narrative-style').value;
+            const tone = document.getElementById('emotional-tone').value;
+            const focus = document.getElementById('story-focus').value;
+            const elements = document.getElementById('scene-elements').value;
+            const length = document.getElementById('narrative-length').value;
+            const creativity = document.getElementById('creativity-level').value;
+
+            const narrative = aiGenerator.generateNarrative(style, tone, focus, elements, length, creativity);
+            document.getElementById('ai-narrative-content').innerHTML = narrative;
+
+            aiGenerator.addToFeed?.(`Generated ${style} narrative with ${tone} tone`, 'ai');
+        }
+
+        function enhanceExistingNarrative() {
+            const currentContent = document.getElementById('ai-narrative-content').textContent;
+            if (currentContent.includes('Click')) {
+                generateAINarrative(); // Generate if empty
+                return;
+            }
+
+            const enhancement = " ✨ As you observe this scene more closely, new details emerge from the shadows. The atmosphere thickens with possibility, and reality becomes more malleable with each passing moment.";
+            document.getElementById('ai-narrative-content').innerHTML += enhancement;
+
+            aiGenerator.addToFeed('Enhanced existing narrative with additional depth', 'ai');
+        }
+
+        function generateCollectiveNarrative() {
+            const narrative = aiGenerator.generateCollectiveNarrative();
+            document.getElementById('ai-narrative-content').innerHTML = 
+                `<strong>🌐 Collective Dream Narrative:</strong><br><br>${narrative}`;
+
+            aiGenerator.addToFeed('Generated collective narrative based on player activity', 'ai');
+        }
+
+        function toggleVoiceRecognition() {
+            if (voiceSystem.isListening) {
+                voiceSystem.stopListening();
+            } else {
+                voiceSystem.startListening();
+            }
+        }
+
+        // Update creativity display
+        document.addEventListener('DOMContentLoaded', () => {
+            const creativitySlider = document.getElementById('creativity-level');
+            const creativityDisplay = document.getElementById('creativity-display');
+            
+            creativitySlider.addEventListener('input', (e) => {
+                creativityDisplay.textContent = e.target.value + '%';
+            });
+
+            // Initialize systems
+            aiGenerator = new AINarrativeGenerator();
+            voiceSystem = new VoiceCommandSystem();
+
+            // Simulate live updates
+            setInterval(() => {
+                // Update collective stats
+                const playtime = Math.floor(Math.random() * 10) + 240;
+                document.getElementById('collective-playtime').textContent = playtime + '.5h';
+                
+                const activePlayers = Math.floor(Math.random() * 20) + 35;
+                document.getElementById('active-players').textContent = activePlayers;
+
+                const narrativesGenerated = Math.floor(Math.random() * 5) + 1845;
+                document.getElementById('narratives-generated').textContent = narrativesGenerated;
+
+                const anomalies = Math.floor(Math.random() * 10) + 150;
+                document.getElementById('collective-anomalies').textContent = anomalies;
+            }, 15000);
+        });
+    </script>
+</body>
+</html>
