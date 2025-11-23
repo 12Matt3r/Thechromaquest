@@ -19,6 +19,11 @@ The entire experience is driven by a compulsory, highly-timed Multimodal Transit
 | Transition Effects | Eye Blink Mechanism and Reality Flash (Clips and flickers synchronized with the countdown). |
 | Agency | Dual Control System (Structured Choice Bubbles + Generative Command Interface). |
 | Prolog Segway | Immediate Conflict Injection (A high-stakes text prompt forces the player to choose and start the quest). |
+| Collective Playtime Tracking | Real-time statistics showing total hours played across all players globally. |
+| Fair Play Reset System | Automatic game state reset after every key collection to ensure equal advantages. |
+| Narrative TV Interface | Bottom-left collapsible TV displaying previous narrative experiences and story history. |
+| Voice Command System | Speech-to-text functionality allowing voice input for enhanced gameplay control. |
+| Custom Radio Stations | User-created radio stations with music upload capabilities for personalized ambient experience. |
 4. PROJECT CREDITS & TOOLING
  * Concept & Game Design: 12Matt3r.
  * Master Prompt Engineer: Gemini Prompt Engineering Master Toolkit.

@@ -397,3 +397,190 @@ Welcome to **ChromaShift**.
 **Version:** 2.0  
 **Author:** MiniMax Agent  
 **Date:** 2025
+
+## Enhanced Generative Command Interface v2.1
+
+### Voice Command Integration
+
+The generative system now includes **enhanced voice manifestation capabilities** through speech-to-text integration:
+
+#### Voice Location Shifts
+**Label:** `🎤 VOICE SHIFT DESTINATION:`  
+**Purpose:** Speak reality into existence with amplified power  
+**Interface:** Microphone button with real-time transcription display
+
+**How Voice Shifts Work:**
+1. Player clicks microphone button or presses Ctrl+V
+2. Speech recognition activates with visual feedback
+3. Player speaks destination aloud with emotional intent
+4. Voice confidence scoring affects reality manipulation potency
+5. Spoken words trigger enhanced reality blink sequence
+6. Dream interprets vocalized intent with greater surrealist amplification
+
+**Voice-Enhanced Location Types:**
+- **Emotionally charged locations** → Enhanced atmospheric distortion
+- **Whispered destinations** → Subconscious realm access
+- **Shouted commands** → Reality-breaking manifestations
+- **Sung phrases** → Musical dreamscape creation
+
+#### Voice Action Manifestations  
+**Label:** `🎤 VOICE MANIFESTATION:`  
+**Purpose:** Vocalized actions carry greater reality-shaping power  
+**Interface:** Same microphone system with enhanced confidence tracking
+
+**Voice Command Amplification:**
+- **Whispered actions** → Subtle reality modifications
+- **Spoken commands** → Standard manifestation power
+- **Shouted declarations** → Reality-bending intensity
+- **Sung manifestations** → Harmonic reality reshaping
+
+### Collective Playtime Integration
+
+#### Quantum Playtime Entanglement
+The generative system now considers collective dream duration in scene generation:
+
+**Enhanced Context Awareness:**
+- Collective session time affects surrealist interpretation intensity
+- Higher collective playtime creates deeper reality layers
+- Shared dream duration influences environmental complexity
+- Cross-player temporal resonance affects scene atmosphere
+
+**Playtime-Based Generation Rules:**
+- **0-1 hour collective** → Simple surreal environments
+- **1-10 hours collective** → Complex layered dreamscapes  
+- **10+ hours collective** → Meta-reality manifestations
+- **100+ hours collective** → Collective unconscious integration
+
+### Narrative TV as Context Provider
+
+The bottom-left TV serves as a **collective memory database** for enhanced context generation:
+
+#### Memory-Influenced Scene Creation
+- Previous narrative experiences inform current scene surrealist elements
+- Collective memory patterns affect NPC behavior and environmental responses
+- Recurring motifs from past scenes manifest as environmental anomalies
+- Player's personal history creates unique story thread connections
+
+#### Cross-Player Narrative Influence
+- Other players' experiences provide unconscious inspiration
+- Collective memory repository creates shared symbolic language
+- Narrative resonance affects reality coherence parameters
+- Story pattern recognition enhances predictive surrealist elements
+
+### Fair Play Reset Integration
+
+#### Automatic State Rebalancing
+Key collection triggers complete system reset while preserving generative capability:
+
+**Reset Parameters:**
+- Dream metrics return to baseline for fair competition
+- Generative command history maintained for continuity
+- Personal enhancement features (voice, TV, radio) persist
+- Collective playtime statistics continue accumulating
+
+**Post-Reset Enhancement:**
+- Fresh perspective enables new surrealist interpretations
+- Reset reality creates opportunity for enhanced manifestations
+- Narrative memory integration provides deeper context
+- Voice commands gain renewed potency after cosmic rebalancing
+
+### Custom Radio Station Reality Modulation
+
+Personal radio stations create **audio-reactive reality environments**:
+
+#### Music-Influenced Generation
+- **Upbeat music** → Vibrant, energetic surrealist environments
+- **Ambient music** → Contemplative, atmospheric dreamscapes
+- **Electronic music** → Geometric, technological surrealism
+- **Classical music** → Elegant, architectural dream spaces
+
+#### Frequency Reality Alteration
+- **Bass frequencies** → Gravity-defying environmental effects
+- **Mid frequencies** → Structural reality modifications  
+- **High frequencies** → Visual distortion and color enhancement
+- **Dynamic range** → Emotional intensity amplification
+
+### Enhanced Technical Implementation
+
+#### Voice Recognition Integration
+```javascript
+enhanceVoiceCommands(inputText, confidence, emotion) {
+    // Apply voice amplification multipliers
+    const amplification = confidence * 1.5;
+    const emotionBoost = detectEmotionalTone(inputText);
+    
+    // Enhanced reality manipulation
+    const realityShift = amplifySurrealistLogic(
+        standardInterpretation(inputText), 
+        amplification + emotionBoost
+    );
+    
+    return generateEnhancedScene(realityShift);
+}
+```
+
+#### Collective Context Integration
+```javascript
+integrateCollectiveContext(playerHistory, collectiveData) {
+    // Combine personal and shared experience
+    const contextualElements = mergeNarrativeMemories(
+        playerHistory, 
+        collectiveData.influences
+    );
+    
+    // Apply collective playtime modifiers
+    const playtimeModifier = calculatePlaytimeInfluence(
+        collectiveData.totalHours
+    );
+    
+    return enhanceSceneGeneration(contextualElements, playtimeModifier);
+}
+```
+
+### Voice-Enhanced User Experience
+
+#### Amplified Manifestation Flow
+```
+Player speaks: "Transform this room into a cathedral of memories"
+↓
+Voice recognition processes with emotional intent detection
+↓
+Enhanced reality blink with audio-visual synchronization
+↓
+Surrealist interpretation amplified by vocal power
+↓
+Scene generates: Musical architecture with memory-shaped arches
+↓
+Dream metrics affected by voice command intensity
+↓
+New contextual choices appear based on vocal manifestation
+```
+
+#### Cross-Modal Command Processing
+Players can seamlessly transition between:
+- **Text commands** for precise control
+- **Voice commands** for amplified reality manipulation  
+- **Bubble choices** for structured exploration
+- **Radio-influenced** commands for music-reactive experiences
+
+### Future Expansion: Collective Dream Collaboration
+
+The enhanced generative system enables:
+
+**Multi-Player Shared Dreamscapes**
+- Voice commands from multiple players create collaborative realities
+- Collective manifestation power amplifies with more participants
+- Shared audio environments create harmonic reality zones
+- Cross-player voice recognition enables communication dreams
+
+**Temporal Dream Persistence**
+- Past player voices leave residual manifestation traces
+- Historical command patterns influence current scene generation
+- Collective command archive provides infinite inspiration
+- Voice time-stamps create temporal narrative layers
+
+The enhanced generative command interface transforms ChromaShift into a **multi-dimensional reality collaboration platform** where individual creativity amplifies through collective consciousness, voice power, and shared dream experiences.
+
+**Every voice matters.**  
+**Every shared moment counts.**  
+**Every collective dream expands reality.**

@@ -46,3 +46,20 @@ If a command cannot be sensibly realized even in dream logic:
 - Respond with a glitch: visual distortion, repeated line, or “reality cannot parse that request.”
 - Avoid hard failure; always give the player something to react to.
 
+
+## Enhanced Command Processing Features
+
+### Voice Command Integration
+The command engine now supports speech-to-text input through the Web Speech API:
+- Voice commands are transcribed in real-time and processed through the same validation pipeline
+- Voice input provides microphone toggle button in the interface
+- Commands spoken aloud are treated identically to typed input
+- Supports voice commands for all existing command types including location shifts, actions, and meta commands
+- Voice input failures gracefully fall back to text input prompt
+
+### Player State Reset Integration
+After every key collection, the command engine automatically triggers a complete game state reset:
+- All dream metrics are reset to baseline values
+- Current scene context is cleared
+- Command history is maintained for continuity
+- Reset timing is synchronized with key collection animations
