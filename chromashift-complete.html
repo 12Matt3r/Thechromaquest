@@ -752,6 +752,219 @@
             outline: 2px solid var(--secondary-color);
             outline-offset: 2px;
         }
+
+        .progression-card.locked {
+            opacity: 0.6;
+            border-color: rgba(128, 128, 128, 0.3);
+        }
+
+        .progression-card.unlocked {
+            opacity: 1;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        .progression-level {
+            font-size: 0.8rem;
+            margin-top: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .progression-level.UNLOCKED {
+            color: var(--success-green);
+            animation: unlockedGlow 2s ease-in-out infinite alternate;
+        }
+
+        .progression-level.LOCKED {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes unlockedGlow {
+            from {
+                text-shadow: 0 0 5px var(--success-green);
+            }
+            to {
+                text-shadow: 0 0 10px var(--success-green), 0 0 15px var(--success-green);
+            }
+        }
+
+        /* ===== VOICE CONTROL STYLES ===== */
+        .voice-control-indicator {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(0, 255, 255, 0.2));
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .voice-control-indicator.listening {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.2), rgba(0, 255, 255, 0.3));
+            border-color: #4CAF50;
+            animation: voicePulse 2s infinite;
+        }
+
+        .voice-control-indicator.stopped {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 16, 240, 0.1));
+            border-color: var(--primary-color);
+        }
+
+        .voice-control-indicator.error {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), rgba(255, 152, 0, 0.2));
+            border-color: var(--error-red);
+        }
+
+        .voice-control-indicator.locked {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(128, 128, 128, 0.2));
+            border-color: #666;
+            color: #888;
+        }
+
+        .voice-control-indicator.unsupported {
+            background: linear-gradient(135deg, rgba(128, 128, 128, 0.2), rgba(128, 128, 128, 0.3));
+            border-color: #999;
+            color: #aaa;
+        }
+
+        @keyframes voicePulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.8), 0 0 30px rgba(76, 175, 80, 0.4); }
+        }
+
+        .voice-toggle-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 20px;
+            padding: 12px 20px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .voice-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .voice-toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        .voice-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--dark-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            max-width: 400px;
+            max-height: 300px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-header {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .notification-header button:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .notification-content {
+            padding: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .notification-content pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: var(--secondary-color);
+        }
+
+        /* Voice command feedback */
+        .voice-command-feedback {
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 4px solid var(--secondary-color);
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile voice control adaptations */
+        @media (max-width: 768px) {
+            .voice-control-indicator {
+                font-size: 0.8rem;
+                padding: 10px 12px;
+            }
+
+            .voice-toggle-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+
+            .voice-notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                max-height: 250px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -987,6 +1200,7 @@
                 this.startGameLoop();
                 this.initializeAICompanion();
                 this.setupMobileOptimizations();
+                this.setupVoiceControl();
                 
                 this.addEventToLog('System initialized. Dream environment loading...');
                 this.updateUI();
@@ -1085,6 +1299,274 @@
                 document.getElementById('resetGameBtn').addEventListener('click', () => {
                     this.resetGame();
                 });
+            }
+
+            setupVoiceControl() {
+                // Check if voice control is unlocked and supported
+                if (!this.gameState.unlockedFeatures.includes('voice-control')) {
+                    this.addVoiceControlIndicator('locked');
+                    return;
+                }
+
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    this.addVoiceControlIndicator('unsupported');
+                    return;
+                }
+
+                // Initialize speech recognition
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.speechRecognition = new SpeechRecognition();
+                
+                this.speechRecognition.continuous = true;
+                this.speechRecognition.interimResults = true;
+                this.speechRecognition.lang = 'en-US';
+
+                this.speechRecognition.onstart = () => {
+                    this.addEventToLog('🎤 Voice control activated - speaking...');
+                    this.updateVoiceControlUI('listening');
+                };
+
+                this.speechRecognition.onresult = (event) => {
+                    let finalTranscript = '';
+                    let interimTranscript = '';
+
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+
+                    if (finalTranscript) {
+                        this.processVoiceCommand(finalTranscript.trim().toLowerCase());
+                    }
+                };
+
+                this.speechRecognition.onerror = (event) => {
+                    this.addEventToLog(`🎤 Voice recognition error: ${event.error}`);
+                    this.updateVoiceControlUI('error');
+                    
+                    // Auto-restart on certain errors
+                    if (event.error === 'network' || event.error === 'not-allowed') {
+                        setTimeout(() => {
+                            this.restartVoiceControl();
+                        }, 2000);
+                    }
+                };
+
+                this.speechRecognition.onend = () => {
+                    this.updateVoiceControlUI('stopped');
+                    // Auto-restart for continuous listening
+                    if (this.gameState.unlockedFeatures.includes('voice-control') && 
+                        this.voiceControlActive) {
+                        setTimeout(() => {
+                            this.startVoiceListening();
+                        }, 1000);
+                    }
+                };
+
+                this.voiceControlActive = false;
+                this.voiceCommands = this.initializeVoiceCommands();
+                this.addVoiceControlIndicator('ready');
+            }
+
+            initializeVoiceCommands() {
+                return {
+                    // Navigation commands
+                    'look around': () => this.examineEnvironment(),
+                    'examine the room': () => this.examineEnvironment(),
+                    'scan the environment': () => this.scanReality(),
+                    'change view': () => this.changePanoramaView(),
+                    'zoom in': () => this.zoomPanorama(true),
+                    'zoom out': () => this.zoomPanorama(false),
+
+                    // Game actions
+                    'collect anomalies': () => this.collectAnomalies(),
+                    'find anomalies': () => this.collectAnomalies(),
+                    'collect keys': () => this.collectKeys(),
+                    'interact with objects': () => this.interactObjects(),
+                    'time travel': () => this.timeTravel(),
+                    'unlock doors': () => this.unlockDoors(),
+
+                    // Quest and progress
+                    'show quest': () => this.showQuestPanel(),
+                    'show my progress': () => this.showProgressPanel(),
+                    'check level': () => this.showLevelInfo(),
+                    'what can i do': () => this.showAvailableCommands(),
+
+                    // Save/Load system
+                    'save game': () => this.saveGame(),
+                    'load game': () => this.loadGame(),
+                    'reset game': () => this.resetGame(),
+
+                    // AI companion
+                    'talk to cortana': () => this.activateAICconversation(),
+                    'ask cortana': () => this.activateAICconversation(),
+                    'cortana help': () => this.activateAICconversation(),
+
+                    // System commands
+                    'help': () => this.showVoiceHelp(),
+                    'stop listening': () => this.stopVoiceListening(),
+                    'voice off': () => this.stopVoiceListening(),
+                    'commands': () => this.showVoiceCommands()
+                };
+            }
+
+            processVoiceCommand(transcript) {
+                this.addEventToLog(`🎤 Voice: "${transcript}"`);
+                
+                // Find matching command
+                for (const [command, action] of Object.entries(this.voiceCommands)) {
+                    if (transcript.includes(command)) {
+                        action();
+                        return;
+                    }
+                }
+
+                // Generic command fallback
+                if (transcript.includes('show') || transcript.includes('display') || transcript.includes('open')) {
+                    const target = transcript.replace('show ', '').replace('display ', '').replace('open ', '').trim();
+                    this.executeGenericVoiceCommand(target);
+                    return;
+                }
+
+                // Default response for unrecognized commands
+                this.addEventToLog('🤖 Cortana: "I didn\'t understand that command. Say \'help\' for available commands."');
+            }
+
+            executeGenericVoiceCommand(target) {
+                const targetMap = {
+                    'quest': () => this.showQuestPanel(),
+                    'progress': () => this.showProgressPanel(),
+                    'level': () => this.showLevelInfo(),
+                    'inventory': () => this.showInventoryPanel(),
+                    'commands': () => this.showVoiceCommands(),
+                    'help': () => this.showVoiceHelp(),
+                    'menu': () => this.showMainMenu()
+                };
+
+                const action = targetMap[target] || targetMap['commands'];
+                action();
+            }
+
+            startVoiceListening() {
+                if (this.speechRecognition && !this.voiceControlActive) {
+                    try {
+                        this.speechRecognition.start();
+                        this.voiceControlActive = true;
+                        this.updateVoiceControlUI('listening');
+                    } catch (error) {
+                        this.addEventToLog(`🎤 Voice recognition failed to start: ${error.message}`);
+                    }
+                }
+            }
+
+            stopVoiceListening() {
+                if (this.speechRecognition && this.voiceControlActive) {
+                    this.speechRecognition.stop();
+                    this.voiceControlActive = false;
+                    this.updateVoiceControlUI('stopped');
+                    this.addEventToLog('🎤 Voice control deactivated');
+                }
+            }
+
+            restartVoiceControl() {
+                this.stopVoiceListening();
+                setTimeout(() => {
+                    this.startVoiceListening();
+                }, 500);
+            }
+
+            updateVoiceControlUI(status) {
+                const voiceIndicator = document.querySelector('.voice-control-indicator');
+                if (voiceIndicator) {
+                    voiceIndicator.className = `voice-control-indicator ${status}`;
+                    
+                    const statusText = {
+                        'listening': '🎤 Listening...',
+                        'stopped': '🎤 Voice Ready',
+                        'error': '⚠️ Voice Error',
+                        'ready': '🎤 Voice Control Ready'
+                    };
+                    
+                    voiceIndicator.textContent = statusText[status] || '🎤 Voice Control';
+                }
+            }
+
+            addVoiceControlIndicator(status) {
+                const indicator = document.createElement('div');
+                indicator.className = `voice-control-indicator ${status}`;
+                indicator.textContent = status === 'locked' ? '🔒 Voice Control (Level 5 Required)' : 
+                                      status === 'unsupported' ? '❌ Voice Control Not Supported' :
+                                      status === 'ready' ? '🎤 Voice Control Ready' : '🎤 Voice Control';
+                
+                // Add to control panel
+                const controlsSection = document.querySelector('.game-controls');
+                if (controlsSection) {
+                    controlsSection.appendChild(indicator);
+                }
+
+                // Add toggle button if supported and unlocked
+                if (status === 'ready') {
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = 'voice-toggle-btn';
+                    toggleBtn.textContent = '🎤 Voice On';
+                    toggleBtn.onclick = () => {
+                        if (this.voiceControlActive) {
+                            this.stopVoiceListening();
+                            toggleBtn.textContent = '🎤 Voice On';
+                        } else {
+                            this.startVoiceListening();
+                            toggleBtn.textContent = '🎤 Voice Off';
+                        }
+                    };
+                    
+                    controlsSection.appendChild(toggleBtn);
+                }
+            }
+
+            showVoiceCommands() {
+                const commandsList = Object.keys(this.voiceCommands)
+                    .map(cmd => `• "${cmd}"`)
+                    .join('\n');
+                
+                this.addEventToLog('🎤 Available Voice Commands:\n' + commandsList);
+                this.showNotification('Voice Commands', commandsList);
+            }
+
+            showVoiceHelp() {
+                const helpText = `🎤 Voice Control Help:
+
+NAVIGATION:
+• "look around" - Examine current environment
+• "scan the environment" - Advanced reality scan
+• "change view" - Switch panoramic view
+• "zoom in/out" - Adjust view zoom
+
+ACTIONS:
+• "collect anomalies" - Gather all anomalies
+• "find anomalies" - Search for anomalies
+• "interact with objects" - Use interactive elements
+
+PROGRESS:
+• "show quest" - View current quest
+• "show my progress" - Check progress
+• "check level" - View level information
+
+SYSTEM:
+• "save game" / "load game" - Save management
+• "help" - Show this help
+• "stop listening" - Deactivate voice control
+
+AI COMPANION:
+• "talk to cortana" - Chat with AI assistant
+
+Tip: Speak clearly and naturally!`;
+                
+                this.addEventToLog(helpText);
+                this.showNotification('Voice Control Help', helpText);
             }
 
             executeCommand(command) {
@@ -1336,6 +1818,128 @@
                 }
             }
 
+            zoomPanorama(zoomIn = true) {
+                const display = document.getElementById('panoramaDisplay');
+                
+                if (zoomIn) {
+                    display.style.transform = 'scale(1.5)';
+                    this.addEventToLog('Zoomed in for detailed exploration');
+                } else {
+                    display.style.transform = 'scale(1)';
+                    this.addEventToLog('Zoom reset to normal view');
+                }
+            }
+
+            // Voice control support methods
+            collectKeys() {
+                const keyCount = Math.floor(Math.random() * 3) + 1;
+                this.playerData.chromaKeys += keyCount;
+                this.addExperience(10);
+                this.addEventToLog(`Collected ${keyCount} Chroma Key${keyCount > 1 ? 's' : ''}!`);
+                this.updateUI();
+            }
+
+            showLevelInfo() {
+                const info = `Current Level: ${this.playerData.level}
+Experience: ${this.playerData.experience} / ${this.playerData.level * 100}
+Unlocked Features: ${this.gameState.unlockedFeatures.length}
+Active Quests: ${this.gameState.activeQuests.length}`;
+                
+                this.addEventToLog(info);
+                this.showNotification('Level Information', info);
+            }
+
+            showProgressPanel() {
+                const progress = `ANOMALIES: ${this.playerData.anomaliesFound} / 5
+CHROMA KEYS: ${this.playerData.chromaKeys}
+LUCIDITY: ${this.playerData.lucidity}
+COHERENCE: ${this.playerData.coherence}
+LEVEL: ${this.playerData.level}`;
+                
+                this.addEventToLog(progress);
+                this.showNotification('Your Progress', progress);
+            }
+
+            showAvailableCommands() {
+                const available = [];
+                
+                if (this.gameState.unlockedFeatures.includes('voice-control')) {
+                    available.push('Voice Control - "talk to cortana", "collect anomalies", "show quest"');
+                }
+                
+                if (this.playerData.level >= 5) {
+                    available.push('Advanced Commands - Complex reality manipulations');
+                }
+                
+                if (this.playerData.level >= 10) {
+                    available.push('Reality Hacking - Direct physics manipulation');
+                }
+                
+                available.push('Basic Commands - "examine", "collect", "scan", "interact"');
+                
+                const commandsText = available.join('\n• ');
+                this.addEventToLog(`Available Commands:\n• ${commandsText}`);
+                this.showNotification('Available Commands', `• ${commandsText}`);
+            }
+
+            showInventoryPanel() {
+                const inventory = `CHROMA KEYS: ${this.playerData.chromaKeys}
+ANOMALIES: ${this.playerData.anomaliesFound}
+LEVEL: ${this.playerData.level}
+EXPERIENCE: ${this.playerData.experience}`;
+                
+                this.addEventToLog(inventory);
+                this.showNotification('Inventory', inventory);
+            }
+
+            activateAICconversation() {
+                const aiPanel = document.getElementById('aiCompanion');
+                if (aiPanel) {
+                    aiPanel.style.display = aiPanel.style.display === 'none' ? 'block' : 'none';
+                    this.addEventToLog('Cortana activated for conversation');
+                    
+                    if (aiPanel.style.display === 'block') {
+                        const aiInput = document.getElementById('aiInput');
+                        if (aiInput) {
+                            aiInput.focus();
+                        }
+                    }
+                }
+            }
+
+            showMainMenu() {
+                const mainPanel = document.querySelector('.main-panel');
+                if (mainPanel) {
+                    mainPanel.scrollTop = 0;
+                    this.addEventToLog('Scrolled to main menu');
+                }
+            }
+
+            showNotification(title, content) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = 'voice-notification';
+                notification.innerHTML = `
+                    <div class="notification-header">
+                        <strong>${title}</strong>
+                        <button onclick="this.parentElement.parentElement.remove()">✕</button>
+                    </div>
+                    <div class="notification-content">
+                        <pre>${content}</pre>
+                    </div>
+                `;
+                
+                // Add to page
+                document.body.appendChild(notification);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
+
             handlePanoramaClick(e) {
                 const display = document.getElementById('panoramaDisplay');
                 const rect = display.getBoundingClientRect();
@@ -1560,12 +2164,30 @@
                 const cards = document.querySelectorAll('.progression-card');
                 cards.forEach(card => {
                     const feature = card.dataset.feature;
+                    const levelIndicator = card.querySelector('.progression-level');
+                    
                     if (this.gameState.unlockedFeatures.includes(feature)) {
                         card.classList.remove('locked');
                         card.classList.add('unlocked');
+                        if (levelIndicator) {
+                            levelIndicator.textContent = '✅ UNLOCKED';
+                            levelIndicator.style.color = '#4CAF50';
+                        }
                     } else {
                         card.classList.add('locked');
                         card.classList.remove('unlocked');
+                        
+                        // Update the level requirement text
+                        if (levelIndicator) {
+                            if (feature === 'voice-control') {
+                                levelIndicator.textContent = 'LOCKED - Level 5 Required';
+                            } else if (feature === 'reality-hacking') {
+                                levelIndicator.textContent = 'LOCKED - Level 10 Required';
+                            } else {
+                                levelIndicator.textContent = 'LOCKED';
+                            }
+                            levelIndicator.style.color = '';
+                        }
                     }
                 });
             }
@@ -1607,6 +2229,34 @@
                 this.playerData.coherence = Math.min(100, this.playerData.coherence + 5);
             }
 
+            showVoiceControlTutorial() {
+                const tutorialText = `🎤 Voice Control Activated!
+
+Welcome to voice-controlled reality manipulation! Here's how to get started:
+
+QUICK START:
+1. Click the "🎤 Voice On" button to activate voice recognition
+2. Say commands like:
+   • "Look around" - Examine your environment
+   • "Collect anomalies" - Gather all anomalies nearby
+   • "Show quest" - View your current quest
+   • "Talk to Cortana" - Chat with your AI companion
+   • "Help" - See all available commands
+
+TIPS:
+• Speak clearly and naturally
+• Commands work even with background noise
+• Say "stop listening" to deactivate voice control
+• Check the green "🎤 Listening..." indicator for status
+
+Try saying: "Show my progress" to get started!
+
+Your consciousness has evolved. Use it wisely. 🌟`;
+                
+                this.addEventToLog('🎤 VOICE CONTROL TUTORIAL:\n' + tutorialText);
+                this.showNotification('🎤 Voice Control Tutorial', tutorialText);
+            }
+
             checkFeatureUnlocks() {
                 const level = this.playerData.level;
                 
@@ -1616,6 +2266,7 @@
                     this.addEventToLog('Voice Control unlocked! You can now command reality with your voice.');
                     this.showAchievement('Voice Unlocked', 'Voice control abilities activated');
                     this.updateAIMessage('Your consciousness has evolved to include voice-controlled reality manipulation!');
+                    this.showVoiceControlTutorial();
                 }
                 
                 if (level >= 10 && !this.gameState.unlockedFeatures.includes('reality-hacking')) {
