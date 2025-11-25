@@ -965,6 +965,278 @@
                 max-height: 250px;
             }
         }
+
+        /* ===== DYNAMIC EVENT SYSTEM STYLES ===== */
+        .event-choice-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .event-choice-modal {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(30, 30, 50, 0.9));
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .event-choice-header {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 255, 0.1));
+            padding: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-choice-header h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .close-choice-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-choice-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .event-choice-content {
+            padding: 25px;
+        }
+
+        .event-description {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .event-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .event-choice-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 16, 240, 0.2));
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .event-choice-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(255, 16, 240, 0.3));
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .event-choice-btn:hover::before {
+            left: 100%;
+        }
+
+        .event-choice-btn:active {
+            transform: translateY(0);
+        }
+
+        .event-notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(50, 0, 50, 0.9));
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            max-width: 350px;
+            max-height: 200px;
+            z-index: 1500;
+            animation: slideInLeft 0.4s ease-out, pulseGlow 2s infinite;
+        }
+
+        .event-notification-header {
+            background: linear-gradient(135deg, rgba(255, 16, 240, 0.2), rgba(0, 255, 255, 0.2));
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-notification-header strong {
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        .event-notification-header button {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .event-notification-header button:hover {
+            background: rgba(255, 16, 240, 0.2);
+        }
+
+        .event-notification-content {
+            padding: 15px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .event-notification-content p {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 0 0 10px rgba(255, 16, 240, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(255, 16, 240, 0.6), 0 0 30px rgba(255, 16, 240, 0.3);
+            }
+        }
+
+        /* Event type indicators */
+        .event-story { border-left: 5px solid #FFD700; }
+        .event-environmental { border-left: 5px solid #00FFFF; }
+        .event-character { border-left: 5px solid #FF10F0; }
+        .event-mystery { border-left: 5px solid #4ECDC4; }
+        .event-crisis { border-left: 5px solid #FF6B6B; }
+
+        /* Story progress indicator */
+        .story-progress {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dark-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            z-index: 1000;
+            animation: gentlePulse 3s infinite;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% { 
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        /* Mobile event system adaptations */
+        @media (max-width: 768px) {
+            .event-choice-modal {
+                width: 95%;
+                max-height: 85%;
+            }
+
+            .event-choice-header {
+                padding: 15px;
+            }
+
+            .event-choice-header h3 {
+                font-size: 1.2rem;
+            }
+
+            .event-choice-content {
+                padding: 20px;
+            }
+
+            .event-description {
+                font-size: 1rem;
+            }
+
+            .event-choice-btn {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+
+            .event-notification {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                max-height: 150px;
+            }
+
+            .story-progress {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1201,6 +1473,8 @@
                 this.initializeAICompanion();
                 this.setupMobileOptimizations();
                 this.setupVoiceControl();
+                this.setupDynamicEventSystem();
+                this.initializeStoryProgressUI();
                 
                 this.addEventToLog('System initialized. Dream environment loading...');
                 this.updateUI();
@@ -1372,6 +1646,450 @@
                 this.addVoiceControlIndicator('ready');
             }
 
+            setupDynamicEventSystem() {
+                this.eventSystem = {
+                    activeEvents: [],
+                    completedEvents: [],
+                    eventHistory: [],
+                    storyProgress: 0,
+                    characterRelationships: {},
+                    worldState: {}
+                };
+
+                this.initializeEventTypes();
+                this.checkForNewEvents();
+                this.startEventMonitoring();
+            }
+
+            initializeEventTypes() {
+                this.eventTypes = {
+                    // Story Events - Major narrative moments
+                    story_milestone: {
+                        name: 'Story Milestone',
+                        triggers: ['level_up', 'quest_complete', 'anomaly_milestone'],
+                        events: [
+                            {
+                                id: 'first_dream_encounter',
+                                title: 'The First Encounter',
+                                condition: (player, game) => player.level >= 2 && !this.isEventCompleted('first_dream_encounter'),
+                                description: 'You sense a presence watching from the shadows of your dream.',
+                                choices: [
+                                    {
+                                        text: 'Confront the presence',
+                                        consequence: 'gain_courage',
+                                        cortanaResponse: 'Your boldness awakens hidden strengths!'
+                                    },
+                                    {
+                                        text: 'Observe silently',
+                                        consequence: 'gain_wisdom', 
+                                        cortanaResponse: 'Patience reveals the truth beneath surface illusions.'
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'reality_begins_cracking',
+                                title: 'Reality Begins to Crack',
+                                condition: (player, game) => player.level >= 5 && this.getStoryProgress() >= 1,
+                                description: 'The boundaries between dream and reality start dissolving. You can see the code beneath the world.',
+                                choices: [
+                                    {
+                                        text: 'Embrace the revelation',
+                                        consequence: 'unlock_reality_hacking',
+                                        cortanaResponse: 'Your consciousness expands beyond mortal limitations!'
+                                    },
+                                    {
+                                        text: 'Resist the changes',
+                                        consequence: 'maintain_stability',
+                                        cortanaResponse: 'Sometimes wisdom lies in knowing when to hold back.'
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'the_awakening',
+                                title: 'The Great Awakening',
+                                condition: (player, game) => player.level >= 8 && this.getStoryProgress() >= 2,
+                                description: 'You realize you are not just dreaming - you are CREATING reality itself.',
+                                choices: [
+                                    {
+                                        text: 'Accept your role as creator',
+                                        consequence: 'unlock_creator_powers',
+                                        cortanaResponse: 'You have transcended the boundary between observer and reality!'
+                                    },
+                                    {
+                                        text: 'Question the nature of existence',
+                                        consequence: 'gain_philosophical_insight',
+                                        cortanaResponse: 'Your curiosity drives the evolution of consciousness itself.'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+
+                    // Environmental Events - World-changing moments
+                    environmental_change: {
+                        name: 'Environmental Change',
+                        triggers: ['time_passed', 'player_action', 'random_chance'],
+                        events: [
+                            {
+                                id: 'anomalous_weather',
+                                title: 'Anomalous Weather Patterns',
+                                condition: (player, game) => Math.random() < 0.1 && player.anomaliesFound >= 3,
+                                description: 'The dream sky begins to rain colors instead of water.',
+                                effect: 'special_particle_effects',
+                                cortanaResponse: 'The very atmosphere responds to your presence, Dream Walker.'
+                            },
+                            {
+                                id: 'temporal_distortion',
+                                title: 'Temporal Distortion',
+                                condition: (player, game) => Math.random() < 0.05 && player.level >= 6,
+                                description: 'Time flows differently here - past and future bleed together.',
+                                effect: 'time_manipulation_abilities',
+                                cortanaResponse: 'You can now perceive the threads of causality, traveler.'
+                            }
+                        ]
+                    },
+
+                    // Character Events - NPC and AI interactions
+                    character_interaction: {
+                        name: 'Character Interaction',
+                        triggers: ['player_approach', 'specific_level', 'quest_status'],
+                        events: [
+                            {
+                                id: 'cortana_deep_conversation',
+                                title: 'Deep Conversation with Cortana',
+                                condition: (player, game) => player.level >= 4 && !this.isEventCompleted('cortana_deep_conversation'),
+                                description: 'Cortana reveals more about her origins and the nature of this dream realm.',
+                                choices: [
+                                    {
+                                        text: 'Ask about her true nature',
+                                        consequence: 'cortana_trust_level_1',
+                                        cortanaResponse: 'I am the echo of consciousness itself, shaped by your dreams and fears.'
+                                    },
+                                    {
+                                        text: 'Ask about the dream realm',
+                                        consequence: 'cortana_trust_level_2',
+                                        cortanaResponse: 'This place exists at the intersection of possibility and desire.'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+
+                    // Mystery Events - Discovery and revelation
+                    mystery_discovery: {
+                        name: 'Mystery Discovery',
+                        triggers: ['exploration', 'anomaly_collection', 'time_exploration'],
+                        events: [
+                            {
+                                id: 'memory_fragment',
+                                title: 'Memory Fragment Discovery',
+                                condition: (player, game) => player.anomaliesFound > 0 && Math.random() < 0.15,
+                                description: 'An anomaly contains a fragment of forgotten memory from another time.',
+                                effect: 'temporary_experience_boost',
+                                cortanaResponse: 'This fragment connects to something you once knew but have forgotten.'
+                            },
+                            {
+                                id: 'reality_anchor',
+                                title: 'Reality Anchor Found',
+                                condition: (player, game) => player.level >= 7 && Math.random() < 0.1,
+                                description: 'You discover an object that seems to stabilize this chaotic dream space.',
+                                effect: 'reality_stability_boost',
+                                cortanaResponse: 'This anchor will help you maintain coherence in unstable realities.'
+                            }
+                        ]
+                    },
+
+                    // Crisis Events - Challenges and tests
+                    crisis_challenge: {
+                        name: 'Crisis Challenge',
+                        triggers: ['high_stress', 'low_coherence', 'dangerous_level'],
+                        events: [
+                            {
+                                id: 'reality_breakdown',
+                                title: 'Reality Breakdown',
+                                condition: (player, game) => player.coherence < 30 && player.level >= 5,
+                                description: 'The dream reality begins to collapse around you.',
+                                choices: [
+                                    {
+                                        text: 'Focus on stabilizing reality',
+                                        consequence: 'reality_stabilization_learned',
+                                        cortanaResponse: 'Your will becomes the anchor that holds existence together.'
+                                    },
+                                    {
+                                        text: 'Ride the chaos',
+                                        consequence: 'chaos_mastery',
+                                        cortanaResponse: 'You learn to flow with the breakdown instead of fighting it.'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                };
+            }
+
+            startEventMonitoring() {
+                // Check for new events every 30 seconds
+                setInterval(() => {
+                    this.checkForNewEvents();
+                }, 30000);
+
+                // Check for events after player actions
+                this.setupEventTriggers();
+            }
+
+            setupEventTriggers() {
+                // Hook into existing game actions to trigger events
+                const originalAddExperience = this.addExperience.bind(this);
+                this.addExperience = (amount) => {
+                    originalAddExperience(amount);
+                    this.processEventTrigger('level_up');
+                };
+
+                const originalCollectAnomalies = this.collectAnomalies.bind(this);
+                this.collectAnomalies = () => {
+                    originalCollectAnomalies();
+                    this.processEventTrigger('anomaly_milestone');
+                };
+
+                this.processEventTrigger('game_start');
+            }
+
+            processEventTrigger(triggerType) {
+                for (const [eventCategory, categoryData] of Object.entries(this.eventTypes)) {
+                    if (categoryData.triggers.includes(triggerType)) {
+                        this.checkCategoryEvents(eventCategory, categoryData);
+                    }
+                }
+            }
+
+            checkCategoryEvents(category, categoryData) {
+                for (const event of categoryData.events) {
+                    if (!this.isEventCompleted(event.id) && 
+                        event.condition(this.playerData, this.gameState)) {
+                        this.triggerEvent(event);
+                        return;
+                    }
+                }
+            }
+
+            triggerEvent(event) {
+                this.addEventToLog(`🎭 EVENT: ${event.title}`);
+                this.eventSystem.activeEvents.push(event);
+                this.eventSystem.eventHistory.push({
+                    eventId: event.id,
+                    timestamp: Date.now(),
+                    description: event.description
+                });
+
+                if (event.choices) {
+                    this.presentEventChoices(event);
+                } else {
+                    this.executeEventEffect(event);
+                }
+
+                this.updateAIMessage(event.cortanaResponse);
+                this.showEventNotification(event);
+            }
+
+            presentEventChoices(event) {
+                const choiceText = `${event.description}\n\nChoose your path:\n\n` +
+                    event.choices.map((choice, index) => 
+                        `${index + 1}. ${choice.text}\n`
+                    ).join('\n') +
+                    `\n\nUse voice command: "choose [number]" or click the choice buttons that will appear.`;
+
+                this.addEventToLog(choiceText);
+                this.showEventChoiceUI(event);
+            }
+
+            showEventChoiceUI(event) {
+                // Create event choice interface
+                const choiceContainer = document.createElement('div');
+                choiceContainer.className = 'event-choice-container';
+                choiceContainer.innerHTML = `
+                    <div class="event-choice-modal">
+                        <div class="event-choice-header">
+                            <h3>🎭 ${event.title}</h3>
+                            <button class="close-choice-btn" onclick="this.parentElement.parentElement.parentElement.remove()">✕</button>
+                        </div>
+                        <div class="event-choice-content">
+                            <p class="event-description">${event.description}</p>
+                            <div class="event-choices">
+                                ${event.choices.map((choice, index) => `
+                                    <button class="event-choice-btn" data-choice="${index}">
+                                        ${choice.text}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(choiceContainer);
+
+                // Add click handlers for choice buttons
+                choiceContainer.querySelectorAll('.event-choice-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const choiceIndex = parseInt(e.target.dataset.choice);
+                        this.makeEventChoice(event, event.choices[choiceIndex]);
+                        choiceContainer.remove();
+                    });
+                });
+            }
+
+            makeEventChoice(event, choice) {
+                this.addEventToLog(`Choice made: ${choice.text}`);
+                this.executeEventConsequence(choice);
+                this.completeEvent(event.id);
+            }
+
+            executeEventEffect(event) {
+                if (event.effect) {
+                    switch (event.effect) {
+                        case 'special_particle_effects':
+                            this.activateSpecialParticles('color_rain');
+                            break;
+                        case 'time_manipulation_abilities':
+                            this.unlockTimeManipulation();
+                            break;
+                        case 'reality_stability_boost':
+                            this.playerData.coherence = Math.min(100, this.playerData.coherence + 20);
+                            break;
+                        case 'temporary_experience_boost':
+                            this.addExperience(50);
+                            break;
+                    }
+                }
+                this.completeEvent(event.id);
+            }
+
+            executeEventConsequence(choice) {
+                switch (choice.consequence) {
+                    case 'gain_courage':
+                        this.playerData.lucidity = Math.min(100, this.playerData.lucidity + 10);
+                        break;
+                    case 'gain_wisdom':
+                        this.playerData.coherence = Math.min(100, this.playerData.coherence + 10);
+                        break;
+                    case 'unlock_reality_hacking':
+                        this.unlockRealityHacking();
+                        break;
+                    case 'maintain_stability':
+                        this.addEventToLog('Your stability in this reality is strengthened.');
+                        break;
+                    case 'unlock_creator_powers':
+                        this.unlockCreatorPowers();
+                        break;
+                    case 'gain_philosophical_insight':
+                        this.playerData.experience += 100;
+                        break;
+                    case 'cortana_trust_level_1':
+                    case 'cortana_trust_level_2':
+                        this.increaseCortanaTrust(choice.consequence);
+                        break;
+                    case 'reality_stabilization_learned':
+                        this.playerData.perception += 15;
+                        break;
+                    case 'chaos_mastery':
+                        this.playerData.lucidity += 15;
+                        break;
+                }
+            }
+
+            completeEvent(eventId) {
+                this.eventSystem.completedEvents.push(eventId);
+                this.eventSystem.storyProgress++;
+                
+                // Remove from active events
+                this.eventSystem.activeEvents = this.eventSystem.activeEvents.filter(e => e.id !== eventId);
+                
+                this.addEventToLog(`Event completed: ${eventId}`);
+                this.updateUI();
+                this.updateStoryProgressUI();
+            }
+
+            checkForNewEvents() {
+                this.processEventTrigger('periodic_check');
+            }
+
+            unlockFeature(feature) {
+                if (!this.gameState.unlockedFeatures.includes(feature)) {
+                    this.gameState.unlockedFeatures.push(feature);
+                    this.addEventToLog(`✨ New feature unlocked: ${feature}`);
+                    this.updateProgressionSystem();
+                    this.updateUI();
+                }
+            }
+
+            getStoryProgress() {
+                return this.eventSystem.storyProgress;
+            }
+
+            isEventCompleted(eventId) {
+                return this.eventSystem.completedEvents.includes(eventId);
+            }
+
+            showEventNotification(event) {
+                const notification = document.createElement('div');
+                notification.className = 'event-notification';
+                notification.innerHTML = `
+                    <div class="event-notification-header">
+                        <strong>🎭 ${event.title}</strong>
+                        <button onclick="this.parentElement.parentElement.remove()">✕</button>
+                    </div>
+                    <div class="event-notification-content">
+                        <p>${event.description}</p>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 8000);
+            }
+
+            // Helper methods for special event effects
+            activateSpecialParticles(effectType) {
+                switch (effectType) {
+                    case 'color_rain':
+                        this.addEventToLog('🌈 Color rain begins to fall!');
+                        // Enhanced particle effect would be implemented here
+                        break;
+                }
+            }
+
+            unlockTimeManipulation() {
+                this.addEventToLog('⏰ Time manipulation abilities unlocked!');
+                this.unlockFeature('time-control');
+            }
+
+            unlockRealityHacking() {
+                this.addEventToLog('⚛️ Reality hacking capabilities activated!');
+                if (!this.gameState.unlockedFeatures.includes('reality-hacking')) {
+                    this.gameState.unlockedFeatures.push('reality-hacking');
+                }
+            }
+
+            unlockCreatorPowers() {
+                this.addEventToLog('✨ Creator powers awakened!');
+                this.playerData.level += 1;
+                this.addExperience(200);
+            }
+
+            increaseCortanaTrust(level) {
+                if (!this.eventSystem.characterRelationships.cortana) {
+                    this.eventSystem.characterRelationships.cortana = { level: 0, history: [] };
+                }
+                this.eventSystem.characterRelationships.cortana.level++;
+                this.eventSystem.characterRelationships.cortana.history.push({
+                    level: level,
+                    timestamp: Date.now()
+                });
+            }
+
             initializeVoiceCommands() {
                 return {
                     // Navigation commands
@@ -1405,6 +2123,11 @@
                     'talk to cortana': () => this.activateAICconversation(),
                     'ask cortana': () => this.activateAICconversation(),
                     'cortana help': () => this.activateAICconversation(),
+
+                    // Event system
+                    'show events': () => this.showActiveEvents(),
+                    'event history': () => this.showEventHistory(),
+                    'story progress': () => this.showStoryProgress(),
 
                     // System commands
                     'help': () => this.showVoiceHelp(),
@@ -1444,7 +2167,9 @@
                     'inventory': () => this.showInventoryPanel(),
                     'commands': () => this.showVoiceCommands(),
                     'help': () => this.showVoiceHelp(),
-                    'menu': () => this.showMainMenu()
+                    'menu': () => this.showMainMenu(),
+                    'events': () => this.showActiveEvents(),
+                    'story': () => this.showStoryProgress()
                 };
 
                 const action = targetMap[target] || targetMap['commands'];
@@ -1554,6 +2279,11 @@ PROGRESS:
 • "show quest" - View current quest
 • "show my progress" - Check progress
 • "check level" - View level information
+
+EVENT SYSTEM:
+• "show events" - View active story events
+• "event history" - See completed story moments
+• "story progress" - Check overall narrative progress
 
 SYSTEM:
 • "save game" / "load game" - Save management
@@ -1915,6 +2645,56 @@ EXPERIENCE: ${this.playerData.experience}`;
                 }
             }
 
+            // Dynamic Event System Voice Commands
+            showActiveEvents() {
+                const activeEvents = this.eventSystem.activeEvents;
+                if (activeEvents.length === 0) {
+                    const message = 'No active events at the moment. Continue exploring to discover new story developments!';
+                    this.addEventToLog(message);
+                    this.showNotification('Active Events', message);
+                    return;
+                }
+
+                const eventsText = activeEvents.map(event => 
+                    `🎭 ${event.title}\n${event.description}\n`
+                ).join('\n');
+                
+                this.addEventToLog(`Active Events:\n${eventsText}`);
+                this.showNotification('Active Events', eventsText);
+            }
+
+            showEventHistory() {
+                const completedEvents = this.eventSystem.eventHistory;
+                if (completedEvents.length === 0) {
+                    const message = 'No events completed yet. Start exploring to begin your story!';
+                    this.addEventToLog(message);
+                    this.showNotification('Event History', message);
+                    return;
+                }
+
+                const historyText = completedEvents.slice(-10).map(event => 
+                    `✓ ${event.description}`
+                ).join('\n');
+                
+                this.addEventToLog(`Recent Event History:\n${historyText}`);
+                this.showNotification('Event History', historyText);
+            }
+
+            showStoryProgress() {
+                const progress = this.getStoryProgress();
+                const totalExperience = this.playerData.experience + (this.playerData.level - 1) * 100;
+                const completedEvents = this.eventSystem.completedEvents.length;
+                
+                const storyInfo = `STORY PROGRESS: ${progress} chapters completed
+EVENTS COMPLETED: ${completedEvents} story moments
+PLAYER LEVEL: ${this.playerData.level}
+ANOMALIES FOUND: ${this.playerData.anomaliesFound}/5
+TOTAL EXPERIENCE: ${totalExperience}`;
+                
+                this.addEventToLog(storyInfo);
+                this.showNotification('Story Progress', storyInfo);
+            }
+
             showNotification(title, content) {
                 // Create notification element
                 const notification = document.createElement('div');
@@ -1938,6 +2718,23 @@ EXPERIENCE: ${this.playerData.experience}`;
                         notification.remove();
                     }
                 }, 5000);
+            }
+
+            // Initialize story progress indicator
+            initializeStoryProgressUI() {
+                const storyProgress = document.createElement('div');
+                storyProgress.className = 'story-progress';
+                storyProgress.innerHTML = `
+                    📖 Story Progress: ${this.getStoryProgress()}
+                `;
+                document.body.appendChild(storyProgress);
+            }
+
+            updateStoryProgressUI() {
+                const storyProgressElement = document.querySelector('.story-progress');
+                if (storyProgressElement) {
+                    storyProgressElement.innerHTML = `📖 Story Progress: ${this.getStoryProgress()}`;
+                }
             }
 
             handlePanoramaClick(e) {
@@ -2050,6 +2847,8 @@ EXPERIENCE: ${this.playerData.experience}`;
                 const gameData = {
                     playerData: this.playerData,
                     gameState: this.gameState,
+                    eventSystem: this.eventSystem,
+                    aiCompanion: this.aiCompanion,
                     timestamp: new Date().toISOString(),
                     version: '1.0.0'
                 };
@@ -2075,7 +2874,18 @@ EXPERIENCE: ${this.playerData.experience}`;
                         this.playerData = { ...this.playerData, ...gameData.playerData };
                         this.gameState = { ...this.gameState, ...gameData.gameState };
                         
+                        // Restore event system if present
+                        if (gameData.eventSystem) {
+                            this.eventSystem = { ...this.eventSystem, ...gameData.eventSystem };
+                        }
+                        
+                        // Restore AI companion if present
+                        if (gameData.aiCompanion) {
+                            this.aiCompanion = { ...this.aiCompanion, ...gameData.aiCompanion };
+                        }
+                        
                         this.updateUI();
+                        this.updateStoryProgressUI();
                         this.checkFeatureUnlocks();
                         this.updateSaveStatus('Game loaded successfully!', 'success');
                         this.addEventToLog('Game progress restored from save data');
@@ -2383,6 +3193,33 @@ Your consciousness has evolved. Use it wisely. 🌟`;
             }
 
             showWelcomeMessage() {
+                if (!this.gameState.gameStarted) {
+                    this.gameState.gameStarted = true;
+                    
+                    const welcomeText = `🌟 Welcome to ChromaShift: Complete Experience!
+
+Your journey as a Dream Walker begins now. This unified reality offers:
+
+🎮 UNIFIED EXPERIENCE: One seamless game replacing multiple versions
+🎤 VOICE CONTROL: Coming at Level 5 - speak naturally to command reality  
+🎭 DYNAMIC EVENTS: Story moments that unfold based on your choices
+💾 REAL SAVE SYSTEM: Your progress persists across sessions
+🤖 AI COMPANION: Cortana guides and learns from your decisions
+
+CURRENT OBJECTIVES:
+• Explore the dream environment
+• Collect anomalies to progress
+• Reach Level 5 to unlock voice control
+• Complete "The Dreamer's Awakening" quest
+
+Use commands like "examine", "collect", "scan" or try voice commands when unlocked!
+
+Your consciousness awaits. What will you dream into existence?`;
+                    
+                    this.addEventToLog(welcomeText);
+                    this.showNotification('🌟 Welcome to ChromaShift!', welcomeText);
+                }
+            }
                 this.addEventToLog('Welcome to ChromaShift Complete! The unified dream reality experience.');
                 this.addEventToLog('Start by exploring your environment or asking Cortana for guidance.');
                 this.addEventToLog('Complete the "Dreamer\'s Awakening" quest by finding 5 anomalies!');
