@@ -1868,6 +1868,927 @@
         .quest-calendar::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 255, 255, 0.5);
         }
+
+        /* ===== MULTIPLAYER/CO-OP SYSTEM ===== */
+        
+        /* Multiplayer Color Variables */
+        :root {
+            --multiplayer-accent-glow: #00FFFF;
+            --multiplayer-accent-500: #00B8D4;
+            --multiplayer-accent-300: #62EEFF;
+            --multiplayer-bg-surface: rgba(20, 20, 22, 0.7);
+            --multiplayer-border-subtle: rgba(255, 255, 255, 0.1);
+            --multiplayer-border-focus: rgba(0, 184, 212, 0.5);
+            --multiplayer-text-primary: #E4E4E7;
+            --multiplayer-text-secondary: #A1A1AA;
+            --multiplayer-success: #22C55E;
+            --multiplayer-warning: #F59E0B;
+            --multiplayer-error: #EF4444;
+        }
+
+        /* Multiplayer Lobby Modal */
+        .multiplayer-lobby {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: var(--multiplayer-bg-surface);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--multiplayer-border-subtle);
+            border-radius: 16px;
+            z-index: 10000;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            animation: lobbySlideIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes lobbySlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .lobby-header {
+            padding: 32px;
+            text-align: center;
+            border-bottom: 1px solid var(--multiplayer-border-subtle);
+        }
+
+        .lobby-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--multiplayer-text-primary);
+            margin: 0 0 16px 0;
+            text-shadow: 0 0 10px var(--multiplayer-accent-glow);
+        }
+
+        .session-id-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--multiplayer-border-subtle);
+        }
+
+        .session-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--multiplayer-accent-500);
+            letter-spacing: 2px;
+        }
+
+        .copy-session-id {
+            background: var(--multiplayer-accent-500);
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .copy-session-id:hover {
+            background: var(--multiplayer-accent-300);
+            transform: scale(1.05);
+        }
+
+        /* Player List */
+        .player-list {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .player-slot {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--multiplayer-border-subtle);
+            border-radius: 12px;
+            padding: 16px 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .player-slot:hover {
+            border-color: var(--multiplayer-border-focus);
+            background: rgba(0, 184, 212, 0.1);
+        }
+
+        .player-slot.empty {
+            opacity: 0.5;
+            border-style: dashed;
+        }
+
+        .player-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--multiplayer-accent-500), var(--multiplayer-accent-300));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #000;
+            flex-shrink: 0;
+        }
+
+        .player-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .player-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--multiplayer-text-primary);
+        }
+
+        .player-role {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--multiplayer-text-secondary);
+        }
+
+        .role-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--multiplayer-text-secondary);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .voice-indicator.speaking {
+            background: var(--multiplayer-success);
+            animation: voicePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes voicePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+            50% {
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+        }
+
+        .player-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .player-slot:hover .player-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .kick-btn {
+            background: var(--multiplayer-error);
+            color: white;
+        }
+
+        .mute-btn {
+            background: var(--multiplayer-warning);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .invite-btn {
+            background: var(--multiplayer-accent-500);
+            color: #000;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .invite-btn:hover {
+            background: var(--multiplayer-accent-300);
+            transform: scale(1.05);
+        }
+
+        /* Role Selection */
+        .role-selection {
+            padding: 0 32px 32px;
+            border-bottom: 1px solid var(--multiplayer-border-subtle);
+        }
+
+        .role-selection h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--multiplayer-text-primary);
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        .role-cards {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .role-card {
+            flex: 1;
+            max-width: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--multiplayer-border-subtle);
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .role-card:hover {
+            border-color: var(--multiplayer-accent-500);
+            background: rgba(0, 184, 212, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .role-card.selected {
+            border-color: var(--multiplayer-accent-500);
+            background: rgba(0, 184, 212, 0.2);
+            box-shadow: 0 0 20px rgba(0, 184, 212, 0.3);
+        }
+
+        .role-card-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .role-card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--multiplayer-text-primary);
+            margin-bottom: 8px;
+        }
+
+        .role-card-desc {
+            font-size: 12px;
+            color: var(--multiplayer-text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Session Controls */
+        .session-controls {
+            padding: 32px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--multiplayer-border-subtle);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--multiplayer-text-primary);
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            border-color: var(--multiplayer-accent-500);
+            color: var(--multiplayer-accent-500);
+            transform: scale(1.05);
+        }
+
+        .launch-btn {
+            padding: 16px 32px;
+            height: 56px;
+            background: var(--multiplayer-accent-500);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .launch-btn:hover {
+            background: var(--multiplayer-accent-300);
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(0, 184, 212, 0.4);
+        }
+
+        .launch-btn:active {
+            transform: scale(0.98);
+        }
+
+        .launch-btn:disabled {
+            background: var(--multiplayer-text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* In-Game HUD */
+        .multiplayer-hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .team-status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .team-player-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 200px;
+            height: 32px;
+            background: var(--multiplayer-bg-surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--multiplayer-border-subtle);
+            border-radius: 16px;
+            padding: 4px 12px;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.2s ease;
+        }
+
+        .team-player-bar:hover {
+            border-color: var(--multiplayer-border-focus);
+            transform: scale(1.02);
+        }
+
+        .team-player-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--multiplayer-accent-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .team-player-name {
+            flex: 1;
+            font-size: 12px;
+            color: var(--multiplayer-text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .team-player-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--multiplayer-success);
+        }
+
+        .voice-chat-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: var(--multiplayer-bg-surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--multiplayer-border-subtle);
+            border-radius: 12px;
+            padding: 12px 16px;
+            min-width: 200px;
+            pointer-events: auto;
+        }
+
+        .current-speaker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .current-speaker.active {
+            opacity: 1;
+        }
+
+        .speaker-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--multiplayer-accent-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+            animation: speakerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes speakerPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 184, 212, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 8px rgba(0, 184, 212, 0);
+            }
+        }
+
+        .speaker-name {
+            font-size: 14px;
+            color: var(--multiplayer-text-primary);
+            font-weight: 500;
+        }
+
+        /* AI Companion Integration */
+        .ai-companion-multiplayer {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-pulse-line {
+            width: 300px;
+            height: 2px;
+            background: var(--multiplayer-border-subtle);
+            border-radius: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-pulse-line.active {
+            background: var(--multiplayer-accent-glow);
+            box-shadow: 0 0 10px var(--multiplayer-accent-glow);
+        }
+
+        .ai-pulse-line.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            animation: aiScan 2s ease-in-out infinite;
+        }
+
+        @keyframes aiScan {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .ai-subtitles {
+            font-size: 12px;
+            color: var(--multiplayer-text-secondary);
+            text-align: center;
+            max-width: 400px;
+            line-height: 1.4;
+        }
+
+        /* Quest Tracker Multiplayer */
+        .quest-tracker-multiplayer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background: var(--multiplayer-bg-surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--multiplayer-border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            pointer-events: auto;
+        }
+
+        .quest-objective {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .quest-objective:hover {
+            background: rgba(0, 184, 212, 0.1);
+        }
+
+        .objective-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-title {
+            font-size: 14px;
+            color: var(--multiplayer-text-primary);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .objective-roles {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .role-required {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--multiplayer-border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+
+        .role-required.available {
+            background: var(--multiplayer-accent-500);
+            color: #000;
+        }
+
+        .role-required.filled {
+            background: var(--multiplayer-success);
+            color: #000;
+        }
+
+        /* Interaction Wheel */
+        .interaction-wheel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+            z-index: 1500;
+        }
+
+        .wheel-segment {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--multiplayer-bg-surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--multiplayer-border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.2s ease;
+            transform-origin: center;
+        }
+
+        .wheel-segment:hover {
+            border-color: var(--multiplayer-accent-500);
+            background: rgba(0, 184, 212, 0.2);
+            transform: scale(1.1);
+        }
+
+        .wheel-segment.selected {
+            border-color: var(--multiplayer-accent-500);
+            background: rgba(0, 184, 212, 0.3);
+            box-shadow: 0 0 15px rgba(0, 184, 212, 0.4);
+        }
+
+        .segment-0 { transform: rotate(0deg) translate(0, -80px); }
+        .segment-1 { transform: rotate(45deg) translate(0, -80px); }
+        .segment-2 { transform: rotate(90deg) translate(0, -80px); }
+        .segment-3 { transform: rotate(135deg) translate(0, -80px); }
+        .segment-4 { transform: rotate(180deg) translate(0, -80px); }
+        .segment-5 { transform: rotate(225deg) translate(0, -80px); }
+        .segment-6 { transform: rotate(270deg) translate(0, -80px); }
+        .segment-7 { transform: rotate(315deg) translate(0, -80px); }
+
+        /* Achievements & Leaderboards */
+        .achievements-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: var(--multiplayer-bg-surface);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--multiplayer-border-subtle);
+            border-radius: 16px;
+            z-index: 10000;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .achievements-header {
+            padding: 32px;
+            border-bottom: 1px solid var(--multiplayer-border-subtle);
+        }
+
+        .achievements-tabs {
+            display: flex;
+            gap: 32px;
+        }
+
+        .achievement-tab {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            color: var(--multiplayer-text-secondary);
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .achievement-tab.active {
+            color: var(--multiplayer-text-primary);
+        }
+
+        .achievement-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--multiplayer-accent-500);
+        }
+
+        .achievements-content {
+            padding: 32px;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 120px;
+            gap: 16px;
+            padding: 16px;
+            border-bottom: 1px solid var(--multiplayer-border-subtle);
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .leaderboard-row:hover {
+            background: rgba(0, 184, 212, 0.1);
+        }
+
+        .leaderboard-row.current-user {
+            background: rgba(0, 184, 212, 0.2);
+            border-radius: 8px;
+        }
+
+        .leaderboard-rank {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--multiplayer-accent-500);
+            text-align: center;
+        }
+
+        .leaderboard-name {
+            font-size: 16px;
+            color: var(--multiplayer-text-primary);
+        }
+
+        .leaderboard-stat {
+            font-size: 14px;
+            color: var(--multiplayer-text-secondary);
+            text-align: center;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-card {
+            width: 120px;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--multiplayer-border-subtle);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--multiplayer-border-focus);
+            box-shadow: 0 8px 25px rgba(0, 184, 212, 0.3);
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .achievement-card.unlocked .achievement-icon {
+            background: var(--multiplayer-accent-500);
+            color: #000;
+        }
+
+        .achievement-card.locked .achievement-icon {
+            background: var(--multiplayer-text-secondary);
+            color: var(--multiplayer-text-secondary);
+        }
+
+        .achievement-title {
+            font-size: 12px;
+            color: var(--multiplayer-text-primary);
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .achievement-card.locked .achievement-title {
+            color: var(--multiplayer-text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .multiplayer-lobby {
+                width: 95vw;
+                margin: 0;
+            }
+            
+            .player-list {
+                padding: 16px;
+            }
+            
+            .role-cards {
+                flex-direction: column;
+            }
+            
+            .role-card {
+                max-width: none;
+            }
+            
+            .session-controls {
+                padding: 16px;
+                flex-wrap: wrap;
+            }
+            
+            .team-player-bar {
+                width: 160px;
+            }
+            
+            .achievements-panel {
+                width: 95vw;
+            }
+            
+            .leaderboard-row {
+                grid-template-columns: 40px 1fr 80px;
+                gap: 8px;
+                font-size: 14px;
+            }
+            
+            .achievements-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .achievement-card {
+                width: 100px;
+                height: 100px;
+                padding: 12px;
+            }
+        }
+
+        /* Animation for mobile performance */
+        @media (prefers-reduced-motion: reduce) {
+            .multiplayer-lobby,
+            .voice-indicator.speaking,
+            .speaker-avatar,
+            .ai-pulse-line.active::before {
+                animation: none;
+            }
+            
+            .launch-btn,
+            .player-slot,
+            .role-card,
+            .team-player-bar,
+            .wheel-segment,
+            .achievement-card {
+                transition: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2167,6 +3088,7 @@
                 this.setupVoiceControl();
                 this.setupDynamicEventSystem();
                 this.setupAdvancedQuestSystem();
+                this.setupMultiplayerSystem();
                 this.initializeStoryProgressUI();
                 
                 this.addEventToLog('System initialized. Dream environment loading...');
@@ -4828,6 +5750,906 @@ Your consciousness awaits. What will you dream into existence?`;
                 this.enhanceQuestVoiceCommands();
             }
 
+            // ===== MULTIPLAYER/CO-OP SYSTEM =====
+            setupMultiplayerSystem() {
+                this.multiplayerSystem = {
+                    sessionId: this.generateSessionId(),
+                    isHost: false,
+                    isInSession: false,
+                    players: [],
+                    currentPlayer: null,
+                    maxPlayers: 6,
+                    roles: {
+                        hacker: { name: 'Hacker', icon: '💻', description: 'Reality programmer & code breaker', count: 0 },
+                        dreamer: { name: 'Dreamer', icon: '🌌', description: 'Narrative weaver & vision guide', count: 0 },
+                        'reality-mapper': { name: 'Reality Mapper', icon: '🗺️', description: 'Spatial navigator & explorer', count: 0 }
+                    },
+                    voiceChat: {
+                        enabled: true,
+                        currentSpeaker: null,
+                        speakingPlayers: new Set()
+                    },
+                    sharedAI: {
+                        adaptive: true,
+                        groupPersonality: { logic: 50, empathy: 50, curiosity: 50 },
+                        playerPreferences: new Map()
+                    },
+                    collaborativeQuests: {
+                        active: [],
+                        completed: [],
+                        roleRequirements: {}
+                    },
+                    sessionSettings: {
+                        public: false,
+                        requireApproval: true,
+                        maxSessionTime: 7200, // 2 hours
+                        autoSave: true
+                    }
+                };
+
+                this.initializeMultiplayerUI();
+                this.setupMultiplayerEventListeners();
+                this.startMultiplayerSimulation();
+                this.setupVoiceChatSystem();
+            }
+
+            generateSessionId() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = 'CHM-';
+                for (let i = 0; i < 6; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+
+            initializeMultiplayerUI() {
+                // Initialize lobby player slots
+                this.updateMultiplayerLobby();
+                
+                // Setup role selection
+                this.setupRoleSelection();
+                
+                // Initialize team status HUD
+                this.updateTeamStatus();
+                
+                // Setup interaction wheel
+                this.setupInteractionWheel();
+            }
+
+            updateMultiplayerLobby() {
+                const playerList = document.getElementById('playerList');
+                if (!playerList) return;
+
+                playerList.innerHTML = '';
+                
+                for (let i = 0; i < this.multiplayerSystem.maxPlayers; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'player-slot';
+                    
+                    if (i < this.multiplayerSystem.players.length) {
+                        const player = this.multiplayerSystem.players[i];
+                        slot.innerHTML = `
+                            <div class="player-avatar">${player.name.charAt(0)}</div>
+                            <div class="player-info">
+                                <div class="player-name">${player.name}</div>
+                                <div class="player-role">
+                                    <span class="role-icon">${this.multiplayerSystem.roles[player.role].icon}</span>
+                                    ${this.multiplayerSystem.roles[player.role].name}
+                                </div>
+                            </div>
+                            <div class="voice-indicator ${player.speaking ? 'speaking' : ''}"></div>
+                            <div class="player-actions">
+                                ${this.multiplayerSystem.isHost ? `
+                                    <button class="action-btn kick-btn" onclick="window.chromaShiftComplete.kickPlayer(${player.id})" title="Kick Player">🚫</button>
+                                    <button class="action-btn mute-btn" onclick="window.chromaShiftComplete.mutePlayer(${player.id})" title="Mute Player">🔇</button>
+                                ` : ''}
+                            </div>
+                        `;
+                    } else {
+                        slot.className = 'player-slot empty';
+                        slot.innerHTML = `
+                            <div class="player-avatar" style="background: transparent; border: 2px dashed var(--multiplayer-border-subtle);"></div>
+                            <div class="player-info">
+                                <div class="player-name">Empty Slot</div>
+                                <div class="player-role">Waiting for player...</div>
+                            </div>
+                            ${this.multiplayerSystem.isHost ? `<button class="invite-btn" onclick="window.chromaShiftComplete.invitePlayer()">INVITE</button>` : ''}
+                        `;
+                    }
+                    
+                    playerList.appendChild(slot);
+                }
+            }
+
+            setupRoleSelection() {
+                const roleCards = document.querySelectorAll('.role-card');
+                roleCards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        // Remove selected class from all cards
+                        roleCards.forEach(c => c.classList.remove('selected'));
+                        // Add selected class to clicked card
+                        card.classList.add('selected');
+                        
+                        // Update player's role
+                        if (this.multiplayerSystem.currentPlayer) {
+                            this.multiplayerSystem.currentPlayer.role = card.dataset.role;
+                            this.updateTeamStatus();
+                        }
+                    });
+                });
+            }
+
+            updateTeamStatus() {
+                const teamStatus = document.getElementById('teamStatus');
+                if (!teamStatus) return;
+
+                teamStatus.innerHTML = '';
+                
+                this.multiplayerSystem.players.forEach(player => {
+                    const playerBar = document.createElement('div');
+                    playerBar.className = 'team-player-bar';
+                    playerBar.onclick = () => this.focusOnPlayer(player.id);
+                    
+                    playerBar.innerHTML = `
+                        <div class="team-player-avatar">${player.name.charAt(0)}</div>
+                        <div class="team-player-name">${player.name}</div>
+                        <div class="team-player-status" style="background: ${player.status === 'online' ? 'var(--multiplayer-success)' : 'var(--multiplayer-text-secondary)'}"></div>
+                    `;
+                    
+                    teamStatus.appendChild(playerBar);
+                });
+            }
+
+            setupInteractionWheel() {
+                const wheel = document.getElementById('interactionWheel');
+                if (!wheel) return;
+
+                const segments = wheel.querySelectorAll('.wheel-segment');
+                segments.forEach((segment, index) => {
+                    segment.addEventListener('click', () => {
+                        this.performInteraction(segment.dataset.action);
+                    });
+                });
+            }
+
+            performInteraction(action) {
+                // Send interaction to all players
+                this.broadcastInteraction({
+                    type: 'interaction',
+                    action: action,
+                    player: this.multiplayerSystem.currentPlayer?.id,
+                    timestamp: Date.now()
+                });
+
+                // Visual feedback
+                this.showInteractionFeedback(action);
+            }
+
+            showInteractionFeedback(action) {
+                // Create temporary feedback element
+                const feedback = document.createElement('div');
+                feedback.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 48px;
+                    z-index: 2000;
+                    pointer-events: none;
+                    animation: interactionFeedback 2s ease-out forwards;
+                `;
+                feedback.textContent = this.getInteractionIcon(action);
+                
+                document.body.appendChild(feedback);
+                
+                // Add CSS animation
+                if (!document.getElementById('interaction-feedback-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'interaction-feedback-style';
+                    style.textContent = `
+                        @keyframes interactionFeedback {
+                            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+                            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) translateY(-50px); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                setTimeout(() => feedback.remove(), 2000);
+            }
+
+            getInteractionIcon(action) {
+                const icons = {
+                    'point': '👆',
+                    'wave': '👋',
+                    'thumbs-up': '👍',
+                    'question': '❓',
+                    'heart': '❤️',
+                    'star': '⭐',
+                    'tool': '🔧',
+                    'share': '🤝'
+                };
+                return icons[action] || '👋';
+            }
+
+            setupMultiplayerEventListeners() {
+                // Keyboard shortcuts for multiplayer
+                document.addEventListener('keydown', (e) => {
+                    if (!this.multiplayerSystem.isInSession) return;
+                    
+                    switch(e.code) {
+                        case 'KeyM':
+                            e.preventDefault();
+                            this.toggleVoiceChat();
+                            break;
+                        case 'KeyR':
+                            if (e.ctrlKey) {
+                                e.preventDefault();
+                                this.openMultiplayerLobby();
+                            }
+                            break;
+                        case 'KeyH':
+                            if (e.ctrlKey) {
+                                e.preventDefault();
+                                this.showInteractionWheel();
+                            }
+                            break;
+                        case 'Escape':
+                            this.hideInteractionWheel();
+                            break;
+                    }
+                });
+
+                // Voice chat detection simulation
+                this.startVoiceChatSimulation();
+            }
+
+            startVoiceChatSimulation() {
+                setInterval(() => {
+                    if (!this.multiplayerSystem.voiceChat.enabled) return;
+                    
+                    // Randomly simulate players speaking
+                    if (this.multiplayerSystem.players.length > 0 && Math.random() < 0.1) {
+                        const randomPlayer = this.multiplayerSystem.players[
+                            Math.floor(Math.random() * this.multiplayerSystem.players.length)
+                        ];
+                        
+                        this.setPlayerSpeaking(randomPlayer.id, true);
+                        
+                        setTimeout(() => {
+                            this.setPlayerSpeaking(randomPlayer.id, false);
+                        }, 2000 + Math.random() * 3000);
+                    }
+                }, 5000);
+            }
+
+            setPlayerSpeaking(playerId, speaking) {
+                const player = this.multiplayerSystem.players.find(p => p.id === playerId);
+                if (player) {
+                    player.speaking = speaking;
+                    
+                    if (speaking) {
+                        this.multiplayerSystem.voiceChat.currentSpeaker = player;
+                        this.updateVoiceChatDisplay();
+                    } else if (this.multiplayerSystem.voiceChat.currentSpeaker === player) {
+                        this.multiplayerSystem.voiceChat.currentSpeaker = null;
+                        this.updateVoiceChatDisplay();
+                    }
+                    
+                    this.updateMultiplayerLobby();
+                }
+            }
+
+            updateVoiceChatDisplay() {
+                const speakerElement = document.getElementById('currentSpeaker');
+                const speakerAvatar = document.getElementById('speakerAvatar');
+                const speakerName = document.getElementById('speakerName');
+                
+                if (!speakerElement || !speakerAvatar || !speakerName) return;
+                
+                const currentSpeaker = this.multiplayerSystem.voiceChat.currentSpeaker;
+                
+                if (currentSpeaker) {
+                    speakerAvatar.textContent = currentSpeaker.name.charAt(0);
+                    speakerName.textContent = currentSpeaker.name;
+                    speakerElement.classList.add('active');
+                } else {
+                    speakerElement.classList.remove('active');
+                }
+            }
+
+            startMultiplayerSimulation() {
+                // Simulate other players joining/leaving
+                setInterval(() => {
+                    if (Math.random() < 0.05 && this.multiplayerSystem.players.length < this.multiplayerSystem.maxPlayers) {
+                        this.addSimulatedPlayer();
+                    } else if (Math.random() < 0.03 && this.multiplayerSystem.players.length > 1) {
+                        this.removeSimulatedPlayer();
+                    }
+                }, 10000);
+            }
+
+            addSimulatedPlayer() {
+                const playerNames = ['Alex', 'Jordan', 'Sam', 'Casey', 'Morgan', 'Riley'];
+                const availableNames = playerNames.filter(name => 
+                    !this.multiplayerSystem.players.some(p => p.name === name)
+                );
+                
+                if (availableNames.length === 0) return;
+                
+                const randomName = availableNames[Math.floor(Math.random() * availableNames.length)];
+                const roles = Object.keys(this.multiplayerSystem.roles);
+                const randomRole = roles[Math.floor(Math.random() * roles.length)];
+                
+                const newPlayer = {
+                    id: Date.now() + Math.random(),
+                    name: randomName,
+                    role: randomRole,
+                    status: 'online',
+                    speaking: false,
+                    joinedAt: Date.now()
+                };
+                
+                this.multiplayerSystem.players.push(newPlayer);
+                this.updateMultiplayerLobby();
+                this.updateTeamStatus();
+                
+                // Notify AI companion about new player
+                if (this.aiCompanion && this.aiCompanion.personality) {
+                    this.aiCompanion.personality.curiosity += 2;
+                    this.announceToAI(`New player ${randomName} joined the session as a ${this.multiplayerSystem.roles[randomRole].name}`);
+                }
+            }
+
+            removeSimulatedPlayer() {
+                if (this.multiplayerSystem.players.length <= 1) return;
+                
+                const playerToRemove = this.multiplayerSystem.players[
+                    Math.floor(Math.random() * (this.multiplayerSystem.players.length - 1)) + 1 // Don't remove current player
+                ];
+                
+                this.multiplayerSystem.players = this.multiplayerSystem.players.filter(p => p.id !== playerToRemove.id);
+                this.updateMultiplayerLobby();
+                this.updateTeamStatus();
+                
+                // Notify AI companion about player leaving
+                if (this.aiCompanion && this.aiCompanion.personality) {
+                    this.aiCompanion.personality.empathy += 1;
+                    this.announceToAI(`${playerToRemove.name} has left the session`);
+                }
+            }
+
+            // ===== MULTIPLAYER UI FUNCTIONS =====
+            
+            openMultiplayerLobby() {
+                const lobby = document.getElementById('multiplayerLobby');
+                const hud = document.getElementById('multiplayerHud');
+                
+                if (lobby) {
+                    lobby.style.display = 'block';
+                    this.updateSessionId();
+                    this.setupCurrentPlayer();
+                }
+                
+                if (hud) hud.style.display = 'none';
+            }
+
+            closeMultiplayerLobby() {
+                const lobby = document.getElementById('multiplayerLobby');
+                if (lobby) lobby.style.display = 'none';
+            }
+
+            setupCurrentPlayer() {
+                if (!this.multiplayerSystem.currentPlayer) {
+                    this.multiplayerSystem.currentPlayer = {
+                        id: Date.now(),
+                        name: 'You',
+                        role: 'hacker',
+                        status: 'online',
+                        speaking: false,
+                        isHost: true
+                    };
+                    this.multiplayerSystem.isHost = true;
+                    this.multiplayerSystem.players = [this.multiplayerSystem.currentPlayer];
+                }
+                this.updateMultiplayerLobby();
+            }
+
+            updateSessionId() {
+                const sessionIdElement = document.getElementById('sessionId');
+                if (sessionIdElement) {
+                    sessionIdElement.textContent = this.multiplayerSystem.sessionId;
+                }
+            }
+
+            launchSession() {
+                if (this.multiplayerSystem.players.length < 1) {
+                    alert('Need at least 1 player to launch session');
+                    return;
+                }
+                
+                this.multiplayerSystem.isInSession = true;
+                this.closeMultiplayerLobby();
+                
+                const hud = document.getElementById('multiplayerHud');
+                if (hud) hud.style.display = 'block';
+                
+                this.initializeCollaborativeQuests();
+                this.setupSharedAIAdaptation();
+                this.startTeamSyncLoop();
+                
+                this.addEventToLog(`Multiplayer session launched with ${this.multiplayerSystem.players.length} players`);
+            }
+
+            initializeCollaborativeQuests() {
+                // Create team-based versions of existing quests
+                this.multiplayerSystem.collaborativeQuests.active = [
+                    {
+                        id: 'team_dream_awakening',
+                        title: 'The Collective Dream',
+                        description: 'Work together to unlock the dream realm',
+                        requiredRoles: ['hacker', 'dreamer'],
+                        progress: 0,
+                        maxProgress: 100,
+                        teamMembers: [],
+                        status: 'active'
+                    },
+                    {
+                        id: 'reality_harmony',
+                        title: 'Reality Harmonization',
+                        description: 'Synchronize your perceptions across dimensions',
+                        requiredRoles: ['reality-mapper', 'dreamer'],
+                        progress: 0,
+                        maxProgress: 150,
+                        teamMembers: [],
+                        status: 'active'
+                    }
+                ];
+            }
+
+            setupSharedAIAdaptation() {
+                if (!this.aiCompanion || !this.aiCompanion.personality) return;
+                
+                // Calculate group personality based on all players' preferences
+                this.calculateGroupPersonality();
+                
+                // Adapt AI responses to be more group-oriented
+                this.adaptAIGroupBehavior();
+            }
+
+            calculateGroupPersonality() {
+                const groupTraits = { logic: 0, empathy: 0, curiosity: 0, protection: 0, humor: 0, mystery: 0 };
+                let playerCount = this.multiplayerSystem.players.length;
+                
+                // Simulate player personalities based on roles
+                this.multiplayerSystem.players.forEach(player => {
+                    switch(player.role) {
+                        case 'hacker':
+                            groupTraits.logic += 20;
+                            groupTraits.curiosity += 15;
+                            break;
+                        case 'dreamer':
+                            groupTraits.empathy += 20;
+                            groupTraits.curiosity += 10;
+                            break;
+                        case 'reality-mapper':
+                            groupTraits.logic += 10;
+                            groupTraits.protection += 15;
+                            break;
+                    }
+                });
+                
+                // Average the traits
+                Object.keys(groupTraits).forEach(trait => {
+                    groupTraits[trait] /= playerCount;
+                });
+                
+                this.multiplayerSystem.sharedAI.groupPersonality = groupTraits;
+            }
+
+            adaptAIGroupBehavior() {
+                if (!this.aiCompanion.personality) return;
+                
+                // Modify Cortana's responses based on group dynamics
+                const originalGenerateResponse = this.generateCompanionResponse;
+                this.generateCompanionResponse = (context) => {
+                    const groupContext = this.getGroupContext(context);
+                    return originalGenerateResponse.call(this, groupContext);
+                };
+            }
+
+            getGroupContext(context) {
+                return {
+                    ...context,
+                    isMultiplayer: true,
+                    teamSize: this.multiplayerSystem.players.length,
+                    groupPersonality: this.multiplayerSystem.sharedAI.groupPersonality,
+                    playerRoles: this.multiplayerSystem.players.map(p => p.role),
+                    collaborationMode: true
+                };
+            }
+
+            startTeamSyncLoop() {
+                setInterval(() => {
+                    this.syncTeamState();
+                    this.updateCollaborativeQuests();
+                    this.broadcastPlayerActions();
+                }, 2000);
+            }
+
+            syncTeamState() {
+                // Sync player positions, statuses, and actions
+                this.multiplayerSystem.players.forEach(player => {
+                    // Simulate position updates
+                    player.x = (player.x || 0) + (Math.random() - 0.5) * 10;
+                    player.y = (player.y || 0) + (Math.random() - 0.5) * 10;
+                });
+            }
+
+            updateCollaborativeQuests() {
+                const quests = this.multiplayerSystem.collaborativeQuests.active;
+                
+                quests.forEach(quest => {
+                    // Check if team has required roles
+                    const teamRoles = this.multiplayerSystem.players.map(p => p.role);
+                    const hasRequiredRoles = quest.requiredRoles.every(role => teamRoles.includes(role));
+                    
+                    if (hasRequiredRoles) {
+                        // Progress the quest based on team coordination
+                        const progressIncrement = Math.random() * 5;
+                        quest.progress = Math.min(quest.progress + progressIncrement, quest.maxProgress);
+                        
+                        // Check for completion
+                        if (quest.progress >= quest.maxProgress) {
+                            this.completeCollaborativeQuest(quest);
+                        }
+                    }
+                });
+                
+                this.updateQuestTrackerDisplay();
+            }
+
+            completeCollaborativeQuest(quest) {
+                quest.status = 'completed';
+                this.multiplayerSystem.collaborativeQuests.completed.push(quest);
+                
+                // Award team achievements
+                this.awardTeamAchievement(quest.id);
+                
+                // Notify all players
+                this.broadcastToAllPlayers({
+                    type: 'quest_completed',
+                    quest: quest,
+                    teamRewards: this.calculateTeamRewards(quest)
+                });
+                
+                this.addEventToLog(`Team completed: ${quest.title}`);
+            }
+
+            awardTeamAchievement(questId) {
+                const achievement = {
+                    id: `team_${questId}`,
+                    title: 'Team Achievement',
+                    description: `Collaborated to complete ${questId}`,
+                    icon: '🤝',
+                    unlockedAt: Date.now(),
+                    players: this.multiplayerSystem.players.map(p => p.id)
+                };
+                
+                if (!this.questSystem.achievements) {
+                    this.questSystem.achievements = [];
+                }
+                this.questSystem.achievements.push(achievement);
+            }
+
+            calculateTeamRewards(quest) {
+                return {
+                    experience: 100 * this.multiplayerSystem.players.length,
+                    chromaKeys: 2 * this.multiplayerSystem.players.length,
+                    teamSynergy: Math.floor(Math.random() * 50) + 25
+                };
+            }
+
+            updateQuestTrackerDisplay() {
+                const objectiveTitle = document.getElementById('objectiveTitle');
+                const objectiveRoles = document.getElementById('objectiveRoles');
+                
+                if (!objectiveTitle || !objectiveRoles) return;
+                
+                const activeQuest = this.multiplayerSystem.collaborativeQuests.active[0];
+                if (!activeQuest) return;
+                
+                objectiveTitle.textContent = activeQuest.title;
+                
+                // Update role requirements
+                objectiveRoles.innerHTML = '';
+                activeQuest.requiredRoles.forEach(role => {
+                    const roleElement = document.createElement('div');
+                    roleElement.className = 'role-required';
+                    roleElement.dataset.role = role;
+                    roleElement.textContent = this.multiplayerSystem.roles[role].icon;
+                    
+                    // Check if team has this role
+                    const teamHasRole = this.multiplayerSystem.players.some(p => p.role === role);
+                    if (teamHasRole) {
+                        roleElement.classList.add('filled');
+                    }
+                    
+                    objectiveRoles.appendChild(roleElement);
+                });
+            }
+
+            broadcastToAllPlayers(message) {
+                // Simulate broadcasting to all players
+                console.log('Broadcast to all players:', message);
+                
+                // Update AI pulse line to show activity
+                this.showAIActivity();
+            }
+
+            showAIActivity() {
+                const aiPulseLine = document.getElementById('aiPulseLine');
+                const aiSubtitles = document.getElementById('aiSubtitles');
+                
+                if (aiPulseLine) {
+                    aiPulseLine.classList.add('active');
+                    setTimeout(() => aiPulseLine.classList.remove('active'), 3000);
+                }
+                
+                if (aiSubtitles) {
+                    const responses = [
+                        "Analyzing team dynamics...",
+                        "Coordinating quantum states...",
+                        "Optimizing group performance...",
+                        "Synchronizing dream frequencies...",
+                        "Harmonizing team consciousness..."
+                    ];
+                    aiSubtitles.textContent = responses[Math.floor(Math.random() * responses.length)];
+                    setTimeout(() => aiSubtitles.textContent = '', 3000);
+                }
+            }
+
+            focusOnPlayer(playerId) {
+                const player = this.multiplayerSystem.players.find(p => p.id === playerId);
+                if (player) {
+                    this.addEventToLog(`Focusing on ${player.name}'s position`);
+                    // Visual feedback for player focus
+                    this.showPlayerFocus(player);
+                }
+            }
+
+            showPlayerFocus(player) {
+                // Create temporary focus indicator
+                const focusIndicator = document.createElement('div');
+                focusIndicator.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: var(--multiplayer-accent-500);
+                    color: #000;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    z-index: 1500;
+                    animation: focusIndicator 2s ease-out forwards;
+                `;
+                focusIndicator.textContent = `Following ${player.name}`;
+                
+                document.body.appendChild(focusIndicator);
+                
+                setTimeout(() => focusIndicator.remove(), 2000);
+            }
+
+            toggleVoiceChat() {
+                this.multiplayerSystem.voiceChat.enabled = !this.multiplayerSystem.voiceChat.enabled;
+                
+                const status = this.multiplayerSystem.voiceChat.enabled ? 'enabled' : 'disabled';
+                this.addEventToLog(`Voice chat ${status}`);
+            }
+
+            showInteractionWheel() {
+                const wheel = document.getElementById('interactionWheel');
+                if (wheel) {
+                    wheel.style.display = 'block';
+                    wheel.style.pointerEvents = 'auto';
+                }
+            }
+
+            hideInteractionWheel() {
+                const wheel = document.getElementById('interactionWheel');
+                if (wheel) {
+                    wheel.style.display = 'none';
+                    wheel.style.pointerEvents = 'none';
+                }
+            }
+
+            kickPlayer(playerId) {
+                if (!this.multiplayerSystem.isHost) return;
+                
+                this.multiplayerSystem.players = this.multiplayerSystem.players.filter(p => p.id !== playerId);
+                this.updateMultiplayerLobby();
+                this.updateTeamStatus();
+                
+                this.addEventToLog('Player removed from session');
+            }
+
+            mutePlayer(playerId) {
+                if (!this.multiplayerSystem.isHost) return;
+                
+                const player = this.multiplayerSystem.players.find(p => p.id === playerId);
+                if (player) {
+                    player.muted = !player.muted;
+                    this.addEventToLog(`${player.name} ${player.muted ? 'muted' : 'unmuted'}`);
+                }
+                this.updateMultiplayerLobby();
+            }
+
+            invitePlayer() {
+                // Simulate sending an invite
+                this.addEventToLog('Invite sent to potential players');
+                
+                // Auto-add a player after a delay
+                setTimeout(() => {
+                    if (this.multiplayerSystem.players.length < this.multiplayerSystem.maxPlayers) {
+                        this.addSimulatedPlayer();
+                    }
+                }, 3000);
+            }
+
+            saveSession() {
+                const sessionData = {
+                    sessionId: this.multiplayerSystem.sessionId,
+                    players: this.multiplayerSystem.players,
+                    collaborativeQuests: this.multiplayerSystem.collaborativeQuests,
+                    timestamp: Date.now()
+                };
+                
+                localStorage.setItem(`chromashift_session_${this.multiplayerSystem.sessionId}`, JSON.stringify(sessionData));
+                this.addEventToLog('Session saved successfully');
+            }
+
+            loadSession() {
+                const savedSession = localStorage.getItem(`chromashift_session_${this.multiplayerSystem.sessionId}`);
+                if (savedSession) {
+                    const sessionData = JSON.parse(savedSession);
+                    this.multiplayerSystem.players = sessionData.players || [];
+                    this.multiplayerSystem.collaborativeQuests = sessionData.collaborativeQuests || { active: [], completed: [] };
+                    
+                    this.updateMultiplayerLobby();
+                    this.updateTeamStatus();
+                    
+                    this.addEventToLog('Session loaded successfully');
+                } else {
+                    this.addEventToLog('No saved session found');
+                }
+            }
+
+            broadcastInteraction(interaction) {
+                console.log('Broadcasting interaction:', interaction);
+                // In a real implementation, this would send to all connected players
+            }
+
+            // ===== ACHIEVEMENTS & LEADERBOARDS =====
+            
+            toggleAchievements() {
+                const panel = document.getElementById('achievementsPanel');
+                if (panel) {
+                    const isVisible = panel.style.display !== 'none';
+                    panel.style.display = isVisible ? 'none' : 'block';
+                    
+                    if (!isVisible) {
+                        this.loadAchievementsPanel();
+                    }
+                }
+            }
+
+            loadAchievementsPanel() {
+                const content = document.getElementById('achievementsContent');
+                if (!content) return;
+
+                // Load leaderboard
+                this.loadLeaderboard(content);
+            }
+
+            loadLeaderboard(container) {
+                const leaderboardData = this.generateLeaderboardData();
+                
+                const leaderboardHTML = `
+                    <div class="leaderboard-section">
+                        <h3 style="color: var(--multiplayer-text-primary); margin-bottom: 20px;">Team Performance</h3>
+                        <div class="leaderboard-table">
+                            ${leaderboardData.map((entry, index) => `
+                                <div class="leaderboard-row ${entry.isCurrentUser ? 'current-user' : ''}">
+                                    <div class="leaderboard-rank">#${index + 1}</div>
+                                    <div class="leaderboard-name">${entry.name}</div>
+                                    <div class="leaderboard-stat">${entry.missionsCompleted} Missions</div>
+                                    <div class="leaderboard-stat">${entry.teamSynergy}% Sync</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = leaderboardHTML;
+            }
+
+            generateLeaderboardData() {
+                const players = this.multiplayerSystem.players.map(player => ({
+                    name: player.name,
+                    missionsCompleted: Math.floor(Math.random() * 20) + 5,
+                    teamSynergy: Math.floor(Math.random() * 30) + 70,
+                    isCurrentUser: player.id === this.multiplayerSystem.currentPlayer?.id
+                }));
+                
+                // Sort by missions completed
+                return players.sort((a, b) => b.missionsCompleted - a.missionsCompleted);
+            }
+
+            switchAchievementTab(tab) {
+                const tabs = document.querySelectorAll('.achievement-tab');
+                const content = document.getElementById('achievementsContent');
+                
+                // Update tab states
+                tabs.forEach(t => t.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                // Load content based on tab
+                if (tab === 'achievements') {
+                    this.loadAchievementsGrid(content);
+                } else {
+                    this.loadLeaderboard(content);
+                }
+            }
+
+            loadAchievementsGrid(container) {
+                const achievements = this.getPlayerAchievements();
+                
+                const achievementsHTML = `
+                    <div class="achievements-grid">
+                        ${achievements.map(achievement => `
+                            <div class="achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                                <div class="achievement-icon">${achievement.icon}</div>
+                                <div class="achievement-title">${achievement.title}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                container.innerHTML = achievementsHTML;
+            }
+
+            getPlayerAchievements() {
+                const baseAchievements = [
+                    { id: 'first_join', title: 'First Steps', icon: '👤', unlocked: true },
+                    { id: 'team_player', title: 'Team Player', icon: '🤝', unlocked: this.multiplayerSystem.players.length > 1 },
+                    { id: 'quest_master', title: 'Quest Master', icon: '🏆', unlocked: this.questSystem?.completedQuests?.length > 0 },
+                    { id: 'hacker', title: 'Code Breaker', icon: '💻', unlocked: this.multiplayerSystem.currentPlayer?.role === 'hacker' },
+                    { id: 'dreamer', title: 'Dream Weaver', icon: '🌌', unlocked: this.multiplayerSystem.currentPlayer?.role === 'dreamer' },
+                    { id: 'explorer', title: 'Reality Explorer', icon: '🗺️', unlocked: this.multiplayerSystem.currentPlayer?.role === 'reality-mapper' },
+                    { id: 'voice_chat', title: ' Communicator', icon: '🎤', unlocked: this.multiplayerSystem.voiceChat.enabled },
+                    { id: 'session_host', title: 'Session Host', icon: '👑', unlocked: this.multiplayerSystem.isHost },
+                    { id: 'collaborator', title: 'Great Collaborator', icon: '⭐', unlocked: this.multiplayerSystem.players.length >= 3 }
+                ];
+                
+                return baseAchievements;
+            }
+
+            // ===== UTILITY FUNCTIONS =====
+            
+            announceToAI(message) {
+                // Add message to AI's knowledge and potentially trigger response
+                if (this.aiCompanion && this.aiCompanion.conversationHistory) {
+                    this.aiCompanion.conversationHistory.push({
+                        type: 'system',
+                        message: message,
+                        timestamp: Date.now()
+                    });
+                }
+            }
+
             initializeQuestTemplates() {
                 return {
                     mainStory: {
@@ -5626,6 +7448,136 @@ Your consciousness awaits. What will you dream into existence?`;
             }
         }
 
+        // ===== MULTIPLAYER UTILITY FUNCTIONS =====
+        
+        function copySessionId() {
+            const sessionId = document.getElementById('sessionId').textContent;
+            navigator.clipboard.writeText(sessionId).then(() => {
+                // Visual feedback for successful copy
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'COPIED!';
+                button.style.background = 'var(--multiplayer-success)';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'var(--multiplayer-accent-500)';
+                }, 1500);
+            });
+        }
+
+        function openMultiplayerLobby() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.openMultiplayerLobby();
+            }
+        }
+
+        function launchSession() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.launchSession();
+            }
+        }
+
+        function toggleAchievements() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.toggleAchievements();
+            }
+        }
+
+        function openModerationSettings() {
+            // Create moderation settings modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 400px;
+                background: var(--multiplayer-bg-surface);
+                backdrop-filter: blur(24px);
+                border: 1px solid var(--multiplayer-border-subtle);
+                border-radius: 16px;
+                padding: 32px;
+                z-index: 10001;
+                color: var(--multiplayer-text-primary);
+            `;
+            
+            modal.innerHTML = `
+                <h2 style="margin-bottom: 20px; color: var(--multiplayer-text-primary);">Moderation Settings</h2>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <input type="checkbox" id="requireApproval" style="width: 18px; height: 18px;">
+                        Require approval for new players
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <input type="checkbox" id="publicSession" style="width: 18px; height: 18px;">
+                        Public session (show in browser)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <input type="checkbox" id="autoSave" style="width: 18px; height: 18px;">
+                        Auto-save session progress
+                    </label>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button onclick="this.closest('[style*=position: fixed]').remove()" 
+                            style="padding: 8px 16px; background: transparent; border: 1px solid var(--multiplayer-border-subtle); color: var(--multiplayer-text-primary); border-radius: 6px; cursor: pointer;">
+                        Cancel
+                    </button>
+                    <button onclick="saveModerationSettings(); this.closest('[style*=position: fixed]').remove()"
+                            style="padding: 8px 16px; background: var(--multiplayer-accent-500); border: none; color: #000; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                        Save
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function saveModerationSettings() {
+            const requireApproval = document.getElementById('requireApproval').checked;
+            const publicSession = document.getElementById('publicSession').checked;
+            const autoSave = document.getElementById('autoSave').checked;
+            
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.multiplayerSystem.sessionSettings.requireApproval = requireApproval;
+                window.chromaShiftComplete.multiplayerSystem.sessionSettings.public = publicSession;
+                window.chromaShiftComplete.multiplayerSystem.sessionSettings.autoSave = autoSave;
+                
+                window.chromaShiftComplete.addEventToLog('Moderation settings updated');
+            }
+        }
+
+        function saveSession() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.saveSession();
+            }
+        }
+
+        function loadSession() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.loadSession();
+            }
+        }
+
+        function switchAchievementTab(tab) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.switchAchievementTab(tab);
+            }
+        }
+
+        // Handle escape key for modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                // Close any open modals
+                const modals = document.querySelectorAll('[style*="position: fixed"][style*="z-index: 1000"]');
+                modals.forEach(modal => {
+                    if (modal.id !== 'interactionWheel') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+        });
+
         // ===== GAME INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', () => {
             window.chromaShiftComplete = new ChromaShiftComplete();
@@ -5655,6 +7607,155 @@ Your consciousness awaits. What will you dream into existence?`;
                 }
             }
         });
+
+        /* ===== MULTIPLAYER INTERFACE HTML ===== */
+
+        <!-- Multiplayer Lobby Modal -->
+        <div class="multiplayer-lobby" id="multiplayerLobby" style="display: none;">
+            <div class="lobby-header">
+                <h1 class="lobby-title">SESSION LOBBY</h1>
+                <div class="session-id-container">
+                    <span class="session-id" id="sessionId">CHM-8F2K-9L1N</span>
+                    <button class="copy-session-id" onclick="copySessionId()">COPY</button>
+                </div>
+            </div>
+            
+            <div class="player-list" id="playerList">
+                <!-- Player slots will be populated by JavaScript -->
+            </div>
+            
+            <div class="role-selection">
+                <h3>Select Your Role</h3>
+                <div class="role-cards">
+                    <div class="role-card" data-role="hacker">
+                        <div class="role-card-icon">💻</div>
+                        <div class="role-card-title">Hacker</div>
+                        <div class="role-card-desc">Reality programmer & code breaker</div>
+                    </div>
+                    <div class="role-card" data-role="dreamer">
+                        <div class="role-card-icon">🌌</div>
+                        <div class="role-card-title">Dreamer</div>
+                        <div class="role-card-desc">Narrative weaver & vision guide</div>
+                    </div>
+                    <div class="role-card" data-role="reality-mapper">
+                        <div class="role-card-icon">🗺️</div>
+                        <div class="role-card-title">Reality Mapper</div>
+                        <div class="role-card-desc">Spatial navigator & explorer</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="session-controls">
+                <button class="control-btn" onclick="toggleAchievements()" title="Achievements & Leaderboards">🏆</button>
+                <button class="control-btn" onclick="openModerationSettings()" title="Moderation Settings">⚙️</button>
+                <button class="control-btn" onclick="saveSession()" title="Save Session">💾</button>
+                <button class="control-btn" onclick="loadSession()" title="Load Session">📁</button>
+                <button class="launch-btn" onclick="launchSession()" id="launchBtn">LAUNCH SESSION</button>
+            </div>
+        </div>
+
+        <!-- In-Game Multiplayer HUD -->
+        <div class="multiplayer-hud" id="multiplayerHud" style="display: none;">
+            <!-- Team Status (Top-Left) -->
+            <div class="team-status" id="teamStatus">
+                <!-- Team players will be populated by JavaScript -->
+            </div>
+            
+            <!-- AI Companion Integration (Top-Center) -->
+            <div class="ai-companion-multiplayer">
+                <div class="ai-pulse-line" id="aiPulseLine"></div>
+                <div class="ai-subtitles" id="aiSubtitles"></div>
+            </div>
+            
+            <!-- Voice Chat Panel (Bottom-Left) -->
+            <div class="voice-chat-panel">
+                <div class="current-speaker" id="currentSpeaker">
+                    <div class="speaker-avatar" id="speakerAvatar">A</div>
+                    <div class="speaker-name" id="speakerName">Player 1</div>
+                </div>
+            </div>
+            
+            <!-- Quest Tracker (Top-Right) -->
+            <div class="quest-tracker-multiplayer">
+                <div class="quest-objective" id="questObjective">
+                    <div class="objective-icon">🎯</div>
+                    <div class="objective-content">
+                        <div class="objective-title" id="objectiveTitle">Connect team quantum channels</div>
+                        <div class="objective-roles" id="objectiveRoles">
+                            <div class="role-required" data-role="hacker">💻</div>
+                            <div class="role-required" data-role="dreamer">🌌</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interaction Wheel (Center) -->
+        <div class="interaction-wheel" id="interactionWheel" style="display: none;">
+            <div class="wheel-segment segment-0" data-action="point">👆</div>
+            <div class="wheel-segment segment-1" data-action="wave">👋</div>
+            <div class="wheel-segment segment-2" data-action="thumbs-up">👍</div>
+            <div class="wheel-segment segment-3" data-action="question">❓</div>
+            <div class="wheel-segment segment-4" data-action="heart">❤️</div>
+            <div class="wheel-segment segment-5" data-action="star">⭐</div>
+            <div class="wheel-segment segment-6" data-action="tool">🔧</div>
+            <div class="wheel-segment segment-7" data-action="share">🤝</div>
+        </div>
+
+        <!-- Achievements & Leaderboards Panel -->
+        <div class="achievements-panel" id="achievementsPanel">
+            <div class="achievements-header">
+                <div class="achievements-tabs">
+                    <button class="achievement-tab active" onclick="switchAchievementTab('leaderboard')">Leaderboards</button>
+                    <button class="achievement-tab" onclick="switchAchievementTab('achievements')">Achievements</button>
+                </div>
+            </div>
+            <div class="achievements-content" id="achievementsContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Multiplayer Quick Access Button -->
+        <button class="multiplayer-btn" id="multiplayerBtn" onclick="openMultiplayerLobby()" style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--multiplayer-accent-500);
+            border: none;
+            color: #000;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 20px rgba(0, 184, 212, 0.4);
+            transition: all 0.3s ease;
+        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Multiplayer Mode">
+            👥
+        </button>
+
+        <!-- Main Menu Multiplayer Button -->
+        <div style="text-align: center; margin: 40px 0;">
+            <button class="control-btn" onclick="openMultiplayerLobby()" style="
+                padding: 16px 32px;
+                height: auto;
+                width: auto;
+                background: var(--multiplayer-accent-500);
+                color: #000;
+                border: none;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0, 184, 212, 0.4);
+            " onmouseover="this.style.background='var(--multiplayer-accent-300)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='var(--multiplayer-accent-500)'; this.style.transform='scale(1)'">
+                🌐 START MULTIPLAYER SESSION
+            </button>
+        </div>
     </script>
 </body>
 </html>
