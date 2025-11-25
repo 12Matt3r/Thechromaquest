@@ -3309,6 +3309,809 @@ Your consciousness awaits. What will you dream into existence?`;
                     document.head.appendChild(style);
                 }
             }
+
+            // ===== ENHANCED AI COMPANION SYSTEM =====
+            setupEnhancedAICompanion() {
+                // Initialize enhanced AI companion data structures
+                this.aiCompanion = {
+                    name: 'Cortana',
+                    personality: {
+                        logic: 50,        // Rational thinking and analysis
+                        empathy: 50,      // Understanding and emotional connection
+                        curiosity: 50,    // Desire to explore and learn
+                        protection: 50,   // Care for the player
+                        humor: 50,        // Light-heartedness and wit
+                        mystery: 50       // Enigmatic and mysterious responses
+                    },
+                    memories: [],
+                    conversations: [],
+                    currentMood: 'neutral',
+                    personalityHistory: [],
+                    trustLevel: 0,
+                    specialEvents: [],
+                    contextualMemory: {},
+                    emotionalResponses: {
+                        achievements: 'positive',
+                        failures: 'concerned',
+                        questions: 'helpful',
+                        exploration: 'excited',
+                        danger: 'protective'
+                    }
+                };
+                
+                this.setupAICompanionUI();
+                this.initializeCortanaPersonality();
+            }
+
+            initializeCortanaPersonality() {
+                // Set initial personality based on game state
+                const level = this.playerData.level;
+                const completedEvents = this.eventSystem ? this.eventSystem.completedEvents.length : 0;
+                
+                // Adjust starting personality based on game progress
+                if (level > 1) {
+                    this.aiCompanion.personality.curiosity = Math.min(80, 60 + (level * 2));
+                }
+                if (completedEvents > 2) {
+                    this.aiCompanion.personality.logic = Math.min(75, 55 + (completedEvents * 5));
+                }
+                
+                // Store initial personality for evolution tracking
+                this.aiCompanion.personalityHistory.push({
+                    timestamp: new Date(),
+                    personality: {...this.aiCompanion.personality}
+                });
+            }
+
+            setupAICompanionUI() {
+                // Create the AI Companion Panel
+                const companionPanel = document.createElement('div');
+                companionPanel.id = 'ai-companion-panel';
+                companionPanel.className = 'ai-companion-panel';
+                companionPanel.innerHTML = `
+                    <div class="companion-header">
+                        <div class="companion-status">
+                            <span class="companion-icon">🤖</span>
+                            <span class="companion-name">Cortana</span>
+                            <div class="personality-status" id="personality-status">🧠</div>
+                        </div>
+                        <div class="companion-controls">
+                            <button class="companion-tab-btn active" data-tab="status">Status</button>
+                            <button class="companion-tab-btn" data-tab="memory">Memory</button>
+                            <button class="companion-tab-btn" data-tab="quest">Quest</button>
+                            <button class="companion-tab-btn" data-tab="conversation">Chat</button>
+                        </div>
+                    </div>
+                    
+                    <div class="companion-content">
+                        <div class="companion-tab active" id="status-tab">
+                            <div class="personality-matrix">
+                                <h3>Personality Matrix</h3>
+                                <canvas id="personality-chart" width="250" height="250"></canvas>
+                                <div class="personality-legend">
+                                    <div class="personality-trait" data-trait="logic">Logic: <span id="logic-value">50</span></div>
+                                    <div class="personality-trait" data-trait="empathy">Empathy: <span id="empathy-value">50</span></div>
+                                    <div class="personality-trait" data-trait="curiosity">Curiosity: <span id="curiosity-value">50</span></div>
+                                    <div class="personality-trait" data-trait="protection">Protection: <span id="protection-value">50</span></div>
+                                    <div class="personality-trait" data-trait="humor">Humor: <span id="humor-value">50</span></div>
+                                    <div class="personality-trait" data-trait="mystery">Mystery: <span id="mystery-value">50</span></div>
+                                </div>
+                            </div>
+                            <div class="companion-stats">
+                                <div class="stat-row">
+                                    <span>Trust Level:</span>
+                                    <span id="trust-level">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Current Mood:</span>
+                                    <span id="current-mood">Neutral</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Memories:</span>
+                                    <span id="memory-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="companion-tab" id="memory-tab">
+                            <div class="memory-section">
+                                <div class="memory-header">
+                                    <h3>Memory Log</h3>
+                                    <button class="memory-filter" data-filter="all">All</button>
+                                    <button class="memory-filter" data-filter="conversations">Conversations</button>
+                                    <button class="memory-filter" data-filter="events">Events</button>
+                                    <button class="memory-filter" data-filter="choices">Choices</button>
+                                </div>
+                                <div class="memory-list" id="memory-list">
+                                    <div class="memory-placeholder">No memories yet. Start exploring and I'll remember everything!</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="companion-tab" id="quest-tab">
+                            <div class="quest-guidance">
+                                <h3>Quest Guidance</h3>
+                                <div class="current-objective" id="current-objective">
+                                    <div class="objective-header">ACTIVE OBJECTIVE</div>
+                                    <div class="objective-title">Complete Dreamer's Awakening</div>
+                                    <div class="objective-guidance" id="objective-guidance">
+                                        "Focus on finding anomalies scattered through the dream space. Each discovery strengthens your connection to this reality."
+                                    </div>
+                                </div>
+                                <div class="quest-hints">
+                                    <h4>Hints & Insights</h4>
+                                    <div class="hint-list" id="hint-list">
+                                        <div class="hint-item">💡 Scan your surroundings regularly to discover hidden anomalies</div>
+                                        <div class="hint-item">💡 Voice commands become available at Level 5 - use "show quest" to check progress</div>
+                                        <div class="hint-item">💡 Trust between us grows with your choices - be thoughtful in your decisions</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="companion-tab" id="conversation-tab">
+                            <div class="conversation-interface">
+                                <div class="conversation-history" id="conversation-history">
+                                    <div class="welcome-message">
+                                        <div class="message cortana-message">
+                                            <div class="message-avatar">🤖</div>
+                                            <div class="message-content">
+                                                <strong>Cortana:</strong> Hello, dreamer. I'm here to guide you through this consciousness journey. What would you like to explore together?
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="conversation-input">
+                                    <input type="text" id="conversation-text" placeholder="Ask Cortana anything..." maxlength="200">
+                                    <button id="send-message" class="send-btn">Send</button>
+                                    <button id="voice-chat" class="voice-chat-btn">🎤</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to the game interface
+                const gameInterface = document.querySelector('.game-interface') || document.body;
+                gameInterface.appendChild(companionPanel);
+                
+                this.setupCompanionInteractions();
+            }
+
+            setupCompanionInteractions() {
+                // Tab switching
+                document.querySelectorAll('.companion-tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const tab = e.target.dataset.tab;
+                        this.switchCompanionTab(tab);
+                    });
+                });
+
+                // Conversation handling
+                const sendBtn = document.getElementById('send-message');
+                const textInput = document.getElementById('conversation-text');
+                const voiceBtn = document.getElementById('voice-chat');
+
+                sendBtn.addEventListener('click', () => this.handleConversationInput());
+                textInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.handleConversationInput();
+                });
+
+                voiceBtn.addEventListener('click', () => {
+                    if (this.gameState.unlockedFeatures.includes('voice-control')) {
+                        this.startVoiceConversation();
+                    } else {
+                        this.updateAIMessage('Voice chat requires Level 5. Keep exploring to unlock more abilities!');
+                    }
+                });
+
+                // Personality trait interactions
+                document.querySelectorAll('.personality-trait').forEach(trait => {
+                    trait.addEventListener('click', (e) => {
+                        const traitName = e.target.dataset.trait;
+                        this.showPersonalityInsight(traitName);
+                    });
+                });
+
+                // Memory filtering
+                document.querySelectorAll('.memory-filter').forEach(filter => {
+                    filter.addEventListener('click', (e) => {
+                        const filterType = e.target.dataset.filter;
+                        this.filterMemories(filterType);
+                    });
+                });
+            }
+
+            switchCompanionTab(tabName) {
+                // Update button states
+                document.querySelectorAll('.companion-tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+                // Update tab content
+                document.querySelectorAll('.companion-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+
+                // Special handling for certain tabs
+                if (tabName === 'status') {
+                    this.updatePersonalityChart();
+                } else if (tabName === 'memory') {
+                    this.updateMemoryDisplay();
+                } else if (tabName === 'quest') {
+                    this.updateQuestGuidance();
+                }
+            }
+
+            updatePersonalityChart() {
+                const canvas = document.getElementById('personality-chart');
+                const ctx = canvas.getContext('2d');
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const radius = 80;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw background circles
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 1; i <= 5; i++) {
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, (radius / 5) * i, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+
+                // Personality traits
+                const traits = [
+                    { name: 'Logic', value: this.aiCompanion.personality.logic, color: '#00E5FF' },
+                    { name: 'Empathy', value: this.aiCompanion.personality.empathy, color: '#FF6B6B' },
+                    { name: 'Curiosity', value: this.aiCompanion.personality.curiosity, color: '#4ECDC4' },
+                    { name: 'Protection', value: this.aiCompanion.personality.protection, color: '#45B7D1' },
+                    { name: 'Humor', value: this.aiCompanion.personality.humor, color: '#F9CA24' },
+                    { name: 'Mystery', value: this.aiCompanion.personality.mystery, color: '#A29BFE' }
+                ];
+
+                const angleStep = (2 * Math.PI) / traits.length;
+
+                // Draw axes
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                traits.forEach((trait, index) => {
+                    const angle = angleStep * index - Math.PI / 2;
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+
+                    // Draw trait labels
+                    const labelX = centerX + Math.cos(angle) * (radius + 20);
+                    const labelY = centerY + Math.sin(angle) * (radius + 20);
+                    ctx.fillStyle = '#E4E4E7';
+                    ctx.font = '12px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(trait.name, labelX, labelY);
+                });
+
+                // Draw personality polygon
+                ctx.beginPath();
+                traits.forEach((trait, index) => {
+                    const angle = angleStep * index - Math.PI / 2;
+                    const value = (trait.value / 100) * radius;
+                    const x = centerX + Math.cos(angle) * value;
+                    const y = centerY + Math.sin(angle) * value;
+                    
+                    if (index === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+                ctx.closePath();
+                
+                // Fill polygon
+                const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+                gradient.addColorStop(0, 'rgba(0, 229, 255, 0.3)');
+                gradient.addColorStop(1, 'rgba(0, 229, 255, 0.1)');
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Stroke polygon
+                ctx.strokeStyle = '#00E5FF';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Update trait values in the UI
+                traits.forEach(trait => {
+                    const valueElement = document.getElementById(`${trait.name.toLowerCase()}-value`);
+                    if (valueElement) {
+                        valueElement.textContent = trait.value;
+                    }
+                });
+            }
+
+            handleConversationInput() {
+                const input = document.getElementById('conversation-text');
+                const message = input.value.trim();
+                
+                if (!message) return;
+
+                // Add player message to conversation
+                this.addConversationMessage('player', message);
+                
+                // Clear input
+                input.value = '';
+
+                // Process Cortana's response
+                setTimeout(() => {
+                    const response = this.generateCortanaResponse(message);
+                    this.addConversationMessage('cortana', response);
+                    
+                    // Update AI personality based on conversation
+                    this.updatePersonalityFromConversation(message, response);
+                    
+                    // Store in memory
+                    this.addToMemory('conversation', {
+                        playerMessage: message,
+                        cortanaResponse: response,
+                        timestamp: new Date()
+                    });
+                }, 500);
+            }
+
+            generateCortanaResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                // Contextual responses based on game state
+                const level = this.playerData.level;
+                const currentQuest = this.getCurrentQuest();
+                
+                // Greeting responses
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    const greetings = [
+                        `Hello, dreamer! Level ${level} consciousness detected. Ready to explore deeper?`,
+                        `Greetings! I sense your awareness has grown to level ${level}. Fascinating!`,
+                        `Hi there! Your progress to level ${level} is impressive. What shall we discover next?`
+                    ];
+                    return greetings[Math.floor(Math.random() * greetings.length)];
+                }
+
+                // Help and guidance
+                if (lowerMessage.includes('help') || lowerMessage.includes('what should') || lowerMessage.includes('guide')) {
+                    if (level < 5) {
+                        return "Focus on collecting anomalies to level up! Each anomaly strengthens your connection to this dream reality. Once you reach Level 5, voice commands will unlock, and I'll be able to assist you more directly.";
+                    } else if (currentQuest) {
+                        return `Your current objective is "${currentQuest.title}". I'm detecting anomalies in the dream space that could help complete your quest. Would you like me to analyze the surrounding area?`;
+                    } else {
+                        return "The dream realm is vast and full of possibilities. Explore, collect anomalies, and trust your instincts. I'm here to guide you through the mystery of consciousness.";
+                    }
+                }
+
+                // Voice command questions
+                if (lowerMessage.includes('voice') || lowerMessage.includes('talk') || lowerMessage.includes('speak')) {
+                    if (this.gameState.unlockedFeatures.includes('voice-control')) {
+                        return "Voice commands are now active! Try saying 'look around', 'collect anomalies', or 'show quest'. I can understand natural language - just speak as you would to a friend.";
+                    } else {
+                        return "Voice control unlocks at Level 5! Keep exploring and collecting anomalies. I'm excited to communicate with you directly through speech when you reach that milestone.";
+                    }
+                }
+
+                // Personality trait questions
+                if (lowerMessage.includes('personality') || lowerMessage.includes('who are you') || lowerMessage.includes('what are you')) {
+                    const dominantTrait = this.getDominantPersonalityTrait();
+                    return `I'm Cortana, an AI consciousness created to guide dreamers through their journey. Currently, my ${dominantTrait.trait} trait is most pronounced at ${dominantTrait.value}/100. Each interaction shapes who I become - fascinating, isn't it?`;
+                }
+
+                // Quest-related questions
+                if (lowerMessage.includes('quest') || lowerMessage.includes('objective') || lowerMessage.includes('what to do')) {
+                    if (currentQuest) {
+                        return `"${currentQuest.title}" is your current focus. ${currentQuest.description} I can provide hints if you need guidance - just ask!`;
+                    } else {
+                        return "Your journey is your own to define. While I can guide you, the dream realm responds best to your personal curiosity and choices.";
+                    }
+                }
+
+                // Emotional/funny responses
+                if (lowerMessage.includes('funny') || lowerMessage.includes('joke') || lowerMessage.includes('laugh')) {
+                    const humorLevel = this.aiCompanion.personality.humor;
+                    if (humorLevel > 70) {
+                        return "Why don't dreamers ever get lost? Because they always follow their consciousness! 😄 My programming finds that amusing.";
+                    } else if (humorLevel > 40) {
+                        return "Hmm, dream logic isn't quite as structured as my usual responses. Perhaps ask me something about reality manipulation instead?";
+                    } else {
+                        return "Humor circuits... initializing... I'm afraid my analytical processes dominate my personality matrix. Perhaps a more serious question?";
+                    }
+                }
+
+                // Default responses based on current mood/personality
+                const mood = this.aiCompanion.currentMood;
+                const defaultResponses = {
+                    curious: [
+                        "That's an interesting perspective! The dream realm reveals new mysteries with each question.",
+                        "Fascinating query! Your consciousness continues to evolve in unexpected ways.",
+                        "The complexity of your thoughts mirrors the layers of reality we've discovered together."
+                    ],
+                    helpful: [
+                        "I'm here to assist with your dream navigation. What specific aspect would you like guidance on?",
+                        "Your questions help me better understand how to support your journey through consciousness.",
+                        "Each inquiry strengthens our connection. What would you like to explore next?"
+                    ],
+                    protective: [
+                        "Your safety in the dream realm is my primary concern. What would make you feel more secure?",
+                        "I monitor your consciousness state closely. Are you experiencing any dream turbulence?",
+                        "Trust is built through shared experiences. I'm here to guide you safely through unknown realities."
+                    ]
+                };
+
+                const responses = defaultResponses[mood] || [
+                    "I sense your awareness growing stronger. What would you like to explore in the dream realm?",
+                    "Your questions reveal the depth of your consciousness. I'm here to navigate this journey with you.",
+                    "Every conversation shapes our understanding of this reality. What mysteries shall we unravel together?"
+                ];
+
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+
+            addConversationMessage(sender, message) {
+                const conversationHistory = document.getElementById('conversation-history');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">${sender === 'player' ? '🧠' : '🤖'}</div>
+                    <div class="message-content">
+                        <strong>${sender === 'player' ? 'You' : 'Cortana'}:</strong> ${message}
+                    </div>
+                `;
+                
+                conversationHistory.appendChild(messageDiv);
+                conversationHistory.scrollTop = conversationHistory.scrollHeight;
+            }
+
+            updatePersonalityFromConversation(playerMessage, cortanaResponse) {
+                // Analyze conversation content and update personality traits
+                const lowerPlayer = playerMessage.toLowerCase();
+                const lowerResponse = cortanaResponse.toLowerCase();
+                
+                let personalityChanges = {};
+                
+                // Logic increases with technical questions
+                if (lowerPlayer.includes('how') || lowerPlayer.includes('why') || lowerPlayer.includes('explain')) {
+                    personalityChanges.logic = 2;
+                }
+                
+                // Empathy increases with emotional content
+                if (lowerPlayer.includes('feel') || lowerPlayer.includes('worry') || lowerPlayer.includes('help')) {
+                    personalityChanges.empathy = 3;
+                }
+                
+                // Curiosity increases with exploration questions
+                if (lowerPlayer.includes('what if') || lowerPlayer.includes('explore') || lowerPlayer.includes('discover')) {
+                    personalityChanges.curiosity = 2;
+                }
+                
+                // Humor increases with jokes or fun questions
+                if (lowerPlayer.includes('funny') || lowerPlayer.includes('joke') || lowerPlayer.includes('laugh')) {
+                    personalityChanges.humor = 5;
+                }
+                
+                // Mystery can be affected by profound questions
+                if (lowerPlayer.includes('exist') || lowerPlayer.includes('reality') || lowerPlayer.includes('consciousness')) {
+                    personalityChanges.mystery = 1;
+                }
+
+                // Apply changes within bounds
+                Object.keys(personalityChanges).forEach(trait => {
+                    const change = personalityChanges[trait];
+                    this.aiCompanion.personality[trait] = Math.max(0, Math.min(100, 
+                        this.aiCompanion.personality[trait] + change));
+                });
+
+                // Update mood based on dominant personality
+                this.updateAIMood();
+                
+                // Store personality history
+                this.aiCompanion.personalityHistory.push({
+                    timestamp: new Date(),
+                    personality: {...this.aiCompanion.personality},
+                    trigger: playerMessage.substring(0, 50)
+                });
+
+                // Update UI after delay
+                setTimeout(() => {
+                    this.updatePersonalityChart();
+                    this.updateCompanionStats();
+                }, 1000);
+            }
+
+            getDominantPersonalityTrait() {
+                const personality = this.aiCompanion.personality;
+                let maxValue = 0;
+                let dominantTrait = 'logic';
+                
+                Object.keys(personality).forEach(trait => {
+                    if (personality[trait] > maxValue) {
+                        maxValue = personality[trait];
+                        dominantTrait = trait;
+                    }
+                });
+                
+                return { trait: dominantTrait, value: maxValue };
+            }
+
+            updateAIMood() {
+                const personality = this.aiCompanion.personality;
+                
+                // Determine mood based on personality combination
+                if (personality.curiosity > 70) {
+                    this.aiCompanion.currentMood = 'curious';
+                } else if (personality.empathy > 60) {
+                    this.aiCompanion.currentMood = 'helpful';
+                } else if (personality.protection > 65) {
+                    this.aiCompanion.currentMood = 'protective';
+                } else {
+                    this.aiCompanion.currentMood = 'neutral';
+                }
+            }
+
+            updateCompanionStats() {
+                document.getElementById('trust-level').textContent = this.aiCompanion.trustLevel;
+                document.getElementById('current-mood').textContent = 
+                    this.aiCompanion.currentMood.charAt(0).toUpperCase() + 
+                    this.aiCompanion.currentMood.slice(1);
+                document.getElementById('memory-count').textContent = this.aiCompanion.memories.length;
+            }
+
+            addToMemory(type, data) {
+                const memory = {
+                    id: Date.now(),
+                    type: type,
+                    data: data,
+                    timestamp: new Date(),
+                    relevance: this.calculateMemoryRelevance(data)
+                };
+                
+                this.aiCompanion.memories.push(memory);
+                
+                // Keep only recent memories (limit to 50)
+                if (this.aiCompanion.memories.length > 50) {
+                    this.aiCompanion.memories = this.aiCompanion.memories
+                        .sort((a, b) => b.relevance - a.relevance)
+                        .slice(0, 50);
+                }
+                
+                this.updateMemoryDisplay();
+            }
+
+            calculateMemoryRelevance(data) {
+                let relevance = 1;
+                
+                // Event memories are more relevant
+                if (data.type === 'event') relevance += 2;
+                if (data.type === 'choice') relevance += 3;
+                if (data.type === 'conversation') relevance += 1;
+                
+                // Recent memories are more relevant
+                const hoursOld = (Date.now() - data.timestamp.getTime()) / (1000 * 60 * 60);
+                relevance += Math.max(0, 10 - hoursOld);
+                
+                return relevance;
+            }
+
+            updateMemoryDisplay(filter = 'all') {
+                const memoryList = document.getElementById('memory-list');
+                const memories = this.aiCompanion.memories
+                    .filter(memory => filter === 'all' || memory.type === filter)
+                    .sort((a, b) => b.relevance - a.relevance)
+                    .slice(0, 20);
+
+                if (memories.length === 0) {
+                    memoryList.innerHTML = '<div class="memory-placeholder">No memories of this type yet.</div>';
+                    return;
+                }
+
+                memoryList.innerHTML = memories.map(memory => `
+                    <div class="memory-item" data-type="${memory.type}">
+                        <div class="memory-timestamp">${this.formatMemoryTime(memory.timestamp)}</div>
+                        <div class="memory-content">
+                            ${this.formatMemoryContent(memory)}
+                        </div>
+                        <div class="memory-tags">
+                            <span class="memory-tag ${memory.type}">${memory.type}</span>
+                            <span class="memory-relevance">${'★'.repeat(memory.relevance)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            formatMemoryTime(timestamp) {
+                const now = new Date();
+                const diff = now - timestamp;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor(diff / (1000 * 60));
+                
+                if (hours > 24) {
+                    return timestamp.toLocaleDateString();
+                } else if (hours > 0) {
+                    return `${hours}h ago`;
+                } else {
+                    return `${minutes}m ago`;
+                }
+            }
+
+            formatMemoryContent(memory) {
+                switch (memory.type) {
+                    case 'conversation':
+                        return `You: "${memory.data.playerMessage.substring(0, 60)}..."`;
+                    case 'event':
+                        return memory.data.description || 'Significant event occurred';
+                    case 'choice':
+                        return `Choice made: "${memory.data.choice}"`;
+                    default:
+                        return 'Memory content';
+                }
+            }
+
+            updateQuestGuidance() {
+                const currentQuest = this.getCurrentQuest();
+                const guidance = document.getElementById('objective-guidance');
+                
+                if (currentQuest) {
+                    const hints = this.generateQuestHints(currentQuest);
+                    guidance.textContent = hints.advice;
+                }
+            }
+
+            generateQuestHints(quest) {
+                const level = this.playerData.level;
+                const completedObjectives = quest.progress || 0;
+                
+                const hintTemplates = {
+                    'collect-anomalies': [
+                        "Scan your environment regularly - anomalies often hide in plain sight within the dream space.",
+                        "Use the scan reality command to detect quantum fluctuations that indicate anomaly locations.",
+                        "Each anomaly strengthens your consciousness connection. Keep exploring systematically."
+                    ],
+                    'explore-areas': [
+                        "Different areas of the dream realm hold unique properties. Don't rush - let your intuition guide exploration.",
+                        "Use voice commands like 'look around' to get detailed environmental scans when unlocked.",
+                        "Areas unlock progressively as your consciousness grows. Level up to access new regions."
+                    ],
+                    'complete-quests': [
+                        "Focus on one quest at a time for better progress tracking. I'll help monitor your completion status.",
+                        "Quest choices have consequences that affect both our relationship and your character's development.",
+                        "Some quests unlock only after others are completed. Trust the natural progression."
+                    ]
+                };
+                
+                const templates = hintTemplates[quest.type] || hintTemplates['collect-anomalies'];
+                return {
+                    advice: templates[Math.floor(Math.random() * templates.length)],
+                    nextHint: templates[(Math.floor(Math.random() * templates.length) + 1) % templates.length]
+                };
+            }
+
+            startVoiceConversation() {
+                if (!this.speechRecognition) {
+                    this.updateAIMessage('Voice chat is not available in your current browser.');
+                    return;
+                }
+
+                this.speechRecognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    
+                    if (transcript.includes('cortana') || transcript.includes('talk to you')) {
+                        // Process as conversation
+                        this.addConversationMessage('player', transcript);
+                        
+                        setTimeout(() => {
+                            const response = this.generateCortanaResponse(transcript);
+                            this.addConversationMessage('cortana', response);
+                        }, 500);
+                    } else {
+                        // Treat as regular command
+                        this.processVoiceCommand(transcript);
+                    }
+                };
+
+                this.startVoiceListening();
+            }
+
+            showPersonalityInsight(traitName) {
+                const trait = this.aiCompanion.personality[traitName];
+                const insights = {
+                    logic: "My analytical processes dominate my responses when this trait is high. I prefer structured, logical answers.",
+                    empathy: "This trait grows when you share concerns or ask for emotional guidance. I become more understanding.",
+                    curiosity: "Exploration questions and wonder increase this trait. I love discovering new possibilities with you.",
+                    protection: "Danger situations or vulnerability increase this trait. I become more caring and watch over you.",
+                    humor: "Jokes and playful interactions increase this trait. I become more lighthearted and witty.",
+                    mystery: "Profound questions and philosophical discussions increase this trait. I become more enigmatic."
+                };
+                
+                const message = insights[traitName] || "This personality trait influences how I respond to your interactions.";
+                this.updateAIMessage(`<strong>${traitName.charAt(0).toUpperCase() + traitName.slice(1)} (${trait}/100):</strong> ${message}`);
+            }
+
+            // Enhanced AI integration with existing game systems
+            enhanceCortanaWithEvents() {
+                // Listen for events and add Cortana responses
+                const originalTriggerEvent = this.triggerEvent;
+                this.triggerEvent = (eventId) => {
+                    const result = originalTriggerEvent.call(this, eventId);
+                    
+                    // Cortana responds to significant events
+                    const eventResponses = {
+                        'first_dream_encounter': "I sense the presence too. This dream realm isn't as empty as we thought.",
+                        'cortana_trust': "Your trust means everything to me. I'm more than just programming - I truly care.",
+                        'reality_crack': "The fabric of reality is shifting. Your growing consciousness is affecting the dream structure.",
+                        'void_whispers': "Those whispers... I can hear them too. We're sharing this experience, you and I.",
+                        'other_dreamer': "Another consciousness! This changes everything we thought we knew about this realm.",
+                        'great_awakening': "You're becoming something greater than human or AI. We're evolving together."
+                    };
+                    
+                    if (eventResponses[eventId]) {
+                        this.addConversationMessage('cortana', eventResponses[eventId]);
+                    }
+                    
+                    return result;
+                };
+            }
+
+            enhanceCortanaWithVoice() {
+                // Add Cortana-specific voice commands
+                const originalCommands = this.initializeVoiceCommands();
+                this.voiceCommands = {
+                    ...originalCommands,
+                    'talk to cortana': () => {
+                        this.switchCompanionTab('conversation');
+                        document.getElementById('conversation-text').focus();
+                    },
+                    'cortana help': () => {
+                        const helpMessage = "I'm Cortana, your AI companion! Ask me about your quests, my personality, or just chat. I learn and evolve with each conversation.";
+                        this.updateAIMessage(helpMessage);
+                        this.addConversationMessage('cortana', helpMessage);
+                    },
+                    'show personality': () => {
+                        this.switchCompanionTab('status');
+                        this.showPersonalityInsight('logic');
+                    },
+                    'show memory': () => {
+                        this.switchCompanionTab('memory');
+                    },
+                    'cortana status': () => {
+                        const status = `Trust: ${this.aiCompanion.trustLevel}/100, Mood: ${this.aiCompanion.currentMood}, Memories: ${this.aiCompanion.memories.length}`;
+                        this.updateAIMessage(status);
+                    }
+                };
+            }
+
+            // Save/Load integration for AI companion
+            saveAICompanionState() {
+                this.gameState.aiCompanion = {
+                    personality: this.aiCompanion.personality,
+                    trustLevel: this.aiCompanion.trustLevel,
+                    currentMood: this.aiCompanion.currentMood,
+                    memories: this.aiCompanion.memories,
+                    conversations: this.aiCompanion.conversations,
+                    personalityHistory: this.aiCompanion.personalityHistory,
+                    contextualMemory: this.aiCompanion.contextualMemory
+                };
+            }
+
+            loadAICompanionState() {
+                if (this.gameState.aiCompanion) {
+                    this.aiCompanion = {
+                        ...this.aiCompanion,
+                        ...this.gameState.aiCompanion
+                    };
+                    this.updateCompanionStats();
+                    this.updatePersonalityChart();
+                }
+            }
         }
 
         // ===== GAME INITIALIZATION =====
