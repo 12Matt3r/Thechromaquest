@@ -3451,6 +3451,635 @@
                 transition: none;
             }
         }
+    }
+
+    /* ========================================= */
+    /* 3D ENVIRONMENT EXPLORATION SYSTEM */
+    /* ========================================= */
+
+    :root {
+        /* 3D Environment Colors */
+        --env3d-bg-primary: #000000;
+        --env3d-surface-glass: rgba(20, 20, 22, 0.65);
+        --env3d-surface-border: rgba(255, 255, 255, 0.1);
+        --env3d-primary-500: #00E5FF;
+        --env3d-primary-700: #00A3B8;
+        --env3d-secondary-500: #F000FF;
+        --env3d-text-primary: #E4E4E7;
+        --env3d-text-secondary: #A1A1AA;
+        --env3d-feedback-success: #34D399;
+        --env3d-feedback-error: #F87171;
+    }
+
+    /* 3D Scene Container */
+    .env3d-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        background: var(--env3d-bg-primary);
+        overflow: hidden;
+    }
+
+    .env3d-scene {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .env3d-renderer {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    /* 3D UI Overlays */
+    .env3d-ui-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .env3d-ui-overlay > * {
+        pointer-events: auto;
+    }
+
+    /* 3D Minimap */
+    .env3d-minimap {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        width: 180px;
+        height: 180px;
+        background: var(--env3d-surface-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: env3d-fade-slide-in-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .env3d-minimap-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--env3d-text-primary);
+        margin-bottom: 12px;
+        text-align: center;
+        letter-spacing: -0.01em;
+    }
+
+    .env3d-minimap-display {
+        width: 140px;
+        height: 140px;
+        background: var(--env3d-bg-primary);
+        border-radius: 50%;
+        position: relative;
+        border: 2px solid var(--env3d-primary-500);
+        box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
+    }
+
+    .env3d-minimap-player {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    .env3d-minimap-player::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: -6px;
+        width: 12px;
+        height: 12px;
+        background: var(--env3d-primary-500);
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        box-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+    }
+
+    .env3d-minimap-waypoint {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: var(--env3d-primary-500);
+        border-radius: 50%;
+        animation: env3d-pulse 2s infinite ease-in-out;
+        box-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
+    }
+
+    .env3d-minimap-controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .env3d-zoom-btn {
+        width: 24px;
+        height: 24px;
+        background: var(--env3d-surface-glass);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 4px;
+        color: var(--env3d-text-primary);
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s ease;
+    }
+
+    .env3d-zoom-btn:hover {
+        background: var(--env3d-primary-500);
+        color: var(--env3d-bg-primary);
+        box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+    }
+
+    /* Environmental Info Panel */
+    .env3d-info-panel {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        width: 280px;
+        background: var(--env3d-surface-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 8px;
+        padding: 16px;
+        animation: env3d-fade-slide-in-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .env3d-info-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        color: var(--env3d-text-primary);
+        margin-bottom: 12px;
+        letter-spacing: -0.01em;
+    }
+
+    .env3d-info-content {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--env3d-text-secondary);
+    }
+
+    .env3d-environment-stats {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--env3d-surface-border);
+    }
+
+    .env3d-stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 12px;
+    }
+
+    .env3d-stat-label {
+        color: var(--env3d-text-secondary);
+    }
+
+    .env3d-stat-value {
+        color: var(--env3d-text-primary);
+        font-family: 'Fira Code', monospace;
+    }
+
+    /* Camera Mode Selector */
+    .env3d-camera-selector {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        background: var(--env3d-surface-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        gap: 8px;
+        animation: env3d-fade-slide-in-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .env3d-camera-btn {
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        color: var(--env3d-text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s ease-in-out;
+    }
+
+    .env3d-camera-btn:hover {
+        color: var(--env3d-primary-700);
+        transform: scale(1.1);
+    }
+
+    .env3d-camera-btn.active {
+        color: var(--env3d-primary-500);
+        background: rgba(0, 229, 255, 0.1);
+        box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+    }
+
+    /* Interaction Prompts */
+    .env3d-interaction-prompt {
+        position: absolute;
+        bottom: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--env3d-surface-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 8px;
+        padding: 12px 20px;
+        text-align: center;
+        opacity: 0;
+        animation: env3d-fade-in 0.2s ease-out forwards;
+    }
+
+    .env3d-interaction-prompt.prompt-hidden {
+        animation: env3d-fade-out 0.2s ease-in forwards;
+    }
+
+    .env3d-prompt-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        color: var(--env3d-text-primary);
+        margin-bottom: 4px;
+    }
+
+    .env3d-prompt-action {
+        font-size: 14px;
+        color: var(--env3d-primary-500);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+
+    /* 3D Controls Panel */
+    .env3d-controls-panel {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        background: var(--env3d-surface-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 8px;
+        padding: 16px;
+        width: 200px;
+        animation: env3d-fade-slide-in-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .env3d-controls-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--env3d-text-primary);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .env3d-controls-list {
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        color: var(--env3d-text-secondary);
+        line-height: 1.6;
+    }
+
+    .env3d-control-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+    }
+
+    .env3d-key {
+        color: var(--env3d-primary-500);
+        font-family: 'Fira Code', monospace;
+        background: rgba(0, 229, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+
+    /* Mobile Controls */
+    .env3d-mobile-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 140px;
+        background: var(--env3d-surface-glass);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid var(--env3d-surface-border);
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+    .env3d-mobile-joystick {
+        width: 80px;
+        height: 80px;
+        background: var(--env3d-surface-glass);
+        border: 2px solid var(--env3d-surface-border);
+        border-radius: 50%;
+        position: relative;
+    }
+
+    .env3d-mobile-joystick-stick {
+        width: 20px;
+        height: 20px;
+        background: var(--env3d-primary-500);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
+    }
+
+    .env3d-mobile-look-area {
+        width: 120px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 8px;
+        position: relative;
+    }
+
+    .env3d-mobile-interact-btn {
+        width: 60px;
+        height: 60px;
+        background: var(--env3d-primary-500);
+        border: none;
+        border-radius: 50%;
+        color: var(--env3d-bg-primary);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 0 16px rgba(0, 229, 255, 0.6);
+    }
+
+    /* Performance Settings */
+    .env3d-settings-panel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--env3d-surface-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--env3d-surface-border);
+        border-radius: 8px;
+        padding: 24px;
+        width: 360px;
+        display: none;
+        animation: env3d-scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .env3d-settings-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        color: var(--env3d-text-primary);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .env3d-setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .env3d-setting-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: var(--env3d-text-primary);
+    }
+
+    .env3d-toggle {
+        width: 44px;
+        height: 24px;
+        background: var(--env3d-surface-border);
+        border-radius: 12px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .env3d-toggle.active {
+        background: var(--env3d-primary-500);
+        box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+    }
+
+    .env3d-toggle-handle {
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .env3d-toggle.active .env3d-toggle-handle {
+        transform: translateX(20px);
+    }
+
+    /* Animations */
+    @keyframes env3d-fade-slide-in-left {
+        from {
+            opacity: 0;
+            transform: translateX(-24px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes env3d-fade-slide-in-right {
+        from {
+            opacity: 0;
+            transform: translateX(24px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes env3d-fade-slide-in-bottom {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes env3d-fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes env3d-fade-out {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes env3d-scale-in {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    @keyframes env3d-pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0.7;
+        }
+    }
+
+    /* 3D Object Interactions */
+    .env3d-object-interactive {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .env3d-object-interactive:hover {
+        filter: brightness(1.2) drop-shadow(0 0 16px rgba(0, 229, 255, 0.6));
+    }
+
+    .env3d-object-glow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle, rgba(0, 229, 255, 0.3) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .env3d-object-interactive:hover .env3d-object-glow {
+        opacity: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .env3d-minimap {
+            width: 150px;
+            height: 150px;
+            padding: 12px;
+        }
+
+        .env3d-minimap-display {
+            width: 120px;
+            height: 120px;
+        }
+
+        .env3d-info-panel {
+            width: 240px;
+        }
+
+        .env3d-controls-panel {
+            width: 160px;
+            padding: 12px;
+        }
+
+        .env3d-mobile-controls {
+            display: flex;
+        }
+
+        .env3d-camera-selector {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .env3d-minimap,
+        .env3d-info-panel,
+        .env3d-controls-panel {
+            position: relative;
+            margin: 8px;
+            width: auto;
+        }
+
+        .env3d-ui-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        .env3d-minimap,
+        .env3d-info-panel,
+        .env3d-camera-selector,
+        .env3d-controls-panel {
+            animation: none;
+        }
+
+        .env3d-object-interactive {
+            transition: none;
+        }
+
+        .env3d-object-glow {
+            display: none;
+        }
+    }
+
+    /* High Contrast Mode */
+    @media (prefers-contrast: high) {
+        .env3d-surface-glass {
+            background: rgba(20, 20, 22, 0.9);
+        }
+
+        .env3d-surface-border {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+    }
     </style>
 </head>
 <body>
@@ -3737,6 +4366,32 @@
                 this.particleSystem = null;
                 this.interactiveObjects = [];
                 
+                // 3D Environment System
+                this.environment3D = {
+                    scene: null,
+                    camera: null,
+                    renderer: null,
+                    player: null,
+                    controls: null,
+                    raycaster: null,
+                    clock: null,
+                    environmentObjects: [],
+                    interactiveObjects3D: [],
+                    cameraModes: ['first', 'third', 'free', 'cinematic'],
+                    currentCameraMode: 'first',
+                    settings: {
+                        particles: true,
+                        lighting: true,
+                        weather: true,
+                        shadows: false,
+                        quality: false,
+                        spatial: true
+                    },
+                    minimapZoom: 1,
+                    isInitialized: false,
+                    isActive: false
+                };
+                
                 this.init();
             }
 
@@ -3752,6 +4407,7 @@
                 this.setupAdvancedQuestSystem();
                 this.setupMultiplayerSystem();
                 this.setupRealityHackingSystem();
+                this.setup3DEnvironmentSystem();
                 this.initializeStoryProgressUI();
                 
                 this.addEventToLog('System initialized. Dream environment loading...');
@@ -9585,6 +10241,1337 @@ function createAnchor(name, properties) {
             }
         }
 
+        // =========================================
+        // 3D ENVIRONMENT EXPLORATION SYSTEM
+        // =========================================
+
+        setup3DEnvironmentSystem() {
+            // Initialize 3D environment variables
+            this.environment3D.scene = null;
+            this.environment3D.camera = null;
+            this.environment3D.renderer = null;
+            this.environment3D.player = null;
+            this.environment3D.controls = null;
+            this.environment3D.raycaster = new THREE.Raycaster();
+            this.environment3D.clock = new THREE.Clock();
+            this.environment3D.environmentObjects = [];
+            this.environment3D.interactiveObjects3D = [];
+            this.environment3D.minimapZoom = 1;
+            this.environment3D.isInitialized = false;
+            this.environment3D.isActive = false;
+
+            // Initialize mouse/touch controls
+            this.setup3DInputControls();
+            
+            // Setup event listeners for 3D system
+            this.setup3DEventListeners();
+            
+            this.addEventToLog('3D Environment System initialized - WebGL context ready');
+        }
+
+        setup3DInputControls() {
+            // Keyboard controls for 3D movement
+            this.keys = {
+                w: false,
+                a: false,
+                s: false,
+                d: false,
+                shift: false,
+                space: false,
+                mouse: { x: 0, y: 0 }
+            };
+
+            // Mobile touch controls state
+            this.touchControls = {
+                joystickActive: false,
+                joystickPosition: { x: 0, y: 0 },
+                lookActive: false,
+                lookPosition: { x: 0, y: 0 }
+            };
+        }
+
+        setup3DEventListeners() {
+            // Keyboard events
+            document.addEventListener('keydown', (e) => this.handle3DKeyDown(e));
+            document.addEventListener('keyup', (e) => this.handle3DKeyUp(e));
+            
+            // Mouse events for camera control
+            if (!this.isMobile()) {
+                document.addEventListener('mousemove', (e) => this.handle3DMouseMove(e));
+                document.addEventListener('click', (e) => this.handle3DClick(e));
+            }
+
+            // Touch events for mobile
+            if (this.isMobile()) {
+                this.setupMobileTouchControls();
+            }
+
+            // 3D UI element events
+            this.setup3DUIEventListeners();
+
+            // Settings panel toggle
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F1') {
+                    e.preventDefault();
+                    this.toggleEnv3dSettings();
+                }
+            });
+        }
+
+        setup3DUIEventListeners() {
+            // Camera mode selector
+            document.querySelectorAll('.env3d-camera-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const cameraMode = e.target.dataset.camera;
+                    this.switch3DCameraMode(cameraMode);
+                });
+            });
+
+            // Minimap zoom controls
+            const zoomInBtn = document.getElementById('env3dZoomIn');
+            const zoomOutBtn = document.getElementById('env3dZoomOut');
+            
+            if (zoomInBtn) zoomInBtn.addEventListener('click', () => this.zoomMinimap(1.2));
+            if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => this.zoomMinimap(0.8));
+
+            // Settings toggles
+            document.querySelectorAll('.env3d-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    const setting = e.target.dataset.setting;
+                    this.toggle3DSetting(setting);
+                });
+            });
+        }
+
+        setupMobileTouchControls() {
+            const mobileControls = document.getElementById('env3dMobileControls');
+            const mobileJoystick = document.getElementById('env3dMobileJoystick');
+            const mobileLookArea = document.getElementById('env3dMobileLookArea');
+            const mobileInteractBtn = document.getElementById('env3dMobileInteract');
+
+            if (mobileJoystick) {
+                mobileJoystick.addEventListener('touchstart', (e) => this.handleJoystickStart(e));
+                mobileJoystick.addEventListener('touchmove', (e) => this.handleJoystickMove(e));
+                mobileJoystick.addEventListener('touchend', (e) => this.handleJoystickEnd(e));
+            }
+
+            if (mobileLookArea) {
+                mobileLookArea.addEventListener('touchstart', (e) => this.handleLookStart(e));
+                mobileLookArea.addEventListener('touchmove', (e) => this.handleLookMove(e));
+                mobileLookArea.addEventListener('touchend', (e) => this.handleLookEnd(e));
+            }
+
+            if (mobileInteractBtn) {
+                mobileInteractBtn.addEventListener('click', () => this.handle3DInteraction());
+            }
+        }
+
+        // 3D Input Handlers
+        handle3DKeyDown(e) {
+            if (!this.environment3D.isActive) return;
+
+            switch(e.key.toLowerCase()) {
+                case 'w': this.keys.w = true; break;
+                case 'a': this.keys.a = true; break;
+                case 's': this.keys.s = true; break;
+                case 'd': this.keys.d = true; break;
+                case 'shift': this.keys.shift = true; break;
+                case ' ': this.keys.space = true; break;
+                case 'e': this.handle3DInteraction(); break;
+            }
+        }
+
+        handle3DKeyUp(e) {
+            if (!this.environment3D.isActive) return;
+
+            switch(e.key.toLowerCase()) {
+                case 'w': this.keys.w = false; break;
+                case 'a': this.keys.a = false; break;
+                case 's': this.keys.s = false; break;
+                case 'd': this.keys.d = false; break;
+                case 'shift': this.keys.shift = false; break;
+                case ' ': this.keys.space = false; break;
+            }
+        }
+
+        handle3DMouseMove(e) {
+            if (!this.environment3D.isActive || this.environment3D.currentCameraMode !== 'first') return;
+            
+            const movementX = e.movementX || 0;
+            const movementY = e.movementY || 0;
+            
+            if (this.environment3D.controls) {
+                this.environment3D.controls.moveRight(movementX * 0.002);
+                this.environment3D.controls.moveForward(-movementY * 0.002);
+            }
+        }
+
+        handle3DClick(e) {
+            if (!this.environment3D.isActive) return;
+            
+            // Raycast for object interaction
+            const mouse = new THREE.Vector2(
+                (e.clientX / window.innerWidth) * 2 - 1,
+                -(e.clientY / window.innerHeight) * 2 + 1
+            );
+            
+            this.environment3D.raycaster.setFromCamera(mouse, this.environment3D.camera);
+            
+            const intersects = this.environment3D.raycaster.intersectObjects(this.environment3D.interactiveObjects3D);
+            
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                this.interactWith3DObject(object);
+            }
+        }
+
+        // Mobile touch handlers
+        handleJoystickStart(e) {
+            e.preventDefault();
+            this.touchControls.joystickActive = true;
+            this.updateJoystickPosition(e);
+        }
+
+        handleJoystickMove(e) {
+            e.preventDefault();
+            if (this.touchControls.joystickActive) {
+                this.updateJoystickPosition(e);
+            }
+        }
+
+        handleJoystickEnd(e) {
+            e.preventDefault();
+            this.touchControls.joystickActive = false;
+            this.touchControls.joystickPosition = { x: 0, y: 0 };
+            this.updateJoystickVisual();
+        }
+
+        updateJoystickPosition(e) {
+            const touch = e.touches[0];
+            const joystickRect = document.getElementById('env3dMobileJoystick').getBoundingClientRect();
+            const centerX = joystickRect.left + joystickRect.width / 2;
+            const centerY = joystickRect.top + joystickRect.height / 2;
+            
+            const deltaX = touch.clientX - centerX;
+            const deltaY = touch.clientY - centerY;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const maxDistance = 30;
+            
+            if (distance <= maxDistance) {
+                this.touchControls.joystickPosition.x = deltaX / maxDistance;
+                this.touchControls.joystickPosition.y = deltaY / maxDistance;
+            } else {
+                this.touchControls.joystickPosition.x = (deltaX / distance) * 0.8;
+                this.touchControls.joystickPosition.y = (deltaY / distance) * 0.8;
+            }
+            
+            this.updateJoystickVisual();
+        }
+
+        updateJoystickVisual() {
+            const stick = document.querySelector('.env3d-mobile-joystick-stick');
+            if (stick) {
+                const x = this.touchControls.joystickPosition.x * 25;
+                const y = this.touchControls.joystickPosition.y * 25;
+                stick.style.transform = `translate(${x}px, ${y}px)`;
+            }
+        }
+
+        handleLookStart(e) {
+            e.preventDefault();
+            this.touchControls.lookActive = true;
+        }
+
+        handleLookMove(e) {
+            e.preventDefault();
+            if (this.touchControls.lookActive && this.environment3D.camera) {
+                const touch = e.touches[0];
+                const deltaX = touch.movementX || 0;
+                const deltaY = touch.movementY || 0;
+                
+                // Apply camera rotation based on touch movement
+                if (this.environment3D.controls) {
+                    this.environment3D.controls.rotateLeft(-deltaX * 0.002);
+                    this.environment3D.controls.rotateUp(deltaY * 0.002);
+                }
+            }
+        }
+
+        handleLookEnd(e) {
+            e.preventDefault();
+            this.touchControls.lookActive = false;
+        }
+
+        // 3D Interaction System
+        handle3DInteraction() {
+            if (!this.environment3D.isActive) return;
+
+            // Check for nearby interactive objects
+            const interactables = this.getNearbyInteractables();
+            
+            if (interactables.length > 0) {
+                this.interactWith3DObject(interactables[0]);
+            } else {
+                this.hideInteractionPrompt();
+            }
+        }
+
+        getNearbyInteractables() {
+            const nearby = [];
+            const playerPos = this.environment3D.player?.position || new THREE.Vector3();
+            
+            this.environment3D.interactiveObjects3D.forEach(object => {
+                const distance = playerPos.distanceTo(object.position);
+                if (distance <= 3.0) { // 3 meter interaction range
+                    nearby.push(object);
+                }
+            });
+            
+            return nearby;
+        }
+
+        interactWith3DObject(object) {
+            const objectType = object.userData.type || 'unknown';
+            
+            switch(objectType) {
+                case 'anomaly':
+                    this.collect3DAnomaly(object);
+                    break;
+                case 'quest_item':
+                    this.collect3DQuestItem(object);
+                    break;
+                case 'reality_node':
+                    this.interactWith3DRealityNode(object);
+                    break;
+                case 'dimensional_portal':
+                    this.enter3DDimensionalPortal(object);
+                    break;
+                default:
+                    this.addEventToLog(`Interacted with ${objectType} - no action defined`);
+            }
+            
+            this.hideInteractionPrompt();
+        }
+
+        collect3DAnomaly(object) {
+            this.addAnomaly('3d_environment', 'chromatic');
+            this.playerData.anomaliesFound++;
+            this.updateUI();
+            
+            // Animate object removal
+            this.animate3DObjectRemoval(object);
+            
+            this.addEventToLog('🌀 Chromatic anomaly collected in 3D space!');
+        }
+
+        collect3DQuestItem(object) {
+            const questItem = object.userData.questItem;
+            if (questItem && this.questSystem) {
+                this.completeQuestObjective(questItem.questId, questItem.objectiveId);
+            }
+            
+            this.animate3DObjectRemoval(object);
+            this.addEventToLog('📋 Quest item collected from 3D environment');
+        }
+
+        interactWith3DRealityNode(object) {
+            if (this.realityHacking) {
+                // Open reality hacking panel with this node's parameters
+                this.openRealityHackingPanel('matrix');
+                this.addEventToLog('🔧 Reality node parameters loaded');
+            }
+        }
+
+        enter3DDimensionalPortal(object) {
+            const portalData = object.userData.portalData;
+            if (portalData) {
+                // Switch to new environment
+                this.switch3DEnvironment(portalData.environmentId);
+                this.addEventToLog(`🌌 Entered dimensional portal to ${portalData.name}`);
+            }
+        }
+
+        animate3DObjectRemoval(object) {
+            const startScale = object.scale.clone();
+            const endScale = startScale.clone().multiplyScalar(0);
+            
+            // Simple scale animation
+            let progress = 0;
+            const animate = () => {
+                progress += 0.05;
+                const scale = 1 - progress;
+                
+                if (scale > 0) {
+                    object.scale.copy(startScale.multiplyScalar(scale));
+                    requestAnimationFrame(animate);
+                } else {
+                    // Remove from scene
+                    this.environment3D.scene.remove(object);
+                    const index = this.environment3D.interactiveObjects3D.indexOf(object);
+                    if (index > -1) {
+                        this.environment3D.interactiveObjects3D.splice(index, 1);
+                    }
+                }
+            };
+            
+            animate();
+        }
+
+        showInteractionPrompt(objectName, action = 'Interact') {
+            const prompt = document.getElementById('env3dInteractionPrompt');
+            const text = document.getElementById('env3dPromptText');
+            
+            if (prompt && text) {
+                text.textContent = objectName;
+                prompt.querySelector('.env3d-prompt-action').textContent = `[E] ${action}`;
+                prompt.style.display = 'block';
+            }
+        }
+
+        hideInteractionPrompt() {
+            const prompt = document.getElementById('env3dInteractionPrompt');
+            if (prompt) {
+                prompt.classList.add('prompt-hidden');
+                setTimeout(() => {
+                    prompt.style.display = 'none';
+                    prompt.classList.remove('prompt-hidden');
+                }, 200);
+            }
+        }
+
+        // 3D Scene Management
+        initialize3DScene() {
+            if (this.environment3D.isInitialized) return;
+
+            try {
+                // Scene setup
+                this.environment3D.scene = new THREE.Scene();
+                this.environment3D.scene.background = new THREE.Color(0x000000);
+
+                // Camera setup
+                this.environment3D.camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+
+                // Renderer setup
+                this.environment3D.renderer = new THREE.WebGLRenderer({ 
+                    antialias: true,
+                    alpha: true 
+                });
+                this.environment3D.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.environment3D.renderer.shadowMap.enabled = true;
+                this.environment3D.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                this.environment3D.renderer.outputEncoding = THREE.sRGBEncoding;
+                this.environment3D.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                this.environment3D.renderer.toneMappingExposure = 1.2;
+
+                // Add renderer to DOM
+                const sceneContainer = document.getElementById('env3dScene');
+                if (sceneContainer) {
+                    sceneContainer.appendChild(this.environment3D.renderer.domElement);
+                }
+
+                // Lighting setup
+                this.setup3DLighting();
+
+                // Environment generation
+                this.generate3DEnvironment();
+
+                // Player setup
+                this.setup3DPlayer();
+
+                // Camera controls
+                this.setup3DCameraControls();
+
+                // Window resize handler
+                window.addEventListener('resize', () => this.handle3DResize());
+
+                this.environment3D.isInitialized = true;
+                this.addEventToLog('3D Scene initialized successfully');
+
+            } catch (error) {
+                this.addEventToLog(`3D Scene initialization failed: ${error.message}`);
+            }
+        }
+
+        setup3DLighting() {
+            // Ambient lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+            this.environment3D.scene.add(ambientLight);
+
+            // Directional light (main light)
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(50, 50, 50);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 500;
+            directionalLight.shadow.camera.left = -100;
+            directionalLight.shadow.camera.right = 100;
+            directionalLight.shadow.camera.top = 100;
+            directionalLight.shadow.camera.bottom = -100;
+            this.environment3D.scene.add(directionalLight);
+
+            // Point lights for atmosphere
+            const pointLight1 = new THREE.PointLight(0x00ffff, 0.5, 30);
+            pointLight1.position.set(10, 5, 10);
+            this.environment3D.scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0xff00ff, 0.3, 25);
+            pointLight2.position.set(-15, 8, -5);
+            this.environment3D.scene.add(pointLight2);
+
+            // Dynamic lighting based on reality parameters
+            this.update3DLightingFromReality();
+        }
+
+        generate3DEnvironment() {
+            // Ground plane
+            const groundGeometry = new THREE.PlaneGeometry(200, 200);
+            const groundMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x1a1a2e,
+                transparent: true,
+                opacity: 0.8
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            this.environment3D.scene.add(ground);
+
+            // Generate procedural structures
+            this.generate3DStructures();
+            
+            // Add interactive objects
+            this.spawn3DInteractiveObjects();
+            
+            // Add atmospheric particles
+            this.create3DAtmosphericEffects();
+        }
+
+        generate3DStructures() {
+            // Generate floating geometric structures
+            for (let i = 0; i < 20; i++) {
+                const geometry = this.getRandomGeometry();
+                const material = new THREE.MeshPhongMaterial({
+                    color: this.getRandomEnvironmentColor(),
+                    transparent: true,
+                    opacity: 0.6 + Math.random() * 0.4
+                });
+                
+                const structure = new THREE.Mesh(geometry, material);
+                structure.position.set(
+                    (Math.random() - 0.5) * 150,
+                    2 + Math.random() * 20,
+                    (Math.random() - 0.5) * 150
+                );
+                structure.castShadow = true;
+                structure.receiveShadow = true;
+                
+                this.environment3D.scene.add(structure);
+                this.environment3D.environmentObjects.push(structure);
+
+                // Add floating animation
+                this.animate3DFloatingStructure(structure);
+            }
+        }
+
+        getRandomGeometry() {
+            const geometries = [
+                new THREE.BoxGeometry(2 + Math.random() * 4, 2 + Math.random() * 4, 2 + Math.random() * 4),
+                new THREE.SphereGeometry(1 + Math.random() * 2, 8, 6),
+                new THREE.ConeGeometry(1 + Math.random() * 2, 3 + Math.random() * 4, 6),
+                new THREE.CylinderGeometry(0.5 + Math.random() * 1, 1 + Math.random() * 2, 3 + Math.random() * 3, 6),
+                new THREE.TetrahedronGeometry(1 + Math.random() * 2)
+            ];
+            
+            return geometries[Math.floor(Math.random() * geometries.length)];
+        }
+
+        getRandomEnvironmentColor() {
+            const colors = [0x00ffff, 0xff00ff, 0x00ff00, 0xff6600, 0x6600ff, 0xffff00];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        animate3DFloatingStructure(structure) {
+            const originalY = structure.position.y;
+            const floatSpeed = 0.5 + Math.random() * 1.0;
+            const floatHeight = 1 + Math.random() * 3;
+            
+            const animate = () => {
+                if (!this.environment3D.isActive) return;
+                
+                structure.position.y = originalY + Math.sin(Date.now() * 0.001 * floatSpeed) * floatHeight;
+                structure.rotation.y += 0.005;
+                
+                requestAnimationFrame(animate);
+            };
+            
+            animate();
+        }
+
+        spawn3DInteractiveObjects() {
+            // Spawn anomalies
+            for (let i = 0; i < 8; i++) {
+                this.create3DAnomaly(
+                    new THREE.Vector3(
+                        (Math.random() - 0.5) * 100,
+                        1 + Math.random() * 10,
+                        (Math.random() - 0.5) * 100
+                    )
+                );
+            }
+
+            // Spawn quest items
+            for (let i = 0; i < 5; i++) {
+                this.create3DQuestItem(
+                    new THREE.Vector3(
+                        (Math.random() - 0.5) * 80,
+                        0.5 + Math.random() * 5,
+                        (Math.random() - 0.5) * 80
+                    )
+                );
+            }
+
+            // Spawn reality nodes
+            for (let i = 0; i < 3; i++) {
+                this.create3DRealityNode(
+                    new THREE.Vector3(
+                        (Math.random() - 0.5) * 60,
+                        2 + Math.random() * 8,
+                        (Math.random() - 0.5) * 60
+                    )
+                );
+            }
+
+            // Spawn dimensional portals
+            for (let i = 0; i < 2; i++) {
+                this.create3DDimensionalPortal(
+                    new THREE.Vector3(
+                        (Math.random() - 0.5) * 120,
+                        3,
+                        (Math.random() - 0.5) * 120
+                    )
+                );
+            }
+        }
+
+        create3DAnomaly(position) {
+            const geometry = new THREE.SphereGeometry(0.8, 16, 12);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.8,
+                emissive: 0x004444,
+                emissiveIntensity: 0.3
+            });
+            
+            const anomaly = new THREE.Mesh(geometry, material);
+            anomaly.position.copy(position);
+            anomaly.userData.type = 'anomaly';
+            anomaly.castShadow = true;
+            
+            this.environment3D.scene.add(anomaly);
+            this.environment3D.interactiveObjects3D.push(anomaly);
+            
+            // Add pulsing animation
+            this.animate3DPulse(anomaly, 0.6, 1.2, 2000);
+        }
+
+        create3DQuestItem(position) {
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xffd700,
+                transparent: true,
+                opacity: 0.9,
+                emissive: 0x332200,
+                emissiveIntensity: 0.2
+            });
+            
+            const item = new THREE.Mesh(geometry, material);
+            item.position.copy(position);
+            item.userData.type = 'quest_item';
+            item.userData.questItem = {
+                questId: 'dreamers_awakening',
+                objectiveId: 'find_3_anomalies'
+            };
+            item.castShadow = true;
+            
+            this.environment3D.scene.add(item);
+            this.environment3D.interactiveObjects3D.push(item);
+            
+            // Add spinning animation
+            this.animate3DRotation(item, 0.02, 0.01, 0.02);
+        }
+
+        create3DRealityNode(position) {
+            const geometry = new THREE.OctahedronGeometry(1.2);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xff00ff,
+                transparent: true,
+                opacity: 0.7,
+                emissive: 0x220022,
+                emissiveIntensity: 0.4
+            });
+            
+            const node = new THREE.Mesh(geometry, material);
+            node.position.copy(position);
+            node.userData.type = 'reality_node';
+            node.castShadow = true;
+            
+            this.environment3D.scene.add(node);
+            this.environment3D.interactiveObjects3D.push(node);
+            
+            // Add complex rotation animation
+            this.animate3DRotation(node, 0.01, 0.015, 0.008);
+        }
+
+        create3DDimensionalPortal(position) {
+            const geometry = new THREE.RingGeometry(1.5, 2.5, 32);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x6600ff,
+                transparent: true,
+                opacity: 0.6,
+                side: THREE.DoubleSide
+            });
+            
+            const portal = new THREE.Mesh(geometry, material);
+            portal.position.copy(position);
+            portal.rotation.x = Math.PI / 2;
+            portal.userData.type = 'dimensional_portal';
+            portal.userData.portalData = {
+                name: 'Alternative Reality',
+                environmentId: 'alternate_dimension_' + Math.floor(Math.random() * 3)
+            };
+            
+            this.environment3D.scene.add(portal);
+            this.environment3D.interactiveObjects3D.push(portal);
+            
+            // Add swirling animation
+            this.animate3DPortal(portal);
+        }
+
+        animate3DPulse(object, minScale, maxScale, duration) {
+            const animate = () => {
+                if (!this.environment3D.isActive) return;
+                
+                const time = Date.now() * 0.002;
+                const scale = minScale + (maxScale - minScale) * (0.5 + 0.5 * Math.sin(time * Math.PI * 2 / duration * 1000));
+                object.scale.setScalar(scale);
+                
+                requestAnimationFrame(animate);
+            };
+            animate();
+        }
+
+        animate3DRotation(object, speedX, speedY, speedZ) {
+            const animate = () => {
+                if (!this.environment3D.isActive) return;
+                
+                object.rotation.x += speedX;
+                object.rotation.y += speedY;
+                object.rotation.z += speedZ;
+                
+                requestAnimationFrame(animate);
+            };
+            animate();
+        }
+
+        animate3DPortal(portal) {
+            const animate = () => {
+                if (!this.environment3D.isActive) return;
+                
+                portal.rotation.z += 0.01;
+                
+                // Pulsing opacity
+                const opacity = 0.3 + 0.3 * Math.sin(Date.now() * 0.003);
+                portal.material.opacity = opacity;
+                
+                requestAnimationFrame(animate);
+            };
+            animate();
+        }
+
+        create3DAtmosphericEffects() {
+            // Floating particles
+            for (let i = 0; i < 100; i++) {
+                const particle = new THREE.Sprite(
+                    new THREE.SpriteMaterial({
+                        color: this.getRandomEnvironmentColor(),
+                        transparent: true,
+                        opacity: 0.3
+                    })
+                );
+                
+                particle.position.set(
+                    (Math.random() - 0.5) * 200,
+                    Math.random() * 50,
+                    (Math.random() - 0.5) * 200
+                );
+                
+                particle.scale.setScalar(0.1 + Math.random() * 0.3);
+                
+                this.environment3D.scene.add(particle);
+                
+                // Animate floating
+                this.animate3DParticle(particle);
+            }
+        }
+
+        animate3DParticle(particle) {
+            const originalPos = particle.position.clone();
+            const floatSpeed = 0.5 + Math.random() * 1.0;
+            const floatDistance = 2 + Math.random() * 5;
+            
+            const animate = () => {
+                if (!this.environment3D.isActive) return;
+                
+                const time = Date.now() * 0.001 * floatSpeed;
+                particle.position.y = originalPos.y + Math.sin(time) * floatDistance;
+                particle.position.x = originalPos.x + Math.cos(time * 0.7) * 0.5;
+                particle.position.z = originalPos.z + Math.sin(time * 0.5) * 0.3;
+                
+                // Gentle fade in/out
+                particle.material.opacity = 0.1 + 0.2 * (0.5 + 0.5 * Math.sin(time * 2));
+                
+                requestAnimationFrame(animate);
+            };
+            
+            animate();
+        }
+
+        setup3DPlayer() {
+            // Create player object
+            this.environment3D.player = new THREE.Group();
+            this.environment3D.player.position.set(0, 2, 0);
+            
+            // Player visual representation (invisible in first person)
+            const playerGeometry = new THREE.SphereGeometry(0.5, 8, 6);
+            const playerMaterial = new THREE.MeshBasicMaterial({
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.0 // Invisible in first person
+            });
+            
+            const playerMesh = new THREE.Mesh(playerGeometry, playerMaterial);
+            this.environment3D.player.add(playerMesh);
+            
+            this.environment3D.scene.add(this.environment3D.player);
+        }
+
+        setup3DCameraControls() {
+            // Simple custom camera controls for first person
+            this.environment3D.camera.position.set(0, 2, 5);
+            
+            // Mouse look variables
+            this.mouseLook = {
+                isPointerLocked: false,
+                eulerX: 0,
+                eulerY: 0
+            };
+            
+            // Pointer lock for mouse look
+            if (!this.isMobile()) {
+                this.environment3D.renderer.domElement.addEventListener('click', () => {
+                    if (this.environment3D.currentCameraMode === 'first') {
+                        this.environment3D.renderer.domElement.requestPointerLock();
+                    }
+                });
+                
+                document.addEventListener('pointerlockchange', () => {
+                    this.mouseLook.isPointerLocked = document.pointerLockElement === this.environment3D.renderer.domElement;
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (this.mouseLook.isPointerLocked && this.environment3D.currentCameraMode === 'first') {
+                        this.mouseLook.eulerX -= e.movementY * 0.002;
+                        this.mouseLook.eulerY -= e.movementX * 0.002;
+                        this.mouseLook.eulerX = Math.max(-Math.PI/2, Math.min(Math.PI/2, this.mouseLook.eulerX));
+                        
+                        this.environment3D.camera.rotation.set(this.mouseLook.eulerX, this.mouseLook.eulerY, 0);
+                    }
+                });
+            }
+        }
+
+        // 3D Camera Management
+        switch3DCameraMode(mode) {
+            this.environment3D.currentCameraMode = mode;
+            
+            // Update UI
+            document.querySelectorAll('.env3d-camera-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-camera="${mode}"]`).classList.add('active');
+            
+            // Apply camera mode
+            switch(mode) {
+                case 'first':
+                    this.setFirstPersonCamera();
+                    break;
+                case 'third':
+                    this.setThirdPersonCamera();
+                    break;
+                case 'free':
+                    this.setFreeCamera();
+                    break;
+                case 'cinematic':
+                    this.setCinematicCamera();
+                    break;
+            }
+            
+            this.addEventToLog(`Camera mode switched to ${mode}`);
+        }
+
+        setFirstPersonCamera() {
+            if (!this.environment3D.camera || !this.environment3D.player) return;
+            
+            this.environment3D.camera.position.copy(this.environment3D.player.position);
+            this.environment3D.camera.position.y += 1.6; // Eye height
+            this.environment3D.camera.lookAt(0, 1.6, -1);
+            
+            // Hide player model
+            this.environment3D.player.children[0].material.opacity = 0.0;
+        }
+
+        setThirdPersonCamera() {
+            if (!this.environment3D.camera || !this.environment3D.player) return;
+            
+            this.environment3D.camera.position.set(0, 3, 8);
+            this.environment3D.camera.lookAt(this.environment3D.player.position);
+            
+            // Show player model
+            this.environment3D.player.children[0].material.opacity = 0.8;
+        }
+
+        setFreeCamera() {
+            // Position camera for overview
+            this.environment3D.camera.position.set(50, 50, 50);
+            this.environment3D.camera.lookAt(0, 0, 0);
+            
+            // Disable pointer lock
+            if (document.pointerLockElement) {
+                document.exitPointerLock();
+            }
+        }
+
+        setCinematicCamera() {
+            // Dramatic camera position
+            this.environment3D.camera.position.set(20, 15, 20);
+            this.environment3D.camera.lookAt(0, 5, 0);
+            
+            // Disable pointer lock
+            if (document.pointerLockElement) {
+                document.exitPointerLock();
+            }
+        }
+
+        // 3D Environment Updates
+        update3DEnvironment() {
+            if (!this.environment3D.isActive || !this.environment3D.isInitialized) return;
+            
+            // Update player movement
+            this.update3DPlayerMovement();
+            
+            // Update minimap
+            this.update3DMinimap();
+            
+            // Update environment stats
+            this.update3DEnvironmentStats();
+            
+            // Reality parameter integration
+            this.integrateRealityParameters();
+        }
+
+        update3DPlayerMovement() {
+            if (!this.environment3D.player || !this.environment3D.camera) return;
+            
+            const speed = this.keys.shift ? 10 : 5;
+            const moveVector = new THREE.Vector3();
+            
+            if (this.keys.w) moveVector.z -= 1;
+            if (this.keys.s) moveVector.z += 1;
+            if (this.keys.a) moveVector.x -= 1;
+            if (this.keys.d) moveVector.x += 1;
+            
+            // Mobile joystick support
+            if (this.isMobile()) {
+                moveVector.x += this.touchControls.joystickPosition.x;
+                moveVector.z -= this.touchControls.joystickPosition.y;
+            }
+            
+            moveVector.normalize().multiplyScalar(speed * this.getDeltaTime());
+            
+            // Transform movement by camera direction
+            const cameraDirection = new THREE.Vector3();
+            this.environment3D.camera.getWorldDirection(cameraDirection);
+            
+            const right = new THREE.Vector3();
+            right.crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0)).normalize();
+            
+            this.environment3D.player.position.add(
+                right.multiplyScalar(moveVector.x)
+            );
+            this.environment3D.player.position.add(
+                cameraDirection.multiplyScalar(-moveVector.z)
+            );
+            
+            // Keep player above ground
+            this.environment3D.player.position.y = Math.max(2, this.environment3D.player.position.y);
+            
+            // Update camera position
+            if (this.environment3D.currentCameraMode === 'first') {
+                this.environment3D.camera.position.copy(this.environment3D.player.position);
+                this.environment3D.camera.position.y += 1.6;
+            }
+            
+            // Jump functionality
+            if (this.keys.space && this.environment3D.player.position.y <= 2.1) {
+                this.environment3D.player.position.y += 8 * this.getDeltaTime();
+            }
+            
+            // Gravity
+            if (this.environment3D.player.position.y > 2) {
+                this.environment3D.player.position.y -= 15 * this.getDeltaTime();
+            }
+        }
+
+        update3DMinimap() {
+            const playerMarker = document.getElementById('env3dMinimapPlayer');
+            if (playerMarker && this.environment3D.player) {
+                const x = this.environment3D.player.position.x;
+                const z = this.environment3D.player.position.z;
+                
+                // Update minimap position (simplified)
+                playerMarker.style.transform = `translate(${(x / 100) * 60}px, ${(z / 100) * 60}px)`;
+            }
+        }
+
+        update3DEnvironmentStats() {
+            // Update stats display
+            const stats = {
+                timeFlow: this.realityHacking?.matrix?.timeFlow || 1.0,
+                gravity: this.realityHacking?.matrix?.gravity || 1.0,
+                lightLevel: this.realityHacking?.matrix?.lightIntensity || 1.0,
+                objectsFound: this.environment3D.interactiveObjects3D.length
+            };
+            
+            const statsContainer = document.getElementById('env3dStats');
+            if (statsContainer) {
+                statsContainer.innerHTML = `
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Time Flow:</span>
+                        <span class="env3d-stat-value">${stats.timeFlow.toFixed(2)}x</span>
+                    </div>
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Gravity:</span>
+                        <span class="env3d-stat-value">${stats.gravity.toFixed(1)}</span>
+                    </div>
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Light Level:</span>
+                        <span class="env3d-stat-value">${Math.round(stats.lightLevel * 100)}%</span>
+                    </div>
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Objects Found:</span>
+                        <span class="env3d-stat-value">${stats.objectsFound}</span>
+                    </div>
+                `;
+            }
+        }
+
+        integrateRealityParameters() {
+            if (!this.realityHacking || !this.environment3D.scene) return;
+            
+            const matrix = this.realityHacking.matrix;
+            
+            // Update lighting based on reality parameters
+            this.update3DLightingFromReality();
+            
+            // Update player physics
+            if (this.environment3D.player) {
+                // Apply gravity modifications
+                this.gravityMultiplier = matrix.gravity;
+                
+                // Apply time flow effects
+                this.timeFlowMultiplier = matrix.timeFlow;
+            }
+        }
+
+        update3DLightingFromReality() {
+            if (!this.realityHacking || !this.environment3D.scene) return;
+            
+            const matrix = this.realityHacking.matrix;
+            const ambientLight = this.environment3D.scene.children.find(child => child instanceof THREE.AmbientLight);
+            const directionalLight = this.environment3D.scene.children.find(child => child instanceof THREE.DirectionalLight);
+            
+            if (ambientLight) {
+                ambientLight.intensity = 0.1 + (matrix.lightIntensity * 0.4);
+            }
+            
+            if (directionalLight) {
+                directionalLight.intensity = 0.3 + (matrix.lightIntensity * 0.7);
+            }
+        }
+
+        // Utility Methods
+        getDeltaTime() {
+            return this.environment3D.clock ? this.environment3D.clock.getDelta() : 0.016;
+        }
+
+        isMobile() {
+            return window.innerWidth <= 1024 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        zoomMinimap(factor) {
+            this.environment3D.minimapZoom = Math.max(0.5, Math.min(3.0, this.environment3D.minimapZoom * factor));
+            
+            const display = document.getElementById('env3dMinimapDisplay');
+            if (display) {
+                display.style.transform = `scale(${this.environment3D.minimapZoom})`;
+            }
+        }
+
+        toggle3DSetting(setting) {
+            this.environment3D.settings[setting] = !this.environment3D.settings[setting];
+            
+            // Update toggle visual
+            const toggle = document.querySelector(`[data-setting="${setting}"]`);
+            if (toggle) {
+                toggle.classList.toggle('active', this.environment3D.settings[setting]);
+            }
+            
+            // Apply setting
+            this.apply3DSetting(setting);
+        }
+
+        apply3DSetting(setting) {
+            switch(setting) {
+                case 'shadows':
+                    if (this.environment3D.renderer) {
+                        this.environment3D.renderer.shadowMap.enabled = this.environment3D.settings[setting];
+                    }
+                    break;
+                case 'quality':
+                    // Adjust rendering quality
+                    if (this.environment3D.renderer) {
+                        const pixelRatio = this.environment3D.settings[setting] ? window.devicePixelRatio : 1;
+                        this.environment3D.renderer.setPixelRatio(pixelRatio);
+                    }
+                    break;
+            }
+        }
+
+        toggleEnv3dSettings() {
+            const panel = document.getElementById('env3dSettingsPanel');
+            if (panel) {
+                panel.style.display = panel.style.display === 'none' || !panel.style.display ? 'block' : 'none';
+            }
+        }
+
+        handle3DResize() {
+            if (this.environment3D.camera && this.environment3D.renderer) {
+                this.environment3D.camera.aspect = window.innerWidth / window.innerHeight;
+                this.environment3D.camera.updateProjectionMatrix();
+                this.environment3D.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        switch3DEnvironment(environmentId) {
+            // Clear current environment
+            this.environment3D.environmentObjects.forEach(obj => {
+                this.environment3D.scene.remove(obj);
+            });
+            this.environment3D.environmentObjects = [];
+            
+            this.environment3D.interactiveObjects3D.forEach(obj => {
+                this.environment3D.scene.remove(obj);
+            });
+            this.environment3D.interactiveObjects3D = [];
+            
+            // Generate new environment based on ID
+            this.generateEnvironmentById(environmentId);
+        }
+
+        generateEnvironmentById(environmentId) {
+            switch(environmentId) {
+                case 'alternate_dimension_0':
+                    this.generateAlternateDimension1();
+                    break;
+                case 'alternate_dimension_1':
+                    this.generateAlternateDimension2();
+                    break;
+                case 'alternate_dimension_2':
+                    this.generateAlternateDimension3();
+                    break;
+                default:
+                    this.generate3DEnvironment(); // Default environment
+            }
+        }
+
+        generateAlternateDimension1() {
+            // Purple/blue theme
+            const purpleGround = new THREE.Mesh(
+                new THREE.PlaneGeometry(200, 200),
+                new THREE.MeshLambertMaterial({ color: 0x2a1a4a, transparent: true, opacity: 0.9 })
+            );
+            purpleGround.rotation.x = -Math.PI / 2;
+            this.environment3D.scene.add(purpleGround);
+            
+            // Floating crystals
+            for (let i = 0; i < 15; i++) {
+                const crystal = new THREE.Mesh(
+                    new THREE.ConeGeometry(1, 4, 6),
+                    new THREE.MeshPhongMaterial({ 
+                        color: 0x9966ff, 
+                        transparent: true, 
+                        opacity: 0.8,
+                        emissive: 0x331144
+                    })
+                );
+                crystal.position.set(
+                    (Math.random() - 0.5) * 100,
+                    3 + Math.random() * 15,
+                    (Math.random() - 0.5) * 100
+                );
+                this.environment3D.scene.add(crystal);
+                this.animate3DFloatingStructure(crystal);
+            }
+        }
+
+        generateAlternateDimension2() {
+            // Orange/red theme
+            const redGround = new THREE.Mesh(
+                new THREE.PlaneGeometry(200, 200),
+                new THREE.MeshLambertMaterial({ color: 0x4a1a1a, transparent: true, opacity: 0.9 })
+            );
+            redGround.rotation.x = -Math.PI / 2;
+            this.environment3D.scene.add(redGround);
+            
+            // Floating geometric shapes
+            for (let i = 0; i < 20; i++) {
+                const shape = new THREE.Mesh(
+                    this.getRandomGeometry(),
+                    new THREE.MeshPhongMaterial({ 
+                        color: 0xff6633, 
+                        transparent: true, 
+                        opacity: 0.7,
+                        emissive: 0x331100
+                    })
+                );
+                shape.position.set(
+                    (Math.random() - 0.5) * 120,
+                    2 + Math.random() * 20,
+                    (Math.random() - 0.5) * 120
+                );
+                this.environment3D.scene.add(shape);
+                this.animate3DRotation(shape, 0.02, 0.01, 0.015);
+            }
+        }
+
+        generateAlternateDimension3() {
+            // Green/cyan theme
+            const greenGround = new THREE.Mesh(
+                new THREE.PlaneGeometry(200, 200),
+                new THREE.MeshLambertMaterial({ color: 0x1a4a2a, transparent: true, opacity: 0.9 })
+            );
+            greenGround.rotation.x = -Math.PI / 2;
+            this.environment3D.scene.add(greenGround);
+            
+            // Organic shapes
+            for (let i = 0; i < 18; i++) {
+                const organic = new THREE.Mesh(
+                    new THREE.SphereGeometry(2 + Math.random() * 3, 16, 12),
+                    new THREE.MeshPhongMaterial({ 
+                        color: 0x33ff66, 
+                        transparent: true, 
+                        opacity: 0.6,
+                        emissive: 0x113311
+                    })
+                );
+                organic.position.set(
+                    (Math.random() - 0.5) * 100,
+                    1 + Math.random() * 12,
+                    (Math.random() - 0.5) * 100
+                );
+                this.environment3D.scene.add(organic);
+                this.animate3DPulse(organic, 0.8, 1.4, 3000);
+            }
+        }
+
+        // 3D System Control Methods
+        activate3DEnvironment() {
+            if (this.environment3D.isActive) return;
+            
+            this.initialize3DScene();
+            this.environment3D.isActive = true;
+            
+            // Start 3D render loop
+            this.start3DRenderLoop();
+            
+            // Hide 2D interface elements
+            this.hideGameInterfaceFor3D();
+            
+            this.addEventToLog('3D Environment activated - Entering immersive exploration mode');
+        }
+
+        deactivate3DEnvironment() {
+            if (!this.environment3D.isActive) return;
+            
+            this.environment3D.isActive = false;
+            
+            // Show 2D interface elements
+            this.showGameInterfaceAfter3D();
+            
+            // Clean up
+            if (this.environment3D.renderer) {
+                this.environment3D.renderer.domElement.remove();
+            }
+            
+            this.addEventToLog('3D Environment deactivated - Returned to 2D interface');
+        }
+
+        hideGameInterfaceFor3D() {
+            const gameContainer = document.querySelector('.game-container');
+            if (gameContainer) {
+                gameContainer.style.display = 'none';
+            }
+        }
+
+        showGameInterfaceAfter3D() {
+            const gameContainer = document.querySelector('.game-container');
+            if (gameContainer) {
+                gameContainer.style.display = 'block';
+            }
+        }
+
+        start3DRenderLoop() {
+            const animate = () => {
+                if (!this.environment3D.isActive) return;
+                
+                this.update3DEnvironment();
+                
+                if (this.environment3D.renderer && this.environment3D.scene && this.environment3D.camera) {
+                    this.environment3D.renderer.render(this.environment3D.scene, this.environment3D.camera);
+                }
+                
+                requestAnimationFrame(animate);
+            };
+            
+            animate();
+        }
+
+        // Global 3D Environment Functions
+        globalToggle3DEnvironment() {
+            if (this.environment3D.isActive) {
+                this.deactivate3DEnvironment();
+            } else {
+                this.activate3DEnvironment();
+            }
+        }
+
         // ===== MULTIPLAYER UTILITY FUNCTIONS =====
         
         function copySessionId() {
@@ -10352,6 +12339,256 @@ function createAnchor(name, properties) {
                 🔧 REALITY HACKING LAB
             </button>
         </div>
+
+        <!-- ========================================= -->
+        <!-- 3D ENVIRONMENT EXPLORATION SYSTEM -->
+        <!-- ========================================= -->
+        
+        <!-- 3D Scene Container -->
+        <div class="env3d-container" id="env3dContainer">
+            <div class="env3d-scene" id="env3dScene"></div>
+        </div>
+
+        <!-- 3D UI Overlays -->
+        <div class="env3d-ui-overlay" id="env3dUI">
+            
+            <!-- 3D Minimap -->
+            <div class="env3d-minimap" id="env3dMinimap">
+                <div class="env3d-minimap-title">3D ENVIRONMENT MAP</div>
+                <div class="env3d-minimap-display" id="env3dMinimapDisplay">
+                    <div class="env3d-minimap-player" id="env3dMinimapPlayer"></div>
+                </div>
+                <div class="env3d-minimap-controls">
+                    <button class="env3d-zoom-btn" id="env3dZoomOut" title="Zoom Out">-</button>
+                    <button class="env3d-zoom-btn" id="env3dZoomIn" title="Zoom In">+</button>
+                </div>
+            </div>
+
+            <!-- Environmental Information Panel -->
+            <div class="env3d-info-panel" id="env3dInfoPanel">
+                <div class="env3d-info-title">Environment Details</div>
+                <div class="env3d-info-content" id="env3dInfoContent">
+                    <p>Exploring the dream dimension...</p>
+                    <p>Current Location: Origin Point</p>
+                    <p>Reality Stability: <span style="color: var(--env3d-primary-500);">Stable</span></p>
+                </div>
+                <div class="env3d-environment-stats" id="env3dStats">
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Time Flow:</span>
+                        <span class="env3d-stat-value">1.00x</span>
+                    </div>
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Gravity:</span>
+                        <span class="env3d-stat-value">1.0</span>
+                    </div>
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Light Level:</span>
+                        <span class="env3d-stat-value">75%</span>
+                    </div>
+                    <div class="env3d-stat-row">
+                        <span class="env3d-stat-label">Objects Found:</span>
+                        <span class="env3d-stat-value" id="env3dObjectsCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Camera Mode Selector -->
+            <div class="env3d-camera-selector" id="env3dCameraSelector">
+                <button class="env3d-camera-btn active" data-camera="first" title="First Person">
+                    👁️
+                </button>
+                <button class="env3d-camera-btn" data-camera="third" title="Third Person">
+                    👤
+                </button>
+                <button class="env3d-camera-btn" data-camera="free" title="Free Camera">
+                    🕹️
+                </button>
+                <button class="env3d-camera-btn" data-camera="cinematic" title="Cinematic">
+                    🎬
+                </button>
+            </div>
+
+            <!-- Interaction Prompts -->
+            <div class="env3d-interaction-prompt" id="env3dInteractionPrompt" style="display: none;">
+                <div class="env3d-prompt-text" id="env3dPromptText">Object Name</div>
+                <div class="env3d-prompt-action">[E] ACTION</div>
+            </div>
+
+            <!-- 3D Controls Panel -->
+            <div class="env3d-controls-panel" id="env3dControlsPanel">
+                <div class="env3d-controls-title">Controls</div>
+                <div class="env3d-controls-list">
+                    <div class="env3d-control-item">
+                        <span>Move</span>
+                        <span class="env3d-key">WASD</span>
+                    </div>
+                    <div class="env3d-control-item">
+                        <span>Look</span>
+                        <span class="env3d-key">Mouse</span>
+                    </div>
+                    <div class="env3d-control-item">
+                        <span>Interact</span>
+                        <span class="env3d-key">E</span>
+                    </div>
+                    <div class="env3d-control-item">
+                        <span>Sprint</span>
+                        <span class="env3d-key">Shift</span>
+                    </div>
+                    <div class="env3d-control-item">
+                        <span>Jump</span>
+                        <span class="env3d-key">Space</span>
+                    </div>
+                    <div class="env3d-control-item">
+                        <span>Settings</span>
+                        <span class="env3d-key">F1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div class="env3d-mobile-controls" id="env3dMobileControls">
+                <div class="env3d-mobile-joystick" id="env3dMobileJoystick">
+                    <div class="env3d-mobile-joystick-stick"></div>
+                </div>
+                <div class="env3d-mobile-look-area" id="env3dMobileLookArea"></div>
+                <button class="env3d-mobile-interact-btn" id="env3dMobileInteract">E</button>
+            </div>
+
+            <!-- Performance Settings Panel -->
+            <div class="env3d-settings-panel" id="env3dSettingsPanel">
+                <div class="env3d-settings-title">3D Environment Settings</div>
+                
+                <div class="env3d-setting-row">
+                    <span class="env3d-setting-label">Enable Particles</span>
+                    <div class="env3d-toggle active" data-setting="particles">
+                        <div class="env3d-toggle-handle"></div>
+                    </div>
+                </div>
+                
+                <div class="env3d-setting-row">
+                    <span class="env3d-setting-label">Dynamic Lighting</span>
+                    <div class="env3d-toggle active" data-setting="lighting">
+                        <div class="env3d-toggle-handle"></div>
+                    </div>
+                </div>
+                
+                <div class="env3d-setting-row">
+                    <span class="env3d-setting-label">Weather Effects</span>
+                    <div class="env3d-toggle active" data-setting="weather">
+                        <div class="env3d-toggle-handle"></div>
+                    </div>
+                </div>
+                
+                <div class="env3d-setting-row">
+                    <span class="env3d-setting-label">Real-time Shadows</span>
+                    <div class="env3d-toggle" data-setting="shadows">
+                        <div class="env3d-toggle-handle"></div>
+                    </div>
+                </div>
+                
+                <div class="env3d-setting-row">
+                    <span class="env3d-setting-label">High Quality Models</span>
+                    <div class="env3d-toggle" data-setting="quality">
+                        <div class="env3d-toggle-handle"></div>
+                    </div>
+                </div>
+                
+                <div class="env3d-setting-row">
+                    <span class="env3d-setting-label">Audio Spatial</span>
+                    <div class="env3d-toggle active" data-setting="spatial">
+                        <div class="env3d-toggle-handle"></div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="closeEnv3dSettings()" style="
+                        padding: 8px 16px;
+                        background: var(--env3d-primary-500);
+                        color: var(--env3d-bg-primary);
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: 600;
+                    ">Close Settings</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- ========================================= -->
+    <!-- 3D ENVIRONMENT UTILITY FUNCTIONS -->
+    <!-- ========================================= -->
+    <script>
+        // 3D Environment Control Functions
+        
+        function toggle3DEnvironment() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.globalToggle3DEnvironment();
+            }
+        }
+
+        function open3DEnvironment() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.activate3DEnvironment();
+            }
+        }
+
+        function close3DEnvironment() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.deactivate3DEnvironment();
+            }
+        }
+
+        function switch3DCamera(mode) {
+            if (window.chromaShiftComplete && window.chromaShiftComplete.environment3D?.isActive) {
+                window.chromaShiftComplete.switch3DCameraMode(mode);
+            }
+        }
+
+        function toggleEnv3dSettings() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.toggleEnv3dSettings();
+            }
+        }
+
+        function closeEnv3dSettings() {
+            const panel = document.getElementById('env3dSettingsPanel');
+            if (panel) {
+                panel.style.display = 'none';
+            }
+        }
+
+        function zoom3DMinimap(in) {
+            if (window.chromaShiftComplete && window.chromaShiftComplete.environment3D?.isActive) {
+                const factor = in ? 1.2 : 0.8;
+                window.chromaShiftComplete.zoomMinimap(factor);
+            }
+        }
+
+        function interactIn3D() {
+            if (window.chromaShiftComplete && window.chromaShiftComplete.environment3D?.isActive) {
+                window.chromaShiftComplete.handle3DInteraction();
+            }
+        }
+
+        // Add keyboard shortcut for 3D toggle (F2)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F2' && !e.ctrlKey && !e.altKey) {
+                e.preventDefault();
+                toggle3DEnvironment();
+            }
+        });
+
+        // Enhanced mobile 3D controls
+        if ('ontouchstart' in window) {
+            // Mobile-specific 3D optimizations
+            document.addEventListener('touchstart', (e) => {
+                // Prevent default scrolling during 3D interaction
+                if (window.chromaShiftComplete?.environment3D?.isActive) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
     </script>
 </body>
 </html>
