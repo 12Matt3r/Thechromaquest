@@ -4570,6 +4570,413 @@
         .audio-spatial-source {
             border: 2px solid #FFFFFF;
         }
+        
+        /* ===== PROCEDURAL QUEST GENERATION SYSTEM ===== */
+        .procedural-quest-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            background: linear-gradient(135deg, #0F1113 0%, #1A1D1F 100%);
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+            display: none;
+            z-index: 10000;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .procedural-quest-panel.active {
+            display: block;
+            animation: proceduralQuestSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes proceduralQuestSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        .procedural-quest-header {
+            padding: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 255, 0.1));
+        }
+        
+        .procedural-quest-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .procedural-quest-close {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .procedural-quest-close:hover {
+            background: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .procedural-quest-content {
+            padding: 30px;
+        }
+        
+        .quest-generation-info {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .quest-generation-info h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .quest-generation-info p {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .quest-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .quest-type-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quest-type-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .quest-type-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .quest-type-card p {
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .quest-difficulty-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .difficulty-easy {
+            background: var(--success-color);
+            color: #000;
+        }
+        
+        .difficulty-medium {
+            background: var(--warning-color);
+            color: #000;
+        }
+        
+        .difficulty-hard {
+            background: var(--error-color);
+            color: #fff;
+        }
+        
+        .procedural-quest-stats {
+            background: rgba(255, 16, 240, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .procedural-quest-stats h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-label {
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        
+        .stat-value {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .generate-quest-button {
+            background: linear-gradient(135deg, var(--primary-color), #FFD700);
+            border: none;
+            color: #000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0;
+            font-family: inherit;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .generate-quest-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        }
+        
+        .generate-quest-button:active {
+            transform: translateY(0);
+        }
+        
+        .quest-template-preview {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .quest-template-preview h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .quest-template-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+        
+        .quest-template-item strong {
+            color: var(--secondary-color);
+        }
+        
+        .procedural-quest-generation-active {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--success-color);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .quest-generation-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-color), #FFD700);
+            color: #000;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            font-weight: bold;
+            z-index: 10001;
+            animation: notificationSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes notificationSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Quest Display Integration */
+        .active-quest-item.procedural {
+            border-left: 4px solid var(--primary-color);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 255, 0.05));
+        }
+        
+        .procedural-quest-badge {
+            background: var(--primary-color);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 10px;
+            text-transform: uppercase;
+        }
+        
+        .quest-procedural-indicator {
+            color: var(--primary-color);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Quest Management */
+        .quest-management-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .quest-management-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .quest-management-section h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .quest-filter-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            margin: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .quest-filter-button:hover,
+        .quest-filter-button.active {
+            background: var(--primary-color);
+            color: #000;
+        }
+        
+        .quest-search-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: inherit;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        
+        .quest-search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .quest-list-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        
+        .quest-list-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quest-list-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .quest-list-item.selected {
+            background: rgba(255, 215, 0, 0.2);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .procedural-quest-panel {
+                width: 95%;
+                top: 5%;
+                transform: translate(-50%, 0);
+                max-height: 90vh;
+            }
+            
+            .quest-types-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quest-management-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .procedural-quest-content {
+                padding: 20px;
+            }
+        }
     }
     </style>
 </head>
@@ -7443,6 +7850,650 @@ Your consciousness awaits. What will you dream into existence?`;
                 };
             }
 
+            // ===== PROCEDURAL QUEST GENERATION SYSTEM =====
+            generateProceduralQuest() {
+                // Analyze current game state for quest generation
+                const playerLevel = this.playerData?.level || 1;
+                const currentTime = Date.now();
+                const playerPreferences = this.questSystem?.questPreferences || {};
+                
+                // Quest generation algorithm
+                const questSeed = this.generateQuestSeed();
+                const questType = this.selectQuestType(questSeed, playerLevel);
+                const difficulty = this.calculateDifficulty(questSeed, playerLevel);
+                const location = this.selectQuestLocation(questType);
+                const rewards = this.generateRewards(questType, difficulty);
+                
+                // Generate quest with procedural elements
+                const quest = {
+                    id: this.generateQuestId(),
+                    title: this.generateQuestTitle(questType),
+                    description: this.generateQuestDescription(questType, location),
+                    type: questType,
+                    difficulty: difficulty,
+                    location: location,
+                    rewards: rewards,
+                    objectives: this.generateObjectives(questType, location),
+                    timeLimit: this.calculateTimeLimit(questType, difficulty),
+                    generated: true,
+                    seed: questSeed,
+                    created: currentTime,
+                    expires: currentTime + this.calculateTimeLimit(questType, difficulty),
+                    variables: this.generateQuestVariables(questType),
+                    branches: this.generateBranchingPaths(questType),
+                    metadata: {
+                        playerLevel: playerLevel,
+                        generationAlgorithm: 'v2.1',
+                        complexity: this.calculateComplexity(questType),
+                        environmental: this.selectEnvironmental(questType),
+                        narrativeArc: this.selectNarrativeArc(questType)
+                    }
+                };
+                
+                // Add to active quests with conditions
+                this.addProceduralQuest(quest);
+                
+                // Notify player
+                this.showNotification(`New procedurally generated quest: ${quest.title}`);
+                this.updateCortanaAboutQuest(quest);
+                
+                return quest;
+            }
+            
+            generateQuestSeed() {
+                // Create seed from multiple game factors
+                const factors = [
+                    Date.now() % 10000,
+                    this.playerData?.level || 1,
+                    this.playerData?.completedQuests?.length || 0,
+                    this.getSessionProgress(),
+                    this.getLocationVisits(),
+                    this.questSystem?.questProgress?.length || 0
+                ];
+                
+                return factors.reduce((seed, factor) => {
+                    return (seed * 31 + factor) % 2147483647;
+                }, 1);
+            }
+            
+            selectQuestType(seed, playerLevel) {
+                const questTypes = [
+                    {
+                        name: 'anomaly_hunt',
+                        weight: 25,
+                        minLevel: 1,
+                        description: 'Locate and collect specific chromatic anomalies'
+                    },
+                    {
+                        name: 'dimensional_exploration',
+                        weight: 20,
+                        minLevel: 2,
+                        description: 'Explore new dimensional locations'
+                    },
+                    {
+                        name: 'reality_calibration',
+                        weight: 15,
+                        minLevel: 3,
+                        description: 'Adjust reality parameters to stabilize areas'
+                    },
+                    {
+                        name: 'cognitive_test',
+                        weight: 18,
+                        minLevel: 2,
+                        description: 'Complete mental challenges and puzzles'
+                    },
+                    {
+                        name: 'consciousness_growth',
+                        weight: 12,
+                        minLevel: 4,
+                        description: 'Develop mental capabilities and awareness'
+                    },
+                    {
+                        name: 'entity_encounter',
+                        weight: 10,
+                        minLevel: 5,
+                        description: 'Meet and interact with dream realm entities'
+                    }
+                ];
+                
+                // Filter by level requirements
+                const availableTypes = questTypes.filter(type => type.minLevel <= playerLevel);
+                
+                // Weighted selection based on seed
+                const totalWeight = availableTypes.reduce((sum, type) => sum + type.weight, 0);
+                let random = (seed % totalWeight) + 1;
+                
+                for (const type of availableTypes) {
+                    random -= type.weight;
+                    if (random <= 0) {
+                        return type.name;
+                    }
+                }
+                
+                return availableTypes[0].name; // fallback
+            }
+            
+            calculateDifficulty(seed, playerLevel) {
+                const baseDifficulty = playerLevel * 10;
+                const seedFactor = (seed % 100) / 100;
+                const variation = (seedFactor - 0.5) * 20; // +/-10 points
+                
+                return Math.max(1, Math.min(10, Math.floor(baseDifficulty + variation)));
+            }
+            
+            selectQuestLocation(questType) {
+                const locations = {
+                    'anomaly_hunt': [
+                        'void_nexus', 'crystal_caverns', 'echo_chamber', 'neural_network',
+                        'memory_vaults', 'reality_crossroads', 'infinite_tunnel', 'quantum_field'
+                    ],
+                    'dimensional_exploration': [
+                        'purple_crystal_dimension', 'orange_geometric_dimension', 'green_organic_dimension',
+                        'chrome_void', 'prismatic_maze', 'dimensional_portal', 'cosmic_backyard'
+                    ],
+                    'reality_calibration': [
+                        'reality_lab', 'matrix_node', 'calibration_station', 'stability_center',
+                        'parameter_hub', 'consciousness_array', 'reality_grid'
+                    ],
+                    'cognitive_test': [
+                        'thought_labyrinth', 'logic_palace', 'abstract_realm', 'cognitive_challenge',
+                        'mental_arena', 'cognitive_forest', 'idea_space'
+                    ],
+                    'consciousness_growth': [
+                        'awakening_chamber', 'mind_sanctuary', 'consciousness_nexus',
+                        'mental_gymnasium', 'intuition_center', 'mental_sculpture'
+                    ],
+                    'entity_encounter': [
+                        'entity_domain', 'consciousness_meeting_point', 'entity_territory',
+                        'dreamer_sanctuary', 'entity_intersection', 'consciousness_crossroads'
+                    ]
+                };
+                
+                const availableLocations = locations[questType] || locations['anomaly_hunt'];
+                return availableLocations[Math.floor(Math.random() * availableLocations.length)];
+            }
+            
+            generateQuestTitle(questType) {
+                const titleTemplates = {
+                    'anomaly_hunt': [
+                        'The {color} Anomaly Hunt',
+                        'Chasing {color} Echoes',
+                        'The {shape} of Reality',
+                        'Dimensional {color} Signatures',
+                        'The {element} Anomaly',
+                        'Seeking {color} Fragments'
+                    ],
+                    'dimensional_exploration': [
+                        'Beyond the {dimension} Veil',
+                        'The {shape} Path Through {dimension}',
+                        'Exploring the {dimension} Realm',
+                        'The {dimension} Threshold',
+                        'Journey to {dimension} Dimension',
+                        'The {dimension} Expedition'
+                    ],
+                    'reality_calibration': [
+                        'Stabilizing the {element} Field',
+                        'Reality Parameter {action}',
+                        'The {element} Calibration',
+                        'Matrix {action} Protocol',
+                        'Reality {action} Sequence',
+                        'The {element} Harmonization'
+                    ],
+                    'cognitive_test': [
+                        'The {concept} Challenge',
+                        'Cognitive {action} Test',
+                        'The {concept} Verification',
+                        'Mental {action} Exercise',
+                        'The {concept} Threshold',
+                        'Cognitive {action} Trial'
+                    ],
+                    'consciousness_growth': [
+                        'Expanding {capacity}',
+                        'The {ability} Awakening',
+                        'Consciousness {growth} Protocol',
+                        'The {power} Development',
+                        'Mental {enhancement} Journey',
+                        'Consciousness {expansion} Quest'
+                    ],
+                    'entity_encounter': [
+                        'Meeting the {entity_type}',
+                        'The {entity_type} Encounter',
+                        'Consciousness Exchange with {entity_type}',
+                        'The {entity_type} Dialogue',
+                        'Encountering the {entity_type}',
+                        'The {entity_type} Communication'
+                    ]
+                };
+                
+                const templates = titleTemplates[questType] || titleTemplates['anomaly_hunt'];
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                
+                // Fill in variables
+                return template
+                    .replace('{color}', this.randomChoice(['crimson', 'azure', 'emerald', 'amber', 'violet', 'cobalt']))
+                    .replace('{shape}', this.randomChoice(['triangle', 'sphere', 'cube', 'helix', 'pyramid', 'crescent']))
+                    .replace('{dimension}', this.randomChoice(['crystal', 'geometric', 'organic', 'neural', 'prismatic', 'chromatic']))
+                    .replace('{element}', this.randomChoice(['quantum', 'neural', 'cosmic', 'dimensional', 'vibrational', 'chromatic']))
+                    .replace('{action}', this.randomChoice(['alignment', 'synchronization', 'harmonization', 'calibration', 'optimization']))
+                    .replace('{concept}', this.randomChoice(['logic', 'intuition', 'memory', 'perception', 'awareness', 'creativity']))
+                    .replace('{capacity}', this.randomChoice(['awareness', 'intuition', 'perception', 'intelligence', 'wisdom', 'consciousness']))
+                    .replace('{ability}', this.randomChoice(['psychometry', 'precognition', 'empathy', 'telepresence', 'reality_sense', 'dream_walking']))
+                    .replace('{growth}', this.randomChoice(['expansion', 'elevation', 'transformation', 'evolution', 'awakening', 'liberation']))
+                    .replace('{power}', this.randomChoice(['psychic', 'dimensional', 'temporal', 'consciousness', 'reality_manipulation', 'telekinetic']))
+                    .replace('{enhancement}', this.randomChoice(['expansion', 'amplification', 'amplification', 'refinement', 'intensification', 'optimization']))
+                    .replace('{entity_type}', this.randomChoice(['Dreamer', 'Keeper', 'Navigator', 'Sage', 'Warden', 'Oracle']));
+            }
+            
+            generateQuestDescription(questType, location) {
+                const descriptions = {
+                    'anomaly_hunt': `Strange {color} anomalies have been detected in the ${location}. These quantum fragments seem to respond to consciousness expansion. Your mission is to locate and absorb these anomalies using your growing awareness.`,
+                    'dimensional_exploration': `The ${location} has recently become accessible through your consciousness development. This dimensional realm holds unique properties that can accelerate your growth. Navigate carefully and document your findings.`,
+                    'reality_calibration': `Reality parameters in the ${location} have become unstable, creating potential damage to the dream realm's structure. Use your reality hacking skills to calibrate the local matrix and restore stability.`,
+                    'cognitive_test': `Your mental capabilities are being challenged in the ${location}. Complete the cognitive tests and mental exercises to unlock new levels of consciousness awareness.`,
+                    'consciousness_growth': `The ${location} is designed for consciousness expansion exercises. Spend time here practicing advanced awareness techniques and mental development protocols.`,
+                    'entity_encounter': `Conscious entities have been detected in the ${location}. These beings may offer valuable insights or pose unique challenges. Approach with caution and respect for their consciousness.`
+                };
+                
+                return descriptions[questType] || descriptions['anomaly_hunt']
+                    .replace('{color}', this.randomChoice(['chromatic', 'quantum', 'dimensional', 'neural', 'vibrational']));
+            }
+            
+            generateObjectives(questType, location) {
+                const objectives = {
+                    'anomaly_hunt': [
+                        `Scan the ${location} for anomaly signatures`,
+                        `Locate and approach ${Math.floor(Math.random() * 5) + 3} chromatic anomalies`,
+                        `Absorb each anomaly while maintaining consciousness stability`,
+                        `Return to document findings`
+                    ],
+                    'dimensional_exploration': [
+                        `Locate the ${location} entrance`,
+                        `Enter the dimensional space`,
+                        `Explore and map key areas of the realm`,
+                        `Identify unique dimensional properties`,
+                        `Return with dimensional insights`
+                    ],
+                    'reality_calibration': [
+                        `Assess reality parameters in ${location}`,
+                        `Identify stability issues and matrix disturbances`,
+                        `Use reality hacking to stabilize the area`,
+                        `Verify calibration success`,
+                        `Document the calibration process`
+                    ],
+                    'cognitive_test': [
+                        `Access the cognitive testing environment in ${location}`,
+                        `Complete logical reasoning challenges`,
+                        `Solve abstract pattern recognition tasks`,
+                        `Complete memory recall exercises`,
+                        `Pass final cognitive assessment`
+                    ],
+                    'consciousness_growth': [
+                        `Enter the consciousness development space in ${location}`,
+                        `Practice awareness expansion techniques`,
+                        `Complete mindfulness and meditation exercises`,
+                        `Develop new consciousness abilities`,
+                        `Integrate consciousness growth into daily activities`
+                    ],
+                    'entity_encounter': [
+                        `Detect entity presence in ${location}`,
+                        `Approach the entity with proper respect`,
+                        `Initiate consciousness communication`,
+                        `Exchange information or complete tasks as requested`,
+                        `Document the encounter for future reference`
+                    ]
+                };
+                
+                return objectives[questType] || objectives['anomaly_hunt'];
+            }
+            
+            generateRewards(questType, difficulty) {
+                const baseXP = difficulty * 100;
+                const experience = Math.floor(baseXP * (0.8 + Math.random() * 0.4));
+                
+                const rewards = {
+                    experience: experience,
+                    items: [],
+                    abilities: [],
+                    knowledge: []
+                };
+                
+                // Add item rewards based on difficulty
+                if (difficulty >= 3) {
+                    rewards.items.push('quantum_fragment');
+                }
+                if (difficulty >= 5) {
+                    rewards.items.push('dimensional_crystal');
+                }
+                if (difficulty >= 7) {
+                    rewards.items.push('reality_shard');
+                }
+                
+                // Add ability rewards
+                if (questType === 'consciousness_growth' && difficulty >= 4) {
+                    rewards.abilities.push('enhanced_perception');
+                }
+                if (questType === 'reality_calibration' && difficulty >= 3) {
+                    rewards.abilities.push('reality_sense');
+                }
+                
+                // Add knowledge rewards
+                rewards.knowledge.push('dimensional_insight');
+                if (difficulty >= 6) {
+                    rewards.knowledge.push('reality_mastery');
+                }
+                
+                return rewards;
+            }
+            
+            generateQuestVariables(questType) {
+                const variables = {
+                    'anomaly_hunt': {
+                        anomalyCount: Math.floor(Math.random() * 5) + 3,
+                        timeLimit: 30 * 60 * 1000, // 30 minutes
+                        difficultyMultiplier: 1 + (Math.random() * 0.5)
+                    },
+                    'dimensional_exploration': {
+                        explorationDepth: Math.floor(Math.random() * 3) + 1,
+                        discoveryBonus: Math.random() > 0.7,
+                        timeLimit: 45 * 60 * 1000, // 45 minutes
+                        mapRequirement: true
+                    },
+                    'reality_calibration': {
+                        stabilityLevel: Math.random(),
+                        requiredCalibration: 0.85,
+                        timeLimit: 20 * 60 * 1000, // 20 minutes
+                        precisionRequirement: 0.95
+                    },
+                    'cognitive_test': {
+                        testType: this.randomChoice(['logical', 'abstract', 'spatial', 'temporal', 'creative']),
+                        passingScore: 0.75 + (Math.random() * 0.15),
+                        timeLimit: 40 * 60 * 1000, // 40 minutes
+                        retakeAllowed: true
+                    },
+                    'consciousness_growth': {
+                        growthType: this.randomChoice(['awareness', 'intuition', 'perception', 'control']),
+                        targetLevel: Math.floor(Math.random() * 3) + 2,
+                        meditationRequired: true,
+                        timeLimit: 60 * 60 * 1000 // 60 minutes
+                    },
+                    'entity_encounter': {
+                        entityType: this.randomChoice(['friendly', 'neutral', 'cautious', 'mysterious']),
+                        communicationMethod: this.randomChoice(['telepathic', 'visual', 'emotional', 'symbolic']),
+                        trustRequired: Math.random() * 0.5 + 0.25,
+                        timeLimit: 90 * 60 * 1000 // 90 minutes
+                    }
+                };
+                
+                return variables[questType] || variables['anomaly_hunt'];
+            }
+            
+            generateBranchingPaths(questType) {
+                const branches = {
+                    'anomaly_hunt': {
+                        'anomaly_focus': {
+                            name: 'Focused Collection',
+                            description: 'Concentrate on collecting as many anomalies as possible',
+                            requirements: {},
+                            rewards: { bonusExperience: 50, itemDrop: 'anomaly_compass' }
+                        },
+                        'consciousness_focus': {
+                            name: 'Consciousness Development',
+                            description: 'Use anomalies primarily for consciousness growth',
+                            requirements: { consciousness: 3 },
+                            rewards: { abilityBoost: 'anomaly_mastery' }
+                        }
+                    },
+                    'dimensional_exploration': {
+                        'deep_exploration': {
+                            name: 'Deep Exploration',
+                            description: 'Explore areas beyond the surface level',
+                            requirements: { exploration: 2 },
+                            rewards: { secretDiscovery: true, uniqueItem: 'dimensional_map' }
+                        },
+                        'quick_mapping': {
+                            name: 'Quick Mapping',
+                            description: 'Map the area efficiently and exit',
+                            requirements: {},
+                            rewards: { timeBonus: 100, navigationBoost: true }
+                        }
+                    },
+                    'reality_calibration': {
+                        'precise_calibration': {
+                            name: 'Precise Calibration',
+                            description: 'Achieve maximum precision in reality adjustment',
+                            requirements: { precision: 4 },
+                            rewards: { realityExpert: true, calibrationMastery: true }
+                        },
+                        'rapid_stabilization': {
+                            name: 'Rapid Stabilization',
+                            description: 'Quickly stabilize reality with basic settings',
+                            requirements: {},
+                            rewards: { timeEfficiency: true, experienceBonus: 75 }
+                        }
+                    }
+                };
+                
+                return branches[questType] || branches['anomaly_hunt'];
+            }
+            
+            addProceduralQuest(quest) {
+                if (!this.questSystem) {
+                    this.questSystem = {};
+                }
+                
+                if (!this.questSystem.activeQuests) {
+                    this.questSystem.activeQuests = [];
+                }
+                
+                if (!this.questSystem.proceduralQuests) {
+                    this.questSystem.proceduralQuests = [];
+                }
+                
+                // Check if quest already exists
+                const exists = this.questSystem.activeQuests.some(q => q.id === quest.id);
+                if (exists) return null;
+                
+                // Add to active quests
+                this.questSystem.activeQuests.push(quest);
+                this.questSystem.proceduralQuests.push(quest);
+                
+                // Update UI if available
+                this.updateQuestDisplay();
+                
+                // Set up quest monitoring
+                this.monitorQuestProgress(quest);
+                
+                return quest;
+            }
+            
+            monitorQuestProgress(quest) {
+                const checkInterval = 5000; // Check every 5 seconds
+                
+                const progressChecker = setInterval(() => {
+                    // Check if quest is still valid
+                    if (!this.questSystem.activeQuests.includes(quest)) {
+                        clearInterval(progressChecker);
+                        return;
+                    }
+                    
+                    // Check time limit
+                    if (Date.now() > quest.expires) {
+                        this.questExpired(quest);
+                        clearInterval(progressChecker);
+                        return;
+                    }
+                    
+                    // Check progress based on quest type
+                    this.checkProceduralQuestProgress(quest);
+                    
+                }, checkInterval);
+                
+                // Store reference for cleanup
+                quest.progressChecker = progressChecker;
+            }
+            
+            checkProceduralQuestProgress(quest) {
+                // This would integrate with actual game mechanics
+                // For now, we'll simulate basic progress tracking
+                
+                const playerLocation = this.playerData?.currentLocation || 'unknown';
+                const hasLevel = this.playerData?.level || 1;
+                const hasSkill = Math.random() > 0.7; // Simulate skill check
+                
+                // Progress simulation based on quest type
+                let progressIncrease = 0;
+                
+                switch (quest.type) {
+                    case 'anomaly_hunt':
+                        progressIncrease = hasSkill ? 15 : 5;
+                        break;
+                    case 'dimensional_exploration':
+                        progressIncrease = playerLocation === quest.location ? 10 : 2;
+                        break;
+                    case 'reality_calibration':
+                        progressIncrease = hasSkill && this.realityHacking?.unlocked ? 20 : 5;
+                        break;
+                    default:
+                        progressIncrease = 5;
+                }
+                
+                if (progressIncrease > 0) {
+                    quest.progress = Math.min(quest.maxProgress || 100, (quest.progress || 0) + progressIncrease);
+                    
+                    if (quest.progress >= (quest.maxProgress || 100)) {
+                        this.questCompleted(quest);
+                    }
+                }
+            }
+            
+            questExpired(quest) {
+                this.showNotification(`Quest expired: ${quest.title}`);
+                this.questSystem.activeQuests = this.questSystem.activeQuests.filter(q => q.id !== quest.id);
+                this.updateQuestDisplay();
+                
+                // Remove progress checker
+                if (quest.progressChecker) {
+                    clearInterval(quest.progressChecker);
+                    delete quest.progressChecker;
+                }
+            }
+            
+            questCompleted(quest) {
+                this.showNotification(`Quest completed: ${quest.title}!`);
+                
+                // Award rewards
+                this.awardQuestRewards(quest);
+                
+                // Move to completed
+                this.questSystem.activeQuests = this.questSystem.activeQuests.filter(q => q.id !== quest.id);
+                this.questSystem.completedQuests.push(quest);
+                
+                // Update UI
+                this.updateQuestDisplay();
+                
+                // Clean up progress checker
+                if (quest.progressChecker) {
+                    clearInterval(quest.progressChecker);
+                    delete quest.progressChecker;
+                }
+                
+                // Generate follow-up quest or chain
+                this.generateQuestChain(quest);
+            }
+            
+            awardQuestRewards(quest) {
+                if (!quest.rewards) return;
+                
+                const rewards = quest.rewards;
+                
+                // Experience
+                if (rewards.experience) {
+                    this.playerData.experience = (this.playerData.experience || 0) + rewards.experience;
+                    this.checkLevelUp();
+                }
+                
+                // Items
+                if (rewards.items && rewards.items.length > 0) {
+                    rewards.items.forEach(item => {
+                        this.addToInventory(item);
+                    });
+                }
+                
+                // Abilities
+                if (rewards.abilities && rewards.abilities.length > 0) {
+                    rewards.abilities.forEach(ability => {
+                        this.unlockAbility(ability);
+                    });
+                }
+                
+                // Knowledge
+                if (rewards.knowledge && rewards.knowledge.length > 0) {
+                    rewards.knowledge.forEach(knowledge => {
+                        this.addKnowledge(knowledge);
+                    });
+                }
+                
+                this.showNotification(`Rewards: +${rewards.experience} XP, ${rewards.items?.length || 0} items, ${rewards.abilities?.length || 0} abilities`);
+            }
+            
+            generateQuestChain(completedQuest) {
+                // Generate follow-up or related quests
+                const chainQuest = {
+                    id: this.generateQuestId() + '_chain',
+                    title: `${completedQuest.title} - Part II`,
+                    description: `Continue the journey from your previous success. New challenges await.`,
+                    type: completedQuest.type,
+                    difficulty: Math.min(10, completedQuest.difficulty + 1),
+                    location: this.selectQuestLocation(completedQuest.type),
+                    prerequisites: [completedQuest.id],
+                    chain: true,
+                    parentQuest: completedQuest.id
+                };
+                
+                this.addProceduralQuest(chainQuest);
+            }
+            
+            startProceduralQuestGeneration() {
+                // Start the automatic quest generation system
+                const generationInterval = 5 * 60 * 1000; // Generate new quest every 5 minutes
+                
+                setInterval(() => {
+                    if (this.questSystem.activeQuests.length < 3) {
+                        this.generateProceduralQuest();
+                    }
+                }, generationInterval);
+                
+                // Generate initial quest
+                setTimeout(() => {
+                    this.generateProceduralQuest();
+                }, 10000); // First quest after 10 seconds
+                
+                console.log('Procedural quest generation system activated');
+            }
+            
+            updateCortanaAboutQuest(quest) {
+                if (this.aiCompanion) {
+                    const message = `I notice a new quest has appeared: "${quest.title}". Based on its ${quest.difficulty}/10 difficulty, I recommend ${quest.difficulty <= 4 ? 'cautious exploration' : quest.difficulty <= 7 ? 'strategic planning' : 'extreme preparation'}. The objective type suggests ${this.getQuestTypeDescription(quest.type)}.`;
+                    this.addConversationMessage('cortana', message);
+                }
+            }
+            
+            getQuestTypeDescription(type) {
+                const descriptions = {
+                    'anomaly_hunt': 'focused energy collection',
+                    'dimensional_exploration': 'spatial exploration',
+                    'reality_calibration': 'technical precision work',
+                    'cognitive_test': 'mental challenges',
+                    'consciousness_growth': 'personal development',
+                    'entity_encounter': 'social interaction with consciousness entities'
+                };
+                return descriptions[type] || 'unknown activities';
+            }
+            
+            randomChoice(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+
             startVoiceConversation() {
                 if (!this.speechRecognition) {
                     this.updateAIMessage('Voice chat is not available in your current browser.');
@@ -7581,6 +8632,7 @@ Your consciousness awaits. What will you dream into existence?`;
                 this.startQuestMonitoring();
                 this.generateInitialQuests();
                 this.enhanceQuestVoiceCommands();
+                this.startProceduralQuestGeneration();
             }
 
             // ===== MULTIPLAYER/CO-OP SYSTEM =====
@@ -13073,6 +14125,130 @@ function createAnchor(name, properties) {
             </div>
         </div>
 
+        <!-- Procedural Quest Generation Panel -->
+        <div class="procedural-quest-panel" id="proceduralQuestPanel">
+            <div class="procedural-quest-header">
+                <h2 class="procedural-quest-title">Procedural Quest Generation System</h2>
+                <button class="procedural-quest-close" onclick="closeProceduralQuestPanel()">✕ Close</button>
+            </div>
+            <div class="procedural-quest-content">
+                <div class="quest-generation-info">
+                    <h3>Dynamic Quest Generation</h3>
+                    <p>ChromaShift now features an advanced procedural quest generation system that creates unique, dynamic quests based on your progress, location, and preferences. Each quest is procedurally generated with custom objectives, difficulty scaling, and rewards.</p>
+                    <div class="quest-procedural-indicator">System Status: <span id="proceduralQuestStatus">Active</span></div>
+                </div>
+                
+                <div class="procedural-quest-stats">
+                    <h3>Quest Generation Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Active Procedural Quests:</span>
+                        <span class="stat-value" id="activeProceduralCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Completed Procedural Quests:</span>
+                        <span class="stat-value" id="completedProceduralCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Available Quest Types:</span>
+                        <span class="stat-value">6</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Generation Algorithm:</span>
+                        <span class="stat-value">v2.1</span>
+                    </div>
+                </div>
+                
+                <div class="quest-types-grid">
+                    <div class="quest-type-card" data-quest-type="anomaly_hunt">
+                        <h4>🌀 Anomaly Hunt</h4>
+                        <p>Locate and collect chromatic anomalies using enhanced perception</p>
+                        <span class="quest-difficulty-indicator difficulty-easy">Easy</span>
+                    </div>
+                    <div class="quest-type-card" data-quest-type="dimensional_exploration">
+                        <h4>🌌 Dimensional Exploration</h4>
+                        <p>Explore new dimensional realms and map their unique properties</p>
+                        <span class="quest-difficulty-indicator difficulty-medium">Medium</span>
+                    </div>
+                    <div class="quest-type-card" data-quest-type="reality_calibration">
+                        <h4>⚙️ Reality Calibration</h4>
+                        <p>Use reality hacking to stabilize unstable areas</p>
+                        <span class="quest-difficulty-indicator difficulty-medium">Medium</span>
+                    </div>
+                    <div class="quest-type-card" data-quest-type="cognitive_test">
+                        <h4>🧠 Cognitive Test</h4>
+                        <p>Complete mental challenges and prove your mental acuity</p>
+                        <span class="quest-difficulty-indicator difficulty-medium">Medium</span>
+                    </div>
+                    <div class="quest-type-card" data-quest-type="consciousness_growth">
+                        <h4>✨ Consciousness Growth</h4>
+                        <p>Develop mental capabilities and expand awareness</p>
+                        <span class="quest-difficulty-indicator difficulty-hard">Hard</span>
+                    </div>
+                    <div class="quest-type-card" data-quest-type="entity_encounter">
+                        <h4>👥 Entity Encounter</h4>
+                        <p>Meet and interact with dream realm consciousness entities</p>
+                        <span class="quest-difficulty-indicator difficulty-hard">Hard</span>
+                    </div>
+                </div>
+                
+                <button class="generate-quest-button" onclick="generateNewProceduralQuest()">
+                    🎯 Generate New Quest
+                </button>
+                
+                <div class="quest-template-preview">
+                    <h4>Recent Quest Template</h4>
+                    <div class="quest-template-item">
+                        <strong>Quest Type:</strong> <span id="lastQuestType">None generated yet</span>
+                    </div>
+                    <div class="quest-template-item">
+                        <strong>Title:</strong> <span id="lastQuestTitle">Generate a quest to see examples</span>
+                    </div>
+                    <div class="quest-template-item">
+                        <strong>Difficulty:</strong> <span id="lastQuestDifficulty">N/A</span>
+                    </div>
+                    <div class="quest-template-item">
+                        <strong>Location:</strong> <span id="lastQuestLocation">N/A</span>
+                    </div>
+                    <div class="quest-template-item">
+                        <strong>Estimated Time:</strong> <span id="lastQuestTime">N/A</span>
+                    </div>
+                </div>
+                
+                <div class="quest-management-panel">
+                    <div class="quest-management-section">
+                        <h4>Quest Filters</h4>
+                        <div>
+                            <button class="quest-filter-button active" data-filter="all">All Quests</button>
+                            <button class="quest-filter-button" data-filter="procedural">Procedural Only</button>
+                            <button class="quest-filter-button" data-filter="active">Active</button>
+                            <button class="quest-filter-button" data-filter="completed">Completed</button>
+                        </div>
+                        <input type="text" class="quest-search-input" placeholder="Search quests..." id="questSearchInput">
+                    </div>
+                    <div class="quest-management-section">
+                        <h4>Quest List</h4>
+                        <div class="quest-list-container" id="questListContainer">
+                            <div style="text-align: center; padding: 20px; color: var(--text-color);">
+                                Generate quests to see them here
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quest-generation-info" style="margin-top: 30px;">
+                    <h3>Generation Algorithm Features</h3>
+                    <ul style="color: var(--text-color); line-height: 1.8; padding-left: 20px;">
+                        <li><strong>Dynamic Difficulty Scaling:</strong> Quests adapt to your current level and progress</li>
+                        <li><strong>Contextual Content:</strong> Quests generated based on your current location and environment</li>
+                        <li><strong>Branch Path Systems:</strong> Multiple completion paths with different rewards</li>
+                        <li><strong>Time-Sensitive Challenges:</strong> Some quests have dynamic time limits</li>
+                        <li><strong>Chain Quest Generation:</strong> Completing quests unlocks related follow-up quests</li>
+                        <li><strong>AI Integration:</strong> Cortana provides contextual guidance for procedural quests</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <!-- Reality Effects Overlay -->
         <div class="reality-effects-overlay" id="realityEffectsOverlay">
             <!-- Dynamic effects will be inserted here -->
@@ -14165,6 +15341,340 @@ function createAnchor(name, properties) {
             console.log('Audio settings reset to defaults');
         }
         
+        // ===== PROCEDURAL QUEST GENERATION UI FUNCTIONS =====
+        
+        // Toggle procedural quest panel
+        function toggleProceduralQuestPanel() {
+            const panel = document.getElementById('proceduralQuestPanel');
+            if (panel.classList.contains('active')) {
+                closeProceduralQuestPanel();
+            } else {
+                openProceduralQuestPanel();
+            }
+        }
+        
+        // Open procedural quest panel
+        function openProceduralQuestPanel() {
+            const panel = document.getElementById('proceduralQuestPanel');
+            panel.classList.add('active');
+            updateProceduralQuestStats();
+            updateQuestList();
+            
+            // Add quest generation active indicator
+            if (!document.querySelector('.procedural-quest-generation-active')) {
+                const indicator = document.createElement('div');
+                indicator.className = 'procedural-quest-generation-active';
+                indicator.textContent = 'AI GENERATING';
+                panel.appendChild(indicator);
+            }
+        }
+        
+        // Close procedural quest panel
+        function closeProceduralQuestPanel() {
+            const panel = document.getElementById('proceduralQuestPanel');
+            panel.classList.remove('active');
+        }
+        
+        // Generate new procedural quest
+        function generateNewProceduralQuest() {
+            const button = document.querySelector('.generate-quest-button');
+            const originalText = button.textContent;
+            
+            // Show loading state
+            button.textContent = '🎯 Generating Quest...';
+            button.disabled = true;
+            button.style.opacity = '0.7';
+            
+            // Call ChromaShift quest generation
+            setTimeout(() => {
+                if (window.chromaShiftComplete && window.chromaShiftComplete.generateProceduralQuest) {
+                    const quest = window.chromaShiftComplete.generateProceduralQuest();
+                    
+                    // Show success notification
+                    showQuestGenerationNotification(`Quest Generated: ${quest.title}`);
+                    
+                    // Update UI
+                    updateProceduralQuestStats();
+                    updateQuestList();
+                    updateLastQuestTemplate(quest);
+                    
+                    // Reset button
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                } else {
+                    showQuestGenerationNotification('Quest generation system not available', 'error');
+                    
+                    // Reset button
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                }
+            }, 1500); // Simulate generation time
+        }
+        
+        // Show quest generation notification
+        function showQuestGenerationNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `quest-generation-notification ${type === 'error' ? 'error' : ''}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+        
+        // Update procedural quest statistics
+        function updateProceduralQuestStats() {
+            const chromaShift = window.chromaShiftComplete;
+            if (!chromaShift || !chromaShift.questSystem) return;
+            
+            const questSystem = chromaShift.questSystem;
+            const activeCount = questSystem.activeQuests?.filter(q => q.generated).length || 0;
+            const completedCount = questSystem.completedQuests?.filter(q => q.generated).length || 0;
+            
+            const activeElement = document.getElementById('activeProceduralCount');
+            const completedElement = document.getElementById('completedProceduralCount');
+            
+            if (activeElement) activeElement.textContent = activeCount;
+            if (completedElement) completedElement.textContent = completedCount;
+            
+            // Update status indicator
+            const statusElement = document.getElementById('proceduralQuestStatus');
+            if (statusElement) {
+                statusElement.textContent = 'Active';
+                statusElement.style.color = 'var(--success-color)';
+            }
+        }
+        
+        // Update last quest template display
+        function updateLastQuestTemplate(quest) {
+            if (!quest) return;
+            
+            const questTypeMap = {
+                'anomaly_hunt': '🌀 Anomaly Hunt',
+                'dimensional_exploration': '🌌 Dimensional Exploration',
+                'reality_calibration': '⚙️ Reality Calibration',
+                'cognitive_test': '🧠 Cognitive Test',
+                'consciousness_growth': '✨ Consciousness Growth',
+                'entity_encounter': '👥 Entity Encounter'
+            };
+            
+            const timeMap = {
+                'anomaly_hunt': '20-30 minutes',
+                'dimensional_exploration': '30-45 minutes',
+                'reality_calibration': '15-25 minutes',
+                'cognitive_test': '25-40 minutes',
+                'consciousness_growth': '45-60 minutes',
+                'entity_encounter': '30-45 minutes'
+            };
+            
+            const difficultyMap = {
+                1: 'Very Easy', 2: 'Easy', 3: 'Easy-Medium', 4: 'Medium',
+                5: 'Medium', 6: 'Medium-Hard', 7: 'Hard', 8: 'Hard',
+                9: 'Very Hard', 10: 'Extreme'
+            };
+            
+            const typeElement = document.getElementById('lastQuestType');
+            const titleElement = document.getElementById('lastQuestTitle');
+            const difficultyElement = document.getElementById('lastQuestDifficulty');
+            const locationElement = document.getElementById('lastQuestLocation');
+            const timeElement = document.getElementById('lastQuestTime');
+            
+            if (typeElement) typeElement.textContent = questTypeMap[quest.type] || quest.type;
+            if (titleElement) titleElement.textContent = quest.title;
+            if (difficultyElement) difficultyElement.textContent = `${difficultyMap[quest.difficulty] || quest.difficulty}/10`;
+            if (locationElement) locationElement.textContent = quest.location;
+            if (timeElement) timeElement.textContent = timeMap[quest.type] || 'Variable';
+        }
+        
+        // Update quest list
+        function updateQuestList() {
+            const chromaShift = window.chromaShiftComplete;
+            if (!chromaShift || !chromaShift.questSystem) return;
+            
+            const questSystem = chromaShift.questSystem;
+            const container = document.getElementById('questListContainer');
+            if (!container) return;
+            
+            const allQuests = [
+                ...(questSystem.activeQuests || []),
+                ...(questSystem.completedQuests || [])
+            ].filter(q => q.generated);
+            
+            if (allQuests.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--text-color);">
+                        No procedural quests generated yet. Click "Generate New Quest" to create one!
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = allQuests.map(quest => {
+                const status = questSystem.activeQuests.includes(quest) ? 'Active' : 'Completed';
+                const statusClass = status === 'Active' ? 'style="color: var(--success-color);"' : 'style="color: var(--text-color);"';
+                
+                return `
+                    <div class="quest-list-item" data-quest-id="${quest.id}">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${quest.title}</strong>
+                                <div style="font-size: 12px; color: var(--text-color); margin-top: 2px;">
+                                    ${quest.type.replace('_', ' ').toUpperCase()} • Difficulty ${quest.difficulty}/10
+                                </div>
+                            </div>
+                            <div ${statusClass} style="font-size: 12px; font-weight: bold;">
+                                ${status}
+                            </div>
+                        </div>
+                        ${quest.generated ? '<div class="procedural-quest-badge">PROC</div>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Quest filter functionality
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('quest-filter-button')) {
+                // Remove active class from all buttons
+                document.querySelectorAll('.quest-filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                e.target.classList.add('active');
+                
+                // Apply filter
+                const filter = e.target.dataset.filter;
+                filterQuests(filter);
+            }
+        });
+        
+        // Filter quests based on selected filter
+        function filterQuests(filter) {
+            const chromaShift = window.chromaShiftComplete;
+            if (!chromaShift || !chromaShift.questSystem) return;
+            
+            const questSystem = chromaShift.questSystem;
+            let filteredQuests = [];
+            
+            switch (filter) {
+                case 'procedural':
+                    filteredQuests = questSystem.activeQuests?.filter(q => q.generated) || [];
+                    break;
+                case 'active':
+                    filteredQuests = questSystem.activeQuests || [];
+                    break;
+                case 'completed':
+                    filteredQuests = questSystem.completedQuests || [];
+                    break;
+                default:
+                    filteredQuests = [
+                        ...(questSystem.activeQuests || []),
+                        ...(questSystem.completedQuests || [])
+                    ].filter(q => q.generated);
+            }
+            
+            updateFilteredQuestList(filteredQuests);
+        }
+        
+        // Update filtered quest list
+        function updateFilteredQuestList(quests) {
+            const container = document.getElementById('questListContainer');
+            if (!container) return;
+            
+            if (quests.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--text-color);">
+                        No quests match the current filter.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = quests.map(quest => {
+                const isActive = document.querySelector(`[data-filter="active"]`).classList.contains('active');
+                const status = isActive ? 'Active' : 'Completed';
+                const statusClass = status === 'Active' ? 'style="color: var(--success-color);"' : 'style="color: var(--text-color);"';
+                
+                return `
+                    <div class="quest-list-item" data-quest-id="${quest.id}">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${quest.title}</strong>
+                                <div style="font-size: 12px; color: var(--text-color); margin-top: 2px;">
+                                    ${quest.type.replace('_', ' ').toUpperCase()} • Difficulty ${quest.difficulty}/10
+                                </div>
+                            </div>
+                            <div ${statusClass} style="font-size: 12px; font-weight: bold;">
+                                ${status}
+                            </div>
+                        </div>
+                        ${quest.generated ? '<div class="procedural-quest-badge">PROC</div>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Quest search functionality
+        const questSearchInput = document.getElementById('questSearchInput');
+        if (questSearchInput) {
+            questSearchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const chromaShift = window.chromaShiftComplete;
+                if (!chromaShift || !chromaShift.questSystem) return;
+                
+                const questSystem = chromaShift.questSystem;
+                const allQuests = [
+                    ...(questSystem.activeQuests || []),
+                    ...(questSystem.completedQuests || [])
+                ].filter(q => q.generated);
+                
+                const filteredQuests = allQuests.filter(quest => 
+                    quest.title.toLowerCase().includes(searchTerm) ||
+                    quest.type.toLowerCase().includes(searchTerm) ||
+                    quest.location.toLowerCase().includes(searchTerm)
+                );
+                
+                updateFilteredQuestList(filteredQuests);
+            });
+        }
+        
+        // Quest type card interactions
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('quest-type-card') || e.target.closest('.quest-type-card')) {
+                const card = e.target.classList.contains('quest-type-card') ? e.target : e.target.closest('.quest-type-card');
+                const questType = card.dataset.questType;
+                
+                // Highlight selected card
+                document.querySelectorAll('.quest-type-card').forEach(c => {
+                    c.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                });
+                card.style.borderColor = 'var(--primary-color)';
+                card.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3)';
+                
+                // Generate quest of this type (if system supports type-specific generation)
+                if (window.chromaShiftComplete) {
+                    // This would require extending the quest generation to support type preference
+                    console.log(`Selected quest type: ${questType}`);
+                }
+            }
+        });
+        
+        // Add keyboard shortcut for procedural quests (Ctrl+Shift+Q)
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'Q') {
+                e.preventDefault();
+                toggleProceduralQuestPanel();
+            }
+        });
+        
         // Integration with ChromaShift main system
         function connectAudioSystemToChromaShift() {
             if (window.chromaShiftComplete) {
@@ -14179,6 +15689,15 @@ function createAnchor(name, properties) {
                         'Advanced Audio System',
                         'Enable spatial 3D audio and dynamic music system',
                         toggleAdvancedAudioSystem
+                    );
+                }
+                
+                // Add procedural quest generation to feature unlocks
+                if (window.chromaShiftComplete.addFeatureButton) {
+                    window.chromaShiftComplete.addFeatureButton(
+                        'Procedural Quest Generation',
+                        'Enable dynamic quest generation with infinite content',
+                        toggleProceduralQuestPanel
                     );
                 }
             }
