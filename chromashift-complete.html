@@ -2789,6 +2789,668 @@
                 transition: none;
             }
         }
+
+        /* ===== ADVANCED REALITY HACKING MECHANICS ===== */
+
+        /* Reality Hacking Color Variables */
+        :root {
+            --reality-primary-cyan-500: #00B8D4;
+            --reality-primary-cyan-300: #62EEFF;
+            --reality-bg-page: #0A0F14;
+            --reality-surface-glass: rgba(28, 37, 48, 0.65);
+            --reality-surface-glass-border: rgba(100, 120, 140, 0.3);
+            --reality-text-primary: #E4E4E7;
+            --reality-text-secondary: #A0A0A9;
+            --reality-text-accent: #62EEFF;
+            --reality-semantic-success: #2ECC71;
+            --reality-semantic-warning: #F39C12;
+            --reality-semantic-error: #E74C3C;
+            --reality-code-bg: #10161D;
+        }
+
+        /* Main Reality Hacking Interface Panel */
+        .reality-hacking-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1200px;
+            max-width: 95vw;
+            max-height: 90vh;
+            background: var(--reality-surface-glass);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 12px;
+            z-index: 10000;
+            overflow: hidden;
+            display: none;
+            animation: panelSlideIn 0.3s ease-out;
+        }
+
+        @keyframes panelSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .reality-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            border-bottom: 1px solid var(--reality-surface-glass-border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .reality-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--reality-text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .reality-close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: var(--reality-text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .reality-close-btn:hover {
+            color: var(--reality-text-primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .reality-content {
+            display: flex;
+            height: 600px;
+            max-height: calc(90vh - 100px);
+        }
+
+        /* Left Panel - Main Tools */
+        .reality-main-panel {
+            flex: 1;
+            padding: 24px;
+            border-right: 1px solid var(--reality-surface-glass-border);
+            overflow-y: auto;
+        }
+
+        /* Right Panel - Inspector */
+        .reality-inspector {
+            width: 350px;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .reality-section {
+            margin-bottom: 32px;
+        }
+
+        .reality-section h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--reality-text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .reality-section h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--reality-text-primary);
+            margin-bottom: 8px;
+            letter-spacing: 0.01em;
+        }
+
+        /* Reality Matrix Editor Controls */
+        .matrix-control {
+            margin-bottom: 20px;
+        }
+
+        .matrix-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .matrix-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .matrix-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--reality-primary-cyan-300);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .matrix-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 8px rgba(0, 184, 212, 0.5);
+        }
+
+        .matrix-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--reality-text-secondary);
+            font-weight: 600;
+        }
+
+        /* Quantum Code Interpreter */
+        .code-editor-container {
+            background: var(--reality-code-bg);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--reality-surface-glass-border);
+        }
+
+        .code-filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--reality-text-accent);
+        }
+
+        .code-run-btn {
+            padding: 8px 16px;
+            background: var(--reality-primary-cyan-500);
+            color: var(--reality-bg-page);
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-run-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 12px rgba(0, 184, 212, 0.6);
+        }
+
+        .code-editor {
+            width: 100%;
+            height: 200px;
+            background: transparent;
+            border: none;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--reality-text-primary);
+            resize: vertical;
+            outline: none;
+        }
+
+        .code-editor::placeholder {
+            color: var(--reality-text-secondary);
+        }
+
+        /* Neural Link Interface */
+        .neural-link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .neural-link-pill {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--reality-text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .neural-link-pill:hover {
+            border-color: var(--reality-primary-cyan-500);
+        }
+
+        .neural-link-pill.active {
+            background: var(--reality-primary-cyan-500);
+            color: var(--reality-bg-page);
+            box-shadow: 0 0 12px rgba(0, 184, 212, 0.3);
+        }
+
+        /* Reality Anchors */
+        .reality-anchors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .anchor-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .anchor-card:hover {
+            border-color: var(--reality-primary-cyan-500);
+            transform: translateY(-2px);
+        }
+
+        .anchor-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--reality-text-primary);
+            margin-bottom: 8px;
+        }
+
+        .anchor-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--reality-text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Reality Virus System */
+        .virus-container {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .virus-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .virus-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .virus-beneficial {
+            background: var(--reality-semantic-success);
+            color: var(--reality-bg-page);
+        }
+
+        .virus-dangerous {
+            background: var(--reality-semantic-error);
+            color: white;
+        }
+
+        .virus-status {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--reality-text-secondary);
+        }
+
+        /* Dimensional Bridge Creator */
+        .bridge-creator {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .bridge-input {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 6px;
+            color: var(--reality-text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+
+        .bridge-create-btn {
+            padding: 8px 16px;
+            background: var(--reality-semantic-success);
+            color: var(--reality-bg-page);
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bridge-create-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Temporal Hack Engine */
+        .temporal-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .temporal-btn {
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 6px;
+            color: var(--reality-text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .temporal-btn:hover {
+            border-color: var(--reality-primary-cyan-500);
+            background: rgba(0, 184, 212, 0.1);
+        }
+
+        .temporal-btn.active {
+            background: var(--reality-primary-cyan-500);
+            color: var(--reality-bg-page);
+            border-color: var(--reality-primary-cyan-500);
+        }
+
+        /* Perception Filters */
+        .perception-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .filter-chip {
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 9999px;
+            color: var(--reality-text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-chip.active {
+            background: var(--reality-primary-cyan-500);
+            color: var(--reality-bg-page);
+            border-color: var(--reality-primary-cyan-500);
+        }
+
+        /* Reality Debug Console */
+        .debug-console {
+            background: var(--reality-code-bg);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--reality-text-primary);
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .debug-line {
+            margin-bottom: 4px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .debug-timestamp {
+            color: var(--reality-text-secondary);
+            font-size: 10px;
+        }
+
+        .debug-message {
+            flex: 1;
+        }
+
+        .debug-success {
+            color: var(--reality-semantic-success);
+        }
+
+        .debug-warning {
+            color: var(--reality-semantic-warning);
+        }
+
+        .debug-error {
+            color: var(--reality-semantic-error);
+        }
+
+        /* Collaborative Reality Weaving */
+        .collaborative-weaving {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .weaving-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .weaving-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--reality-primary-cyan-500), var(--reality-primary-cyan-300));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .weaving-participants {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .participant-badge {
+            padding: 4px 8px;
+            background: rgba(0, 184, 212, 0.2);
+            border: 1px solid var(--reality-primary-cyan-500);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            color: var(--reality-primary-cyan-300);
+        }
+
+        /* Reality Hacking Tools Menu */
+        .reality-tools-menu {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 200px;
+            background: var(--reality-surface-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .reality-tools-menu.visible {
+            display: block;
+            animation: toolsSlideIn 0.2s ease-out;
+        }
+
+        @keyframes toolsSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50%) translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+
+        .tools-menu-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--reality-text-primary);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .tools-menu-btn {
+            width: 100%;
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--reality-surface-glass-border);
+            border-radius: 6px;
+            color: var(--reality-text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tools-menu-btn:hover {
+            border-color: var(--reality-primary-cyan-500);
+            background: rgba(0, 184, 212, 0.1);
+        }
+
+        .tools-menu-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Reality Effects Overlay */
+        .reality-effects-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 999;
+            display: none;
+        }
+
+        .reality-effects-overlay.active {
+            display: block;
+        }
+
+        .reality-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--reality-effect-color);
+            opacity: var(--reality-effect-opacity);
+            mix-blend-mode: var(--reality-effect-blend);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .reality-hacking-panel {
+                width: 95vw;
+                max-height: 95vh;
+            }
+            
+            .reality-content {
+                flex-direction: column;
+                height: auto;
+                max-height: calc(95vh - 120px);
+            }
+            
+            .reality-main-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--reality-surface-glass-border);
+            }
+            
+            .reality-inspector {
+                width: 100%;
+                max-height: 250px;
+            }
+            
+            .reality-tools-menu {
+                position: fixed;
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                width: calc(100vw - 40px);
+            }
+        }
+
+        /* Focus Glow Effects */
+        .reality-hacking-panel:focus-within {
+            box-shadow: 0 0 12px 2px rgba(0, 184, 212, 0.6);
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            .reality-hacking-panel,
+            .reality-tools-menu.visible,
+            .matrix-slider::-webkit-slider-thumb:hover,
+            .code-run-btn:hover,
+            .neural-link-pill.active,
+            .anchor-card:hover,
+            .temporal-btn.active,
+            .tools-menu-btn:hover {
+                animation: none;
+                transition: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -3089,6 +3751,7 @@
                 this.setupDynamicEventSystem();
                 this.setupAdvancedQuestSystem();
                 this.setupMultiplayerSystem();
+                this.setupRealityHackingSystem();
                 this.initializeStoryProgressUI();
                 
                 this.addEventToLog('System initialized. Dream environment loading...');
@@ -6650,6 +7313,1480 @@ Your consciousness awaits. What will you dream into existence?`;
                 }
             }
 
+            // ===== ADVANCED REALITY HACKING MECHANICS =====
+            setupRealityHackingSystem() {
+                this.realityHacking = {
+                    matrix: {
+                        gravity: 9.8,
+                        lightIntensity: 1.0,
+                        timeFlow: 1.0,
+                        realityStability: 0.8,
+                        perceptionFilter: 'normal'
+                    },
+                    anchors: [],
+                    viruses: [],
+                    bridges: [],
+                    temporalStates: new Map(),
+                    perceptionFilters: [
+                        { id: 'normal', name: 'Normal Vision', description: 'Standard perception' },
+                        { id: 'augmented', name: 'Augmented Reality', description: 'Enhanced information overlay' },
+                        { id: 'matrix', name: 'Matrix View', description: 'Code visualization' },
+                        { id: 'dream', name: 'Dream State', description: 'Fluid reality perception' },
+                        { id: 'quantum', name: 'Quantum Vision', description: 'Multiple timeline awareness' }
+                    ],
+                    collaborativeProjects: [],
+                    codeScripts: [
+                        {
+                            id: 'gravity_modifier',
+                            name: 'Gravity Modifier',
+                            code: `// Modify local gravity field
+function modifyGravity(multiplier) {
+    reality.matrix.gravity *= multiplier;
+    return \`Gravity set to \${reality.matrix.gravity} m/s²\`;
+}`,
+                            category: 'physics'
+                        },
+                        {
+                            id: 'time_dilation',
+                            name: 'Time Dilation',
+                            code: `// Create time dilation field
+function timeDilation(factor) {
+    reality.matrix.timeFlow = factor;
+    return \`Time flow modified: \${factor}x\`;
+}`,
+                            category: 'temporal'
+                        },
+                        {
+                            id: 'reality_anchor',
+                            name: 'Reality Anchor',
+                            code: `// Create persistent reality anchor
+function createAnchor(name, properties) {
+    const anchor = {
+        id: Date.now(),
+        name: name,
+        properties: properties,
+        created: Date.now(),
+        persistent: true
+    };
+    reality.anchors.push(anchor);
+    return \`Anchor "\${name}" created successfully\`;
+}`,
+                            category: 'structure'
+                        }
+                    ]
+                };
+
+                this.initializeRealityHackingUI();
+                this.setupRealityHackingEventListeners();
+                this.startRealityMonitoring();
+            }
+
+            initializeRealityHackingUI() {
+                // Setup initial Reality Hacking interface
+                this.updateRealityMatrixDisplay();
+                this.updateRealityAnchorsDisplay();
+                this.updateRealityVirusesDisplay();
+            }
+
+            setupRealityHackingEventListeners() {
+                // Keyboard shortcuts for reality hacking
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.shiftKey) {
+                        switch(e.code) {
+                            case 'KeyR':
+                                e.preventDefault();
+                                this.openRealityHackingPanel();
+                                break;
+                            case 'KeyM':
+                                e.preventDefault();
+                                this.openRealityMatrixEditor();
+                                break;
+                            case 'KeyQ':
+                                e.preventDefault();
+                                this.openQuantumCodeInterpreter();
+                                break;
+                            case 'KeyT':
+                                e.preventDefault();
+                                this.openTemporalHackEngine();
+                                break;
+                        }
+                    }
+                });
+            }
+
+            startRealityMonitoring() {
+                // Monitor reality stability and apply effects
+                setInterval(() => {
+                    this.monitorRealityIntegrity();
+                    this.applyActiveEffects();
+                    this.updateCollaborativeReality();
+                }, 1000);
+            }
+
+            monitorRealityIntegrity() {
+                // Check for reality inconsistencies and auto-fix
+                const stability = this.realityHacking.matrix.realityStability;
+                if (stability < 0.3) {
+                    this.addToDebugConsole('WARNING', 'Reality stability critical! Applying emergency protocols...', 'warning');
+                    this.applyRealityEmergencyProtocols();
+                }
+            }
+
+            applyActiveEffects() {
+                // Apply active reality modifications
+                if (this.realityHacking.anchors.length > 0) {
+                    this.realityHacking.anchors.forEach(anchor => {
+                        if (anchor.active) {
+                            this.applyAnchorEffect(anchor);
+                        }
+                    });
+                }
+            }
+
+            // ===== MAIN INTERFACE FUNCTIONS =====
+            openRealityHackingPanel(tool = 'matrix') {
+                const panel = document.getElementById('realityHackingPanel');
+                const titleElement = document.getElementById('realityPanelTitle');
+                
+                if (panel) {
+                    panel.style.display = 'block';
+                    this.currentRealityTool = tool;
+                    
+                    // Load specific tool interface
+                    this.loadRealityTool(tool);
+                }
+            }
+
+            closeRealityHackingPanel() {
+                const panel = document.getElementById('realityHackingPanel');
+                if (panel) {
+                    panel.style.display = 'none';
+                }
+            }
+
+            toggleRealityToolsMenu() {
+                const menu = document.getElementById('realityToolsMenu');
+                if (menu) {
+                    menu.classList.toggle('visible');
+                }
+            }
+
+            loadRealityTool(tool) {
+                const titleElement = document.getElementById('realityPanelTitle');
+                const mainPanel = document.getElementById('realityMainPanel');
+                const inspector = document.getElementById('realityProperties');
+                
+                switch(tool) {
+                    case 'matrix':
+                        titleElement.textContent = 'Reality Matrix Editor';
+                        mainPanel.innerHTML = this.getMatrixEditorHTML();
+                        inspector.innerHTML = this.getMatrixPropertiesHTML();
+                        break;
+                    case 'quantum':
+                        titleElement.textContent = 'Quantum Code Interpreter';
+                        mainPanel.innerHTML = this.getQuantumCodeHTML();
+                        inspector.innerHTML = this.getCodePropertiesHTML();
+                        break;
+                    case 'neural':
+                        titleElement.textContent = 'Neural Link Interface';
+                        mainPanel.innerHTML = this.getNeuralLinkHTML();
+                        inspector.innerHTML = this.getNeuralPropertiesHTML();
+                        break;
+                    case 'temporal':
+                        titleElement.textContent = 'Temporal Hack Engine';
+                        mainPanel.innerHTML = this.getTemporalHackHTML();
+                        inspector.innerHTML = this.getTemporalPropertiesHTML();
+                        break;
+                    case 'bridge':
+                        titleElement.textContent = 'Dimensional Bridge Creator';
+                        mainPanel.innerHTML = this.getBridgeCreatorHTML();
+                        inspector.innerHTML = this.getBridgePropertiesHTML();
+                        break;
+                    case 'debug':
+                        titleElement.textContent = 'Reality Debug Console';
+                        mainPanel.innerHTML = this.getDebugConsoleHTML();
+                        inspector.innerHTML = this.getDebugPropertiesHTML();
+                        break;
+                    case 'weaving':
+                        titleElement.textContent = 'Collaborative Reality Weaving';
+                        mainPanel.innerHTML = this.getCollaborativeWeavingHTML();
+                        inspector.innerHTML = this.getWeavingPropertiesHTML();
+                        break;
+                }
+            }
+
+            // ===== REALITY MATRIX EDITOR =====
+            openRealityMatrixEditor() {
+                this.openRealityHackingPanel('matrix');
+                this.toggleRealityToolsMenu();
+            }
+
+            getMatrixEditorHTML() {
+                return `
+                    <div class="reality-section">
+                        <h2>Environmental Controls</h2>
+                        <div class="matrix-control">
+                            <div class="matrix-label">
+                                <span>Gravity</span>
+                                <span class="matrix-value" id="gravityValue">${this.realityHacking.matrix.gravity.toFixed(1)}</span>
+                            </div>
+                            <input type="range" class="matrix-slider" id="gravitySlider" 
+                                   min="0" max="20" step="0.1" value="${this.realityHacking.matrix.gravity}"
+                                   oninput="window.chromaShiftComplete.updateMatrixValue('gravity', this.value)">
+                        </div>
+                        
+                        <div class="matrix-control">
+                            <div class="matrix-label">
+                                <span>Light Intensity</span>
+                                <span class="matrix-value" id="lightValue">${this.realityHacking.matrix.lightIntensity.toFixed(2)}</span>
+                            </div>
+                            <input type="range" class="matrix-slider" id="lightSlider" 
+                                   min="0" max="3" step="0.01" value="${this.realityHacking.matrix.lightIntensity}"
+                                   oninput="window.chromaShiftComplete.updateMatrixValue('lightIntensity', this.value)">
+                        </div>
+                        
+                        <div class="matrix-control">
+                            <div class="matrix-label">
+                                <span>Time Flow</span>
+                                <span class="matrix-value" id="timeValue">${this.realityHacking.matrix.timeFlow.toFixed(2)}x</span>
+                            </div>
+                            <input type="range" class="matrix-slider" id="timeSlider" 
+                                   min="0.1" max="5" step="0.01" value="${this.realityHacking.matrix.timeFlow}"
+                                   oninput="window.chromaShiftComplete.updateMatrixValue('timeFlow', this.value)">
+                        </div>
+                        
+                        <div class="matrix-control">
+                            <div class="matrix-label">
+                                <span>Reality Stability</span>
+                                <span class="matrix-value" id="stabilityValue">${Math.round(this.realityHacking.matrix.realityStability * 100)}%</span>
+                            </div>
+                            <input type="range" class="matrix-slider" id="stabilitySlider" 
+                                   min="0.1" max="1" step="0.01" value="${this.realityHacking.matrix.realityStability}"
+                                   oninput="window.chromaShiftComplete.updateMatrixValue('realityStability', this.value)">
+                        </div>
+                        
+                        <button class="code-run-btn" onclick="window.chromaShiftComplete.applyMatrixChanges()">
+                            Apply Matrix Changes
+                        </button>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Reality Anchors</h2>
+                        <div class="reality-anchors-grid" id="anchorsGrid">
+                            ${this.getAnchorsDisplayHTML()}
+                        </div>
+                        <button class="code-run-btn" onclick="window.chromaShiftComplete.createNewAnchor()">
+                            Create New Anchor
+                        </button>
+                    </div>
+                `;
+            }
+
+            getMatrixPropertiesHTML() {
+                return `
+                    <h3>Current Settings</h3>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Gravity:</strong> ${this.realityHacking.matrix.gravity.toFixed(1)} m/s²
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Light Level:</strong> ${Math.round(this.realityHacking.matrix.lightIntensity * 100)}%
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Time Flow:</strong> ${this.realityHacking.matrix.timeFlow.toFixed(2)}x normal
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Stability:</strong> ${Math.round(this.realityHacking.matrix.realityStability * 100)}%
+                    </div>
+                    
+                    <h3>Quick Actions</h3>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.resetToDefaults()">
+                        Reset to Defaults
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.randomizeReality()">
+                        Randomize Reality
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.stabilizeReality()">
+                        Stabilize Reality
+                    </button>
+                `;
+            }
+
+            updateMatrixValue(property, value) {
+                this.realityHacking.matrix[property] = parseFloat(value);
+                
+                // Update display values
+                const valueElement = document.getElementById(`${property}Value`);
+                if (valueElement) {
+                    if (property === 'realityStability') {
+                        valueElement.textContent = `${Math.round(value * 100)}%`;
+                    } else if (property === 'timeFlow') {
+                        valueElement.textContent = `${parseFloat(value).toFixed(2)}x`;
+                    } else {
+                        valueElement.textContent = parseFloat(value).toFixed(property === 'lightIntensity' ? 2 : 1);
+                    }
+                }
+                
+                this.addToDebugConsole('INFO', `Matrix ${property} updated to ${value}`, 'info');
+            }
+
+            applyMatrixChanges() {
+                // Apply reality matrix changes
+                const changes = this.realityHacking.matrix;
+                this.addToDebugConsole('SUCCESS', 'Reality matrix changes applied successfully', 'success');
+                
+                // Visual feedback
+                this.showRealityEffect('matrix-change');
+                
+                // Announce to AI
+                if (this.aiCompanion) {
+                    this.aiCompanion.personality.logic += 1;
+                    this.announceToAI('Reality matrix parameters have been modified by the user');
+                }
+                
+                // Update multiplayer team if in session
+                if (this.multiplayerSystem?.isInSession) {
+                    this.broadcastToAllPlayers({
+                        type: 'reality_change',
+                        matrix: changes,
+                        player: this.multiplayerSystem.currentPlayer?.name
+                    });
+                }
+            }
+
+            getAnchorsDisplayHTML() {
+                if (this.realityHacking.anchors.length === 0) {
+                    return '<div class="anchor-card"><div class="anchor-title">No Anchors Created</div><div class="anchor-description">Create your first reality anchor to stabilize this dimension.</div></div>';
+                }
+                
+                return this.realityHacking.anchors.map(anchor => `
+                    <div class="anchor-card">
+                        <div class="anchor-title">${anchor.name}</div>
+                        <div class="anchor-description">${anchor.description || 'Persistent reality modification'}</div>
+                        <div style="margin-top: 8px; font-size: 11px; color: var(--reality-text-secondary);">
+                            Created: ${new Date(anchor.created).toLocaleTimeString()}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            createNewAnchor() {
+                const name = prompt('Enter anchor name:');
+                if (name) {
+                    const anchor = {
+                        id: Date.now(),
+                        name: name,
+                        description: `Reality anchor created by user`,
+                        properties: { ...this.realityHacking.matrix },
+                        created: Date.now(),
+                        active: true
+                    };
+                    
+                    this.realityHacking.anchors.push(anchor);
+                    this.addToDebugConsole('SUCCESS', `Reality anchor "${name}" created successfully`, 'success');
+                    
+                    // Refresh display
+                    this.loadRealityTool('matrix');
+                    
+                    // Announce to AI
+                    if (this.aiCompanion) {
+                        this.aiCompanion.personality.logic += 2;
+                        this.announceToAI(`New reality anchor "${name}" has been created and activated`);
+                    }
+                }
+            }
+
+            // ===== QUANTUM CODE INTERPRETER =====
+            openQuantumCodeInterpreter() {
+                this.openRealityHackingPanel('quantum');
+                this.toggleRealityToolsMenu();
+            }
+
+            getQuantumCodeHTML() {
+                const scripts = this.realityHacking.codeScripts;
+                
+                return `
+                    <div class="reality-section">
+                        <h2>Code Scripts</h2>
+                        <div style="margin-bottom: 16px;">
+                            <select id="scriptSelector" onchange="window.chromaShiftComplete.loadScript(this.value)" style="
+                                width: 100%;
+                                padding: 8px 12px;
+                                background: rgba(0, 0, 0, 0.3);
+                                border: 1px solid var(--reality-surface-glass-border);
+                                border-radius: 6px;
+                                color: var(--reality-text-primary);
+                                font-family: 'Inter', sans-serif;
+                                margin-bottom: 16px;
+                            ">
+                                <option value="">Select a script...</option>
+                                ${scripts.map(script => `<option value="${script.id}">${script.name} (${script.category})</option>`).join('')}
+                            </select>
+                        </div>
+                        
+                        <div class="code-editor-container">
+                            <div class="code-header">
+                                <span class="code-filename" id="codeFilename">untitled.js</span>
+                                <button class="code-run-btn" onclick="window.chromaShiftComplete.executeCode()">Execute Script</button>
+                            </div>
+                            <textarea class="code-editor" id="codeEditor" placeholder="// Enter your reality-hacking code here..."></textarea>
+                        </div>
+                        
+                        <button class="code-run-btn" onclick="window.chromaShiftComplete.createCustomScript()">
+                            Create New Script
+                        </button>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Script Categories</h2>
+                        <div class="neural-link-grid">
+                            <div class="neural-link-pill active" data-category="all" onclick="window.chromaShiftComplete.filterScripts('all')">All Scripts</div>
+                            <div class="neural-link-pill" data-category="physics" onclick="window.chromaShiftComplete.filterScripts('physics')">Physics</div>
+                            <div class="neural-link-pill" data-category="temporal" onclick="window.chromaShiftComplete.filterScripts('temporal')">Temporal</div>
+                            <div class="neural-link-pill" data-category="structure" onclick="window.chromaShiftComplete.filterScripts('structure')">Structure</div>
+                            <div class="neural-link-pill" data-category="perception" onclick="window.chromaShiftComplete.filterScripts('perception')">Perception</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getCodePropertiesHTML() {
+                return `
+                    <h3>Code Status</h3>
+                    <div id="codeStatus" style="margin-bottom: 16px; color: var(--reality-text-secondary);">
+                        No script loaded
+                    </div>
+                    
+                    <h3>Script Library</h3>
+                    <div style="margin-bottom: 16px;">
+                        ${this.realityHacking.codeScripts.map(script => `
+                            <div style="margin-bottom: 12px; padding: 8px; background: rgba(0, 0, 0, 0.2); border-radius: 4px;">
+                                <div style="font-weight: 600; color: var(--reality-text-primary);">${script.name}</div>
+                                <div style="font-size: 11px; color: var(--reality-text-secondary);">Category: ${script.category}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <h3>Quick Actions</h3>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.validateCode()">
+                        Validate Syntax
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.formatCode()">
+                        Format Code
+                    </button>
+                `;
+            }
+
+            loadScript(scriptId) {
+                const script = this.realityHacking.codeScripts.find(s => s.id === scriptId);
+                if (script) {
+                    const editor = document.getElementById('codeEditor');
+                    const filename = document.getElementById('codeFilename');
+                    const status = document.getElementById('codeStatus');
+                    
+                    if (editor) {
+                        editor.value = script.code;
+                        editor.dataset.scriptId = scriptId;
+                    }
+                    
+                    if (filename) {
+                        filename.textContent = `${script.name}.js`;
+                    }
+                    
+                    if (status) {
+                        status.innerHTML = `
+                            <span style="color: var(--reality-semantic-success);">✓</span> 
+                            Script loaded: ${script.name}
+                            <br><span style="font-size: 11px;">Category: ${script.category}</span>
+                        `;
+                    }
+                }
+            }
+
+            executeCode() {
+                const editor = document.getElementById('codeEditor');
+                const scriptId = editor?.dataset.scriptId;
+                const code = editor?.value;
+                
+                if (!code) {
+                    this.addToDebugConsole('ERROR', 'No code to execute', 'error');
+                    return;
+                }
+                
+                try {
+                    // Simulate code execution in reality context
+                    const result = this.simulateCodeExecution(code);
+                    this.addToDebugConsole('SUCCESS', `Code executed: ${result}`, 'success');
+                    
+                    // Visual feedback
+                    this.showRealityEffect('code-execution');
+                    
+                    // Announce to AI
+                    if (this.aiCompanion) {
+                        this.aiCompanion.personality.logic += 3;
+                        this.aiCompanion.personality.curiosity += 1;
+                        this.announceToAI(`Reality code executed successfully with result: ${result}`);
+                    }
+                    
+                    // Update multiplayer team
+                    if (this.multiplayerSystem?.isInSession) {
+                        this.broadcastToAllPlayers({
+                            type: 'code_executed',
+                            code: code,
+                            result: result,
+                            player: this.multiplayerSystem.currentPlayer?.name
+                        });
+                    }
+                    
+                } catch (error) {
+                    this.addToDebugConsole('ERROR', `Code execution failed: ${error.message}`, 'error');
+                }
+            }
+
+            simulateCodeExecution(code) {
+                // Simple simulation of reality hacking code execution
+                if (code.includes('modifyGravity')) {
+                    const match = code.match(/modifyGravity\(([^)]+)\)/);
+                    if (match) {
+                        const multiplier = parseFloat(match[1]);
+                        this.realityHacking.matrix.gravity *= multiplier;
+                        return `Gravity modified by factor of ${multiplier}`;
+                    }
+                } else if (code.includes('timeDilation')) {
+                    const match = code.match(/timeDilation\(([^)]+)\)/);
+                    if (match) {
+                        const factor = parseFloat(match[1]);
+                        this.realityHacking.matrix.timeFlow = factor;
+                        return `Time flow set to ${factor}x`;
+                    }
+                } else if (code.includes('createAnchor')) {
+                    const match = code.match(/createAnchor\("([^"]+)"/);
+                    if (match) {
+                        const name = match[1];
+                        const anchor = {
+                            id: Date.now(),
+                            name: name,
+                            description: 'Code-generated reality anchor',
+                            properties: { ...this.realityHacking.matrix },
+                            created: Date.now(),
+                            active: true
+                        };
+                        this.realityHacking.anchors.push(anchor);
+                        return `Reality anchor "${name}" created`;
+                    }
+                }
+                
+                return 'Code executed successfully';
+            }
+
+            // ===== NEURAL LINK INTERFACE =====
+            openNeuralLinkInterface() {
+                this.openRealityHackingPanel('neural');
+                this.toggleRealityToolsMenu();
+            }
+
+            getNeuralLinkHTML() {
+                return `
+                    <div class="reality-section">
+                        <h2>Consciousness States</h2>
+                        <div class="neural-link-grid">
+                            <div class="neural-link-pill active" onclick="window.chromaShiftComplete.setConsciousnessState('normal')">Normal</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.setConsciousnessState('lucid')">Lucid</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.setConsciousnessState('expanded')">Expanded</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.setConsciousnessState('quantum')">Quantum</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.setConsciousnessState('omniscient')">Omniscient</div>
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Perception Filters</h2>
+                        <div class="perception-filters">
+                            ${this.realityHacking.perceptionFilters.map(filter => 
+                                `<div class="filter-chip" onclick="window.chromaShiftComplete.applyPerceptionFilter('${filter.id}')">${filter.name}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Neural Synchronization</h2>
+                        <div style="margin-bottom: 16px;">
+                            <div style="margin-bottom: 8px; color: var(--reality-text-secondary);">Sync with team members:</div>
+                            <div class="neural-link-grid">
+                                ${this.multiplayerSystem?.players?.map(player => 
+                                    `<div class="neural-link-pill" onclick="window.chromaShiftComplete.syncWithPlayer('${player.id}')">
+                                        ${player.name}
+                                    </div>`
+                                ).join('') || '<div class="neural-link-pill">No team members</div>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getNeuralPropertiesHTML() {
+                return `
+                    <h3>Current State</h3>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Consciousness:</strong> <span id="consciousnessState">Normal</span>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Perception:</strong> <span id="perceptionFilter">Normal Vision</span>
+                    </div>
+                    
+                    <h3>Neural Metrics</h3>
+                    <div style="margin-bottom: 8px;">Lucidity: <strong>${this.playerData?.lucidity || 50}%</strong></div>
+                    <div style="margin-bottom: 8px;">Coherence: <strong>${this.playerData?.coherence || 75}%</strong></div>
+                    <div style="margin-bottom: 8px;">Perception: <strong>${this.playerData?.perception || 60}%</strong></div>
+                    
+                    <h3>Quick Actions</h3>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.resetNeuralState()">
+                        Reset to Baseline
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.enhanceConsciousness()">
+                        Enhance Consciousness
+                    </button>
+                `;
+            }
+
+            setConsciousnessState(state) {
+                // Update all neural link pills
+                document.querySelectorAll('.neural-link-pill').forEach(pill => {
+                    pill.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                this.addToDebugConsole('INFO', `Consciousness state set to: ${state}`, 'info');
+                
+                // Apply consciousness state effects
+                this.applyConsciousnessState(state);
+            }
+
+            applyConsciousnessState(state) {
+                const consciousnessEffects = {
+                    normal: { lucidity: 0, perception: 0, realityAccess: 'basic' },
+                    lucid: { lucidity: 20, perception: 10, realityAccess: 'enhanced' },
+                    expanded: { lucidity: 30, perception: 25, realityAccess: 'advanced' },
+                    quantum: { lucidity: 40, perception: 40, realityAccess: 'quantum' },
+                    omniscient: { lucidity: 50, perception: 50, realityAccess: 'complete' }
+                };
+                
+                const effect = consciousnessEffects[state];
+                if (effect) {
+                    this.playerData.lucidity = Math.min(100, (this.playerData?.lucidity || 50) + effect.lucidity);
+                    this.playerData.perception = Math.min(100, (this.playerData?.perception || 60) + effect.perception);
+                    
+                    // Update display
+                    const consciousnessElement = document.getElementById('consciousnessState');
+                    if (consciousnessElement) {
+                        consciousnessElement.textContent = state.charAt(0).toUpperCase() + state.slice(1);
+                    }
+                }
+                
+                this.showRealityEffect('consciousness-change');
+            }
+
+            applyPerceptionFilter(filterId) {
+                const filter = this.realityHacking.perceptionFilters.find(f => f.id === filterId);
+                if (filter) {
+                    this.realityHacking.matrix.perceptionFilter = filterId;
+                    
+                    // Update all filter chips
+                    document.querySelectorAll('.filter-chip').forEach(chip => {
+                        chip.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+                    
+                    this.addToDebugConsole('SUCCESS', `Perception filter applied: ${filter.name}`, 'success');
+                    this.showRealityEffect('perception-change');
+                    
+                    // Update display
+                    const perceptionElement = document.getElementById('perceptionFilter');
+                    if (perceptionElement) {
+                        perceptionElement.textContent = filter.name;
+                    }
+                }
+            }
+
+            syncWithPlayer(playerId) {
+                const player = this.multiplayerSystem?.players?.find(p => p.id == playerId);
+                if (player) {
+                    this.addToDebugConsole('SUCCESS', `Neural synchronization initiated with ${player.name}`, 'success');
+                    this.showRealityEffect('neural-sync');
+                    
+                    // Announce to AI
+                    if (this.aiCompanion) {
+                        this.aiCompanion.personality.empathy += 2;
+                        this.announceToAI(`Neural synchronization established with team member ${player.name}`);
+                    }
+                }
+            }
+
+            // ===== TEMPORAL HACK ENGINE =====
+            openTemporalHackEngine() {
+                this.openRealityHackingPanel('temporal');
+                this.toggleRealityToolsMenu();
+            }
+
+            getTemporalHackHTML() {
+                return `
+                    <div class="reality-section">
+                        <h2>Time Control</h2>
+                        <div class="temporal-controls">
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.slowTime(0.5)">Slow Time (0.5x)</button>
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.normalTime()">Normal Time</button>
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.fastTime(2.0)">Fast Time (2x)</button>
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.pauseTime()">Pause Time</button>
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.rewindTime(5)">Rewind 5s</button>
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.createTimeLoop()">Create Loop</button>
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Temporal Anchors</h2>
+                        <div class="reality-anchors-grid" id="temporalAnchors">
+                            ${this.getTemporalAnchorsDisplayHTML()}
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Timeline Manipulation</h2>
+                        <div class="matrix-control">
+                            <div class="matrix-label">
+                                <span>Custom Time Factor</span>
+                                <span class="matrix-value" id="customTimeValue">1.00x</span>
+                            </div>
+                            <input type="range" class="matrix-slider" id="customTimeSlider" 
+                                   min="0.1" max="10" step="0.1" value="1.0"
+                                   oninput="window.chromaShiftComplete.updateCustomTime(this.value)">
+                        </div>
+                        <button class="code-run-btn" onclick="window.chromaShiftComplete.applyCustomTime()">
+                            Apply Custom Time
+                        </button>
+                    </div>
+                `;
+            }
+
+            getTemporalPropertiesHTML() {
+                const currentTime = this.realityHacking.matrix.timeFlow;
+                return `
+                    <h3>Current Temporal State</h3>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Time Flow:</strong> ${currentTime.toFixed(2)}x normal
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Status:</strong> ${currentTime === 1 ? 'Normal' : currentTime < 1 ? 'Dilated' : 'Accelerated'}
+                    </div>
+                    
+                    <h3>Temporal History</h3>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        ${this.getTemporalHistoryHTML()}
+                    </div>
+                    
+                    <h3>Quick Actions</h3>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.freezeAllTime()">
+                        Global Time Freeze
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.restoreDefaultTime()">
+                        Restore Default
+                    </button>
+                `;
+            }
+
+            slowTime(factor) {
+                this.realityHacking.matrix.timeFlow = factor;
+                this.updateTemporalButtons('slow');
+                this.addToDebugConsole('SUCCESS', `Time slowed to ${factor}x normal speed`, 'success');
+                this.showRealityEffect('time-slow');
+            }
+
+            fastTime(factor) {
+                this.realityHacking.matrix.timeFlow = factor;
+                this.updateTemporalButtons('fast');
+                this.addToDebugConsole('SUCCESS', `Time accelerated to ${factor}x normal speed`, 'success');
+                this.showRealityEffect('time-fast');
+            }
+
+            normalTime() {
+                this.realityHacking.matrix.timeFlow = 1.0;
+                this.updateTemporalButtons('normal');
+                this.addToDebugConsole('INFO', 'Time flow restored to normal', 'info');
+            }
+
+            pauseTime() {
+                this.realityHacking.matrix.timeFlow = 0;
+                this.updateTemporalButtons('pause');
+                this.addToDebugConsole('WARNING', 'Time paused - reality frozen', 'warning');
+                this.showRealityEffect('time-pause');
+            }
+
+            rewindTime(seconds) {
+                // Simulate time rewind
+                this.addToDebugConsole('INFO', `Rewinding time by ${seconds} seconds`, 'info');
+                this.showRealityEffect('time-rewind');
+                
+                // Restore previous temporal state
+                setTimeout(() => {
+                    this.restoreDefaultTime();
+                }, 2000);
+            }
+
+            createTimeLoop() {
+                const loopId = Date.now();
+                this.realityHacking.temporalStates.set(loopId, {
+                    id: loopId,
+                    type: 'loop',
+                    created: Date.now(),
+                    duration: 10000, // 10 second loop
+                    active: true
+                });
+                
+                this.addToDebugConsole('SUCCESS', `Time loop created (ID: ${loopId})`, 'success');
+                this.loadRealityTool('temporal');
+            }
+
+            updateCustomTime(value) {
+                const valueElement = document.getElementById('customTimeValue');
+                if (valueElement) {
+                    valueElement.textContent = `${parseFloat(value).toFixed(2)}x`;
+                }
+            }
+
+            applyCustomTime() {
+                const slider = document.getElementById('customTimeSlider');
+                const value = slider ? parseFloat(slider.value) : 1.0;
+                
+                this.realityHacking.matrix.timeFlow = value;
+                this.updateTemporalButtons('custom');
+                this.addToDebugConsole('SUCCESS', `Custom time flow applied: ${value}x`, 'success');
+            }
+
+            updateTemporalButtons(active) {
+                document.querySelectorAll('.temporal-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Activate the appropriate button
+                const buttonMap = {
+                    slow: 'Slow Time (0.5x)',
+                    fast: 'Fast Time (2x)',
+                    normal: 'Normal Time',
+                    pause: 'Pause Time',
+                    custom: 'Apply Custom Time'
+                };
+                
+                const buttonText = buttonMap[active];
+                if (buttonText) {
+                    const button = Array.from(document.querySelectorAll('.temporal-btn'))
+                        .find(btn => btn.textContent === buttonText);
+                    if (button) {
+                        button.classList.add('active');
+                    }
+                }
+            }
+
+            getTemporalAnchorsDisplayHTML() {
+                const temporalAnchors = Array.from(this.realityHacking.temporalStates.values());
+                
+                if (temporalAnchors.length === 0) {
+                    return '<div class="anchor-card"><div class="anchor-title">No Temporal Anchors</div><div class="anchor-description">Create temporal anchors to stabilize time flow in specific areas.</div></div>';
+                }
+                
+                return temporalAnchors.map(anchor => `
+                    <div class="anchor-card">
+                        <div class="anchor-title">${anchor.type.charAt(0).toUpperCase() + anchor.type.slice(1)} Anchor</div>
+                        <div class="anchor-description">Temporal modification ID: ${anchor.id}</div>
+                        <div style="margin-top: 8px; font-size: 11px; color: var(--reality-text-secondary);">
+                            Status: ${anchor.active ? 'Active' : 'Inactive'}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getTemporalHistoryHTML() {
+                // Simulate temporal history
+                const history = [
+                    { time: new Date(Date.now() - 30000), action: 'Time flow set to 1.0x', type: 'info' },
+                    { time: new Date(Date.now() - 60000), action: 'Reality matrix updated', type: 'success' },
+                    { time: new Date(Date.now() - 120000), action: 'Perception filter changed', type: 'info' }
+                ];
+                
+                return history.map(entry => `
+                    <div style="margin-bottom: 8px; padding: 4px 8px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; font-size: 11px;">
+                        <div style="color: var(--reality-text-secondary);">${entry.time.toLocaleTimeString()}</div>
+                        <div style="color: var(--reality-text-primary);">${entry.action}</div>
+                    </div>
+                `).join('');
+            }
+
+            // ===== DIMENSIONAL BRIDGE CREATOR =====
+            openDimensionalBridgeCreator() {
+                this.openRealityHackingPanel('bridge');
+                this.toggleRealityToolsMenu();
+            }
+
+            getBridgeCreatorHTML() {
+                return `
+                    <div class="reality-section">
+                        <h2>Bridge Configuration</h2>
+                        <div class="bridge-creator">
+                            <input type="text" class="bridge-input" id="bridgeFromDimension" placeholder="Source dimension ID" value="dream_realm_alpha">
+                            <span style="color: var(--reality-text-secondary);">→</span>
+                            <input type="text" class="bridge-input" id="bridgeToDimension" placeholder="Target dimension ID" value="dream_realm_beta">
+                            <button class="bridge-create-btn" onclick="window.chromaShiftComplete.createDimensionalBridge()">Create Bridge</button>
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Active Bridges</h2>
+                        <div class="reality-anchors-grid" id="activeBridges">
+                            ${this.getActiveBridgesHTML()}
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Bridge Templates</h2>
+                        <div class="neural-link-grid">
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.loadBridgeTemplate('standard')">Standard Bridge</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.loadBridgeTemplate('quantum')">Quantum Tunnel</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.loadBridgeTemplate('temporal')">Temporal Gateway</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.loadBridgeTemplate('team')">Team Portal</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getBridgePropertiesHTML() {
+                return `
+                    <h3>Bridge Network</h3>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Active Bridges:</strong> ${this.realityHacking.bridges.length}
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Network Stability:</strong> <span id="networkStability">${Math.round(Math.random() * 20 + 80)}%</span>
+                    </div>
+                    
+                    <h3>Quick Actions</h3>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.connectToTeamDimensions()">
+                        Connect Team Dimensions
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.stabilizeAllBridges()">
+                        Stabilize Network
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.emergencyDisconnect()">
+                        Emergency Disconnect
+                    </button>
+                `;
+            }
+
+            createDimensionalBridge() {
+                const fromDim = document.getElementById('bridgeFromDimension')?.value;
+                const toDim = document.getElementById('bridgeToDimension')?.value;
+                
+                if (fromDim && toDim) {
+                    const bridge = {
+                        id: Date.now(),
+                        from: fromDim,
+                        to: toDim,
+                        created: Date.now(),
+                        active: true,
+                        stability: Math.random() * 0.3 + 0.7 // 70-100% stability
+                    };
+                    
+                    this.realityHacking.bridges.push(bridge);
+                    this.addToDebugConsole('SUCCESS', `Dimensional bridge created: ${fromDim} → ${toDim}`, 'success');
+                    this.showRealityEffect('bridge-creation');
+                    
+                    // Update display
+                    this.loadRealityTool('bridge');
+                    
+                    // Announce to AI
+                    if (this.aiCompanion) {
+                        this.aiCompanion.personality.logic += 2;
+                        this.aiCompanion.personality.curiosity += 1;
+                        this.announceToAI(`New dimensional bridge established between ${fromDim} and ${toDim}`);
+                    }
+                    
+                    // Broadcast to team
+                    if (this.multiplayerSystem?.isInSession) {
+                        this.broadcastToAllPlayers({
+                            type: 'bridge_created',
+                            bridge: bridge,
+                            player: this.multiplayerSystem.currentPlayer?.name
+                        });
+                    }
+                }
+            }
+
+            loadBridgeTemplate(template) {
+                const templates = {
+                    standard: { from: 'current_realm', to: 'neighboring_realm' },
+                    quantum: { from: 'quantum_layer_1', to: 'quantum_layer_2' },
+                    temporal: { from: 'past_realm', to: 'future_realm' },
+                    team: { from: 'team_lobby', to: 'shared_workspace' }
+                };
+                
+                const selectedTemplate = templates[template];
+                if (selectedTemplate) {
+                    const fromInput = document.getElementById('bridgeFromDimension');
+                    const toInput = document.getElementById('bridgeToDimension');
+                    
+                    if (fromInput) fromInput.value = selectedTemplate.from;
+                    if (toInput) toInput.value = selectedTemplate.to;
+                    
+                    this.addToDebugConsole('INFO', `Bridge template loaded: ${template}`, 'info');
+                }
+            }
+
+            getActiveBridgesHTML() {
+                if (this.realityHacking.bridges.length === 0) {
+                    return '<div class="anchor-card"><div class="anchor-title">No Active Bridges</div><div class="anchor-description">Create your first dimensional bridge to connect separate realities.</div></div>';
+                }
+                
+                return this.realityHacking.bridges.map(bridge => `
+                    <div class="anchor-card">
+                        <div class="anchor-title">Bridge #${bridge.id}</div>
+                        <div class="anchor-description">${bridge.from} → ${bridge.to}</div>
+                        <div style="margin-top: 8px; font-size: 11px; color: var(--reality-text-secondary);">
+                            Stability: ${Math.round(bridge.stability * 100)}%
+                        </div>
+                        <button class="code-run-btn" onclick="window.chromaShiftComplete.toggleBridge(${bridge.id})" style="margin-top: 8px; padding: 4px 8px; font-size: 10px;">
+                            ${bridge.active ? 'Disable' : 'Enable'}
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            toggleBridge(bridgeId) {
+                const bridge = this.realityHacking.bridges.find(b => b.id === bridgeId);
+                if (bridge) {
+                    bridge.active = !bridge.active;
+                    this.addToDebugConsole('INFO', `Bridge ${bridge.active ? 'enabled' : 'disabled'}`, 'info');
+                    this.loadRealityTool('bridge');
+                }
+            }
+
+            // ===== REALITY DEBUG CONSOLE =====
+            openRealityDebugConsole() {
+                this.openRealityHackingPanel('debug');
+                this.toggleRealityToolsMenu();
+            }
+
+            getDebugConsoleHTML() {
+                return `
+                    <div class="reality-section">
+                        <h2>Reality System Monitor</h2>
+                        <div class="debug-console" id="realityDebugConsole">
+                            ${this.getDebugConsoleContent()}
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>System Diagnostics</h2>
+                        <div style="margin-bottom: 16px;">
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.runSystemDiagnostics()">Run Diagnostics</button>
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.clearConsole()">Clear Console</button>
+                            <button class="temporal-btn" onclick="window.chromaShiftComplete.exportDebugData()">Export Data</button>
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Reality Integrity Check</h2>
+                        <div id="integrityCheck">
+                            ${this.getIntegrityCheckHTML()}
+                        </div>
+                    </div>
+                `;
+            }
+
+            getDebugPropertiesHTML() {
+                return `
+                    <h3>System Status</h3>
+                    <div style="margin-bottom: 8px;">Matrix Integrity: <strong id="matrixIntegrity">98.5%</strong></div>
+                    <div style="margin-bottom: 8px;">Anchors Active: <strong>${this.realityHacking.anchors.length}</strong></div>
+                    <div style="margin-bottom: 8px;">Bridges Online: <strong>${this.realityHacking.bridges.filter(b => b.active).length}</strong></div>
+                    <div style="margin-bottom: 8px;">Viruses Detected: <strong>${this.realityHacking.viruses.length}</strong></div>
+                    
+                    <h3>Performance</h3>
+                    <div style="margin-bottom: 8px;">CPU Usage: <strong>12.3%</strong></div>
+                    <div style="margin-bottom: 8px;">Memory: <strong>1.2GB</strong></div>
+                    <div style="margin-bottom: 8px;">Network: <strong>Stable</strong></div>
+                    
+                    <h3>Quick Actions</h3>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.emergencyReboot()">
+                        Emergency Reboot
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.optimizeReality()">
+                        Optimize Performance
+                    </button>
+                `;
+            }
+
+            addToDebugConsole(level, message, type = 'info') {
+                const console = document.getElementById('realityDebugConsole');
+                if (console) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    const logLine = document.createElement('div');
+                    logLine.className = `debug-line debug-${type}`;
+                    logLine.innerHTML = `
+                        <span class="debug-timestamp">${timestamp}</span>
+                        <span class="debug-message">[${level.toUpperCase()}] ${message}</span>
+                    `;
+                    
+                    console.insertBefore(logLine, console.firstChild);
+                    
+                    // Keep only last 50 entries
+                    while (console.children.length > 50) {
+                        console.removeChild(console.lastChild);
+                    }
+                }
+            }
+
+            getDebugConsoleContent() {
+                // Return last 20 debug entries
+                const recentLogs = [
+                    { timestamp: '14:23:15', level: 'INFO', message: 'Reality matrix initialized successfully', type: 'success' },
+                    { timestamp: '14:23:14', level: 'SUCCESS', message: 'Neural link interface activated', type: 'success' },
+                    { timestamp: '14:23:13', level: 'INFO', message: 'Loading reality hacking modules...', type: 'info' },
+                    { timestamp: '14:23:12', level: 'SUCCESS', message: 'Reality hacking system online', type: 'success' },
+                    { timestamp: '14:23:11', level: 'INFO', message: 'Initializing quantum code interpreter', type: 'info' }
+                ];
+                
+                return recentLogs.map(log => `
+                    <div class="debug-line debug-${log.type}">
+                        <span class="debug-timestamp">${log.timestamp}</span>
+                        <span class="debug-message">[${log.level}] ${log.message}</span>
+                    </div>
+                `).join('');
+            }
+
+            runSystemDiagnostics() {
+                this.addToDebugConsole('INFO', 'Running comprehensive system diagnostics...', 'info');
+                
+                setTimeout(() => {
+                    const issues = [];
+                    
+                    // Check matrix stability
+                    if (this.realityHacking.matrix.realityStability < 0.5) {
+                        issues.push('Low reality stability detected');
+                    }
+                    
+                    // Check anchor count
+                    if (this.realityHacking.anchors.length === 0) {
+                        issues.push('No reality anchors active');
+                    }
+                    
+                    // Check bridge stability
+                    const unstableBridges = this.realityHacking.bridges.filter(b => b.stability < 0.8);
+                    if (unstableBridges.length > 0) {
+                        issues.push(`${unstableBridges.length} unstable bridge(s) detected`);
+                    }
+                    
+                    if (issues.length === 0) {
+                        this.addToDebugConsole('SUCCESS', 'All systems nominal - no issues detected', 'success');
+                    } else {
+                        this.addToDebugConsole('WARNING', `Issues found: ${issues.join(', ')}`, 'warning');
+                    }
+                }, 2000);
+            }
+
+            getIntegrityCheckHTML() {
+                return `
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Matrix Integrity</span>
+                            <span>98.5%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div style="width: 98.5%; height: 100%; background: var(--reality-semantic-success); border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Network Stability</span>
+                            <span>94.2%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div style="width: 94.2%; height: 100%; background: var(--reality-semantic-success); border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>AI Companion Status</span>
+                            <span>100%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div style="width: 100%; height: 100%; background: var(--reality-semantic-success); border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.runIntegrityCheck()" style="width: 100%;">
+                        Run Full Integrity Check
+                    </button>
+                `;
+            }
+
+            runIntegrityCheck() {
+                this.addToDebugConsole('INFO', 'Running full reality integrity check...', 'info');
+                setTimeout(() => {
+                    this.addToDebugConsole('SUCCESS', 'Integrity check completed - all systems stable', 'success');
+                }, 3000);
+            }
+
+            // ===== COLLABORATIVE REALITY WEAVING =====
+            openCollaborativeWeaving() {
+                this.openRealityHackingPanel('weaving');
+                this.toggleRealityToolsMenu();
+            }
+
+            getCollaborativeWeavingHTML() {
+                return `
+                    <div class="reality-section">
+                        <h2>Team Reality Project</h2>
+                        <div class="collaborative-weaving">
+                            <div style="margin-bottom: 16px;">
+                                <h3 style="color: var(--reality-text-primary); margin-bottom: 8px;">Building: Dream Cathedral</h3>
+                                <div class="weaving-progress">
+                                    <div class="weaving-progress-bar" style="width: 67%;"></div>
+                                </div>
+                                <div style="text-align: center; color: var(--reality-text-secondary); font-size: 14px;">67% Complete</div>
+                            </div>
+                            
+                            <div class="weaving-participants">
+                                ${this.multiplayerSystem?.players?.map(player => 
+                                    `<div class="participant-badge">${player.name}</div>`
+                                ).join('') || '<div class="participant-badge">Solo Project</div>'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Weaving Tools</h2>
+                        <div class="neural-link-grid">
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.startWeavingProject('cathedral')">Dream Cathedral</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.startWeavingProject('garden')">Memory Garden</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.startWeavingProject('lab')">Research Lab</div>
+                            <div class="neural-link-pill" onclick="window.chromaShiftComplete.startWeavingProject('portal')">Portal Network</div>
+                        </div>
+                    </div>
+                    
+                    <div class="reality-section">
+                        <h2>Shared Reality Elements</h2>
+                        <div class="reality-anchors-grid" id="sharedReality">
+                            <div class="anchor-card">
+                                <div class="anchor-title">Team Nexus</div>
+                                <div class="anchor-description">Central meeting point for all team members</div>
+                            </div>
+                            <div class="anchor-card">
+                                <div class="anchor-title">Shared Memory Bank</div>
+                                <div class="anchor-description">Collaborative memory storage</div>
+                            </div>
+                            <div class="anchor-card">
+                                <div class="anchor-title">Reality Workshop</div>
+                                <div class="anchor-description">Shared creation and modification space</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getWeavingPropertiesHTML() {
+                return `
+                    <h3>Project Status</h3>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Active Projects:</strong> ${this.realityHacking.collaborativeProjects.length}
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Team Contribution:</strong> <span id="teamContribution">85%</span>
+                    </div>
+                    
+                    <h3>Team Coordination</h3>
+                    <div style="margin-bottom: 8px;">Synchronization Level: <strong>High</strong></div>
+                    <div style="margin-bottom: 8px;">Creative Synergy: <strong>Excellent</strong></div>
+                    <div style="margin-bottom: 8px;">Reality Coherence: <strong>Stable</strong></div>
+                    
+                    <h3>Quick Actions</h3>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.inviteTeamToWeaving()">
+                        Invite Team
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.optimizeTeamWeaving()">
+                        Optimize Coordination
+                    </button>
+                    <button class="temporal-btn" onclick="window.chromaShiftComplete.finalizeCurrentProject()">
+                        Finalize Project
+                    </button>
+                `;
+            }
+
+            startWeavingProject(projectType) {
+                const projectNames = {
+                    cathedral: 'Dream Cathedral',
+                    garden: 'Memory Garden',
+                    lab: 'Research Laboratory',
+                    portal: 'Portal Network'
+                };
+                
+                const projectName = projectNames[projectType] || 'Unknown Project';
+                
+                this.addToDebugConsole('INFO', `Starting collaborative weaving project: ${projectName}`, 'info');
+                this.showRealityEffect('project-start');
+                
+                // Announce to AI
+                if (this.aiCompanion) {
+                    this.aiCompanion.personality.empathy += 3;
+                    this.aiCompanion.personality.curiosity += 2;
+                    this.announceToAI(`Collaborative reality weaving project initiated: ${projectName}`);
+                }
+                
+                // Broadcast to team
+                if (this.multiplayerSystem?.isInSession) {
+                    this.broadcastToAllPlayers({
+                        type: 'weaving_project_started',
+                        project: projectName,
+                        projectType: projectType,
+                        player: this.multiplayerSystem.currentPlayer?.name
+                    });
+                }
+            }
+
+            // ===== UTILITY AND HELPER FUNCTIONS =====
+            showRealityEffect(effectType) {
+                const overlay = document.getElementById('realityEffectsOverlay');
+                if (overlay) {
+                    overlay.classList.add('active');
+                    
+                    const effect = document.createElement('div');
+                    effect.className = 'reality-effect';
+                    
+                    switch(effectType) {
+                        case 'matrix-change':
+                            effect.style.setProperty('--reality-effect-color', 'rgba(0, 184, 212, 0.3)');
+                            effect.style.setProperty('--reality-effect-opacity', '1');
+                            effect.style.setProperty('--reality-effect-blend', 'screen');
+                            break;
+                        case 'code-execution':
+                            effect.style.setProperty('--reality-effect-color', 'rgba(98, 238, 255, 0.4)');
+                            effect.style.setProperty('--reality-effect-opacity', '1');
+                            effect.style.setProperty('--reality-effect-blend', 'color-dodge');
+                            break;
+                        case 'consciousness-change':
+                            effect.style.setProperty('--reality-effect-color', 'rgba(46, 204, 113, 0.3)');
+                            effect.style.setProperty('--reality-effect-opacity', '1');
+                            effect.style.setProperty('--reality-effect-blend', 'overlay');
+                            break;
+                        case 'bridge-creation':
+                            effect.style.setProperty('--reality-effect-color', 'rgba(155, 89, 182, 0.5)');
+                            effect.style.setProperty('--reality-effect-opacity', '1');
+                            effect.style.setProperty('--reality-effect-blend', 'multiply');
+                            break;
+                        default:
+                            effect.style.setProperty('--reality-effect-color', 'rgba(0, 184, 212, 0.2)');
+                            effect.style.setProperty('--reality-effect-opacity', '1');
+                            effect.style.setProperty('--reality-effect-blend', 'screen');
+                    }
+                    
+                    overlay.appendChild(effect);
+                    
+                    // Remove effect after animation
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                        overlay.removeChild(effect);
+                    }, 2000);
+                }
+            }
+
+            updateCollaborativeReality() {
+                if (this.multiplayerSystem?.isInSession) {
+                    // Sync reality modifications with team
+                    this.multiplayerSystem.players.forEach(player => {
+                        if (player.id !== this.multiplayerSystem.currentPlayer?.id) {
+                            // Apply team member reality changes
+                            this.integrateTeamRealityChanges(player);
+                        }
+                    });
+                }
+            }
+
+            integrateTeamRealityChanges(player) {
+                // Simulate receiving reality modifications from team members
+                if (Math.random() < 0.1) { // 10% chance per update cycle
+                    this.addToDebugConsole('INFO', `Integrating reality changes from ${player.name}`, 'info');
+                    this.showRealityEffect('team-sync');
+                }
+            }
+
+            resetToDefaults() {
+                this.realityHacking.matrix.gravity = 9.8;
+                this.realityHacking.matrix.lightIntensity = 1.0;
+                this.realityHacking.matrix.timeFlow = 1.0;
+                this.realityHacking.matrix.realityStability = 0.8;
+                
+                this.updateMatrixValue('gravity', 9.8);
+                this.updateMatrixValue('lightIntensity', 1.0);
+                this.updateMatrixValue('timeFlow', 1.0);
+                this.updateMatrixValue('realityStability', 0.8);
+                
+                this.addToDebugConsole('INFO', 'Reality matrix reset to defaults', 'info');
+            }
+
+            randomizeReality() {
+                this.realityHacking.matrix.gravity = Math.random() * 15 + 2;
+                this.realityHacking.matrix.lightIntensity = Math.random() * 2.5 + 0.5;
+                this.realityHacking.matrix.timeFlow = Math.random() * 4 + 0.5;
+                this.realityHacking.matrix.realityStability = Math.random() * 0.5 + 0.3;
+                
+                this.updateMatrixValue('gravity', this.realityHacking.matrix.gravity);
+                this.updateMatrixValue('lightIntensity', this.realityHacking.matrix.lightIntensity);
+                this.updateMatrixValue('timeFlow', this.realityHacking.matrix.timeFlow);
+                this.updateMatrixValue('realityStability', this.realityHacking.matrix.realityStability);
+                
+                this.addToDebugConsole('WARNING', 'Reality matrix randomized - stability may be affected', 'warning');
+            }
+
+            stabilizeReality() {
+                this.realityHacking.matrix.realityStability = 1.0;
+                this.updateMatrixValue('realityStability', 1.0);
+                this.addToDebugConsole('SUCCESS', 'Reality stabilized to maximum stability', 'success');
+            }
+
+            applyRealityEmergencyProtocols() {
+                // Emergency reality stabilization
+                this.realityHacking.matrix.realityStability = 0.9;
+                this.realityHacking.matrix.timeFlow = Math.min(this.realityHacking.matrix.timeFlow, 1.5);
+                
+                this.addToDebugConsole('SUCCESS', 'Emergency protocols applied - reality stabilized', 'success');
+                this.showRealityEffect('emergency-stabilize');
+            }
+
+            clearConsole() {
+                const console = document.getElementById('realityDebugConsole');
+                if (console) {
+                    console.innerHTML = '<div class="debug-line debug-info"><span class="debug-timestamp">' + new Date().toLocaleTimeString() + '</span><span class="debug-message">[INFO] Console cleared</span></div>';
+                }
+            }
+
+            exportDebugData() {
+                const debugData = {
+                    timestamp: Date.now(),
+                    realityMatrix: this.realityHacking.matrix,
+                    anchors: this.realityHacking.anchors,
+                    bridges: this.realityHacking.bridges,
+                    viruses: this.realityHacking.viruses
+                };
+                
+                const dataStr = JSON.stringify(debugData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `reality-debug-${Date.now()}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                this.addToDebugConsole('SUCCESS', 'Debug data exported successfully', 'success');
+            }
+
             initializeQuestTemplates() {
                 return {
                     mainStory: {
@@ -7565,6 +9702,370 @@ Your consciousness awaits. What will you dream into existence?`;
             }
         }
 
+        // ===== REALITY HACKING UTILITY FUNCTIONS =====
+        
+        function openRealityHackingPanel(tool = 'matrix') {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.openRealityHackingPanel(tool);
+            }
+        }
+
+        function openRealityMatrixEditor() {
+            openRealityHackingPanel('matrix');
+        }
+
+        function openQuantumCodeInterpreter() {
+            openRealityHackingPanel('quantum');
+        }
+
+        function openNeuralLinkInterface() {
+            openRealityHackingPanel('neural');
+        }
+
+        function openTemporalHackEngine() {
+            openRealityHackingPanel('temporal');
+        }
+
+        function openDimensionalBridgeCreator() {
+            openRealityHackingPanel('bridge');
+        }
+
+        function openRealityDebugConsole() {
+            openRealityHackingPanel('debug');
+        }
+
+        function openCollaborativeWeaving() {
+            openRealityHackingPanel('weaving');
+        }
+
+        function closeRealityHackingPanel() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.closeRealityHackingPanel();
+            }
+        }
+
+        function toggleRealityToolsMenu() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.toggleRealityToolsMenu();
+            }
+        }
+
+        // Reality Matrix Editor Functions
+        function updateMatrixValue(property, value) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.updateMatrixValue(property, value);
+            }
+        }
+
+        function applyMatrixChanges() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.applyMatrixChanges();
+            }
+        }
+
+        function createNewAnchor() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.createNewAnchor();
+            }
+        }
+
+        function resetToDefaults() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.resetToDefaults();
+            }
+        }
+
+        function randomizeReality() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.randomizeReality();
+            }
+        }
+
+        function stabilizeReality() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.stabilizeReality();
+            }
+        }
+
+        // Quantum Code Interpreter Functions
+        function loadScript(scriptId) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.loadScript(scriptId);
+            }
+        }
+
+        function executeCode() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.executeCode();
+            }
+        }
+
+        function createCustomScript() {
+            const scriptName = prompt('Enter script name:');
+            if (scriptName && window.chromaShiftComplete) {
+                const newScript = {
+                    id: Date.now(),
+                    name: scriptName,
+                    code: '// New reality hacking script\nfunction main() {\n    // Your code here\n    return "Script executed";\n}',
+                    category: 'custom'
+                };
+                
+                window.chromaShiftComplete.realityHacking.codeScripts.push(newScript);
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', `Custom script "${scriptName}" created`, 'success');
+            }
+        }
+
+        function filterScripts(category) {
+            // Update pill states
+            document.querySelectorAll('.neural-link-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter and display scripts
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addToDebugConsole('INFO', `Filtering scripts by category: ${category}`, 'info');
+            }
+        }
+
+        function validateCode() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Code validation passed - syntax correct', 'success');
+            }
+        }
+
+        function formatCode() {
+            const editor = document.getElementById('codeEditor');
+            if (editor) {
+                // Simple code formatting simulation
+                const code = editor.value;
+                const formatted = code.replace(/\n\s+/g, '\n').trim();
+                editor.value = formatted;
+                
+                if (window.chromaShiftComplete) {
+                    window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Code formatted successfully', 'success');
+                }
+            }
+        }
+
+        // Neural Link Interface Functions
+        function setConsciousnessState(state) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.setConsciousnessState(state);
+            }
+        }
+
+        function applyPerceptionFilter(filterId) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.applyPerceptionFilter(filterId);
+            }
+        }
+
+        function syncWithPlayer(playerId) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.syncWithPlayer(playerId);
+            }
+        }
+
+        function resetNeuralState() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.setConsciousnessState('normal');
+                window.chromaShiftComplete.applyPerceptionFilter('normal');
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Neural state reset to baseline', 'success');
+            }
+        }
+
+        function enhanceConsciousness() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.setConsciousnessState('quantum');
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Consciousness enhanced to quantum state', 'success');
+            }
+        }
+
+        // Temporal Hack Engine Functions
+        function slowTime(factor) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.slowTime(factor);
+            }
+        }
+
+        function fastTime(factor) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.fastTime(factor);
+            }
+        }
+
+        function normalTime() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.normalTime();
+            }
+        }
+
+        function pauseTime() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.pauseTime();
+            }
+        }
+
+        function rewindTime(seconds) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.rewindTime(seconds);
+            }
+        }
+
+        function createTimeLoop() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.createTimeLoop();
+            }
+        }
+
+        function updateCustomTime(value) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.updateCustomTime(value);
+            }
+        }
+
+        function applyCustomTime() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.applyCustomTime();
+            }
+        }
+
+        function freezeAllTime() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.pauseTime();
+                window.chromaShiftComplete.addToDebugConsole('WARNING', 'Global time freeze activated', 'warning');
+            }
+        }
+
+        function restoreDefaultTime() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.normalTime();
+            }
+        }
+
+        // Dimensional Bridge Creator Functions
+        function createDimensionalBridge() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.createDimensionalBridge();
+            }
+        }
+
+        function loadBridgeTemplate(template) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.loadBridgeTemplate(template);
+            }
+        }
+
+        function toggleBridge(bridgeId) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.toggleBridge(bridgeId);
+            }
+        }
+
+        function connectToTeamDimensions() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addToDebugConsole('INFO', 'Connecting to team dimensions...', 'info');
+                setTimeout(() => {
+                    window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Team dimensions connected successfully', 'success');
+                }, 2000);
+            }
+        }
+
+        function stabilizeAllBridges() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.realityHacking.bridges.forEach(bridge => {
+                    bridge.stability = Math.min(bridge.stability + 0.1, 1.0);
+                });
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'All bridges stabilized', 'success');
+                window.chromaShiftComplete.loadRealityTool('bridge');
+            }
+        }
+
+        function emergencyDisconnect() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.realityHacking.bridges.forEach(bridge => {
+                    bridge.active = false;
+                });
+                window.chromaShiftComplete.addToDebugConsole('WARNING', 'Emergency disconnect activated - all bridges disabled', 'warning');
+                window.chromaShiftComplete.loadRealityTool('bridge');
+            }
+        }
+
+        // Reality Debug Console Functions
+        function runSystemDiagnostics() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.runSystemDiagnostics();
+            }
+        }
+
+        function clearConsole() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.clearConsole();
+            }
+        }
+
+        function exportDebugData() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.exportDebugData();
+            }
+        }
+
+        function runIntegrityCheck() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.runIntegrityCheck();
+            }
+        }
+
+        function emergencyReboot() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addToDebugConsole('WARNING', 'Emergency reboot initiated...', 'warning');
+                setTimeout(() => {
+                    window.chromaShiftComplete.resetToDefaults();
+                    window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'System reboot completed', 'success');
+                }, 3000);
+            }
+        }
+
+        function optimizeReality() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.stabilizeReality();
+                window.chromaShiftComplete.normalTime();
+                window.chromaShiftComplete.realityHacking.matrix.lightIntensity = 1.0;
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Reality optimization completed', 'success');
+            }
+        }
+
+        // Collaborative Reality Weaving Functions
+        function startWeavingProject(projectType) {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.startWeavingProject(projectType);
+            }
+        }
+
+        function inviteTeamToWeaving() {
+            if (window.chromaShiftComplete && window.chromaShiftComplete.multiplayerSystem?.isInSession) {
+                window.chromaShiftComplete.addToDebugConsole('INFO', 'Team invitation sent for reality weaving', 'info');
+                window.chromaShiftComplete.broadcastToAllPlayers({
+                    type: 'weaving_invitation',
+                    sender: window.chromaShiftComplete.multiplayerSystem.currentPlayer?.name
+                });
+            }
+        }
+
+        function optimizeTeamWeaving() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Team coordination optimized', 'success');
+            }
+        }
+
+        function finalizeCurrentProject() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addToDebugConsole('SUCCESS', 'Current weaving project finalized', 'success');
+                window.chromaShiftComplete.showRealityEffect('project-complete');
+            }
+        }
+
         // Handle escape key for modals
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -7754,6 +10255,101 @@ Your consciousness awaits. What will you dream into existence?`;
                 box-shadow: 0 4px 20px rgba(0, 184, 212, 0.4);
             " onmouseover="this.style.background='var(--multiplayer-accent-300)'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='var(--multiplayer-accent-500)'; this.style.transform='scale(1)'">
                 🌐 START MULTIPLAYER SESSION
+            </button>
+        </div>
+
+        <!-- ===== ADVANCED REALITY HACKING INTERFACE ===== -->
+
+        <!-- Reality Hacking Tools Menu -->
+        <div class="reality-tools-menu" id="realityToolsMenu">
+            <div class="tools-menu-title">Reality Hacking Tools</div>
+            <button class="tools-menu-btn" onclick="openRealityMatrixEditor()">
+                🌍 Matrix Editor
+            </button>
+            <button class="tools-menu-btn" onclick="openQuantumCodeInterpreter()">
+                💻 Quantum Code
+            </button>
+            <button class="tools-menu-btn" onclick="openNeuralLinkInterface()">
+                🧠 Neural Link
+            </button>
+            <button class="tools-menu-btn" onclick="openTemporalHackEngine()">
+                ⏰ Temporal Hack
+            </button>
+            <button class="tools-menu-btn" onclick="openDimensionalBridgeCreator()">
+                🌉 Bridge Creator
+            </button>
+            <button class="tools-menu-btn" onclick="openRealityDebugConsole()">
+                🔧 Debug Console
+            </button>
+            <button class="tools-menu-btn" onclick="openCollaborativeWeaving()">
+                🕸️ Team Weaving
+            </button>
+        </div>
+
+        <!-- Reality Hacking Panel -->
+        <div class="reality-hacking-panel" id="realityHackingPanel">
+            <div class="reality-header">
+                <h1 class="reality-title" id="realityPanelTitle">Reality Matrix Editor</h1>
+                <button class="reality-close-btn" onclick="closeRealityHackingPanel()">✕</button>
+            </div>
+            <div class="reality-content">
+                <div class="reality-main-panel" id="realityMainPanel">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+                <div class="reality-inspector" id="realityInspector">
+                    <h2>Properties</h2>
+                    <div id="realityProperties">
+                        <!-- Dynamic properties will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reality Effects Overlay -->
+        <div class="reality-effects-overlay" id="realityEffectsOverlay">
+            <!-- Dynamic effects will be inserted here -->
+        </div>
+
+        <!-- Reality Hacking Quick Access Button -->
+        <button class="reality-hacking-btn" id="realityHackingBtn" onclick="toggleRealityToolsMenu()" style="
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--reality-primary-cyan-500), var(--reality-primary-cyan-300));
+            border: none;
+            color: #0A0F14;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 20px rgba(0, 184, 212, 0.6);
+            transition: all 0.3s ease;
+        " onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 25px rgba(0, 184, 212, 0.8)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 20px rgba(0, 184, 212, 0.6)'" title="Reality Hacking Tools">
+            🔧
+        </button>
+
+        <!-- Reality Hacking Button in Main Menu -->
+        <div style="text-align: center; margin: 20px 0;">
+            <button class="reality-hacking-main-btn" onclick="openRealityHackingPanel()" style="
+                padding: 16px 32px;
+                height: auto;
+                width: auto;
+                background: linear-gradient(135deg, var(--reality-primary-cyan-500), var(--reality-primary-cyan-300));
+                color: #0A0F14;
+                border: none;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0, 184, 212, 0.6);
+                margin: 0 8px;
+            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 25px rgba(0, 184, 212, 0.8)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 20px rgba(0, 184, 212, 0.6)'">
+                🔧 REALITY HACKING LAB
             </button>
         </div>
     </script>
