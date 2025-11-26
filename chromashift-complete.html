@@ -4080,6 +4080,497 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
     }
+
+    /* ========================================
+       ADVANCED AUDIO SYSTEM
+       ======================================== */
+
+    /* Audio System Color Variables */
+    :root {
+        --audio-accent-glow: #0CF2FF;
+        --audio-accent-base: #00B8D9;
+        --audio-accent-dark: #007A8D;
+        --audio-bg-page: #000000;
+        --audio-bg-surface-1: #0F0F0F;
+        --audio-bg-surface-2: #1C1C1C;
+        --audio-text-primary: #E4E4E7;
+        --audio-text-secondary: #A1A1AA;
+        --audio-border-divider: #2D2D2D;
+        --audio-feedback-error: #FF453A;
+        --audio-feedback-warning: #FFD60A;
+        
+        /* Spacing Variables */
+        --audio-space-xs: 4px;
+        --audio-space-sm: 8px;
+        --audio-space-md: 16px;
+        --audio-space-lg: 24px;
+        --audio-space-xl: 32px;
+        --audio-space-xxl: 48px;
+        
+        /* Animation Variables */
+        --audio-glow-standard: 0 0 12px 0px rgba(12, 242, 255, 0.3);
+        --audio-glow-intense: 0 0 24px 2px rgba(12, 242, 255, 0.5);
+    }
+
+    /* Audio System Base Container */
+    .audio-system-container {
+        position: fixed;
+        top: var(--audio-space-lg);
+        right: var(--audio-space-lg);
+        width: 320px;
+        max-height: 80vh;
+        background: var(--audio-bg-surface-1);
+        border: 1px solid var(--audio-border-divider);
+        border-radius: 4px;
+        box-shadow: var(--audio-glow-standard);
+        z-index: 1000;
+        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        color: var(--audio-text-primary);
+        overflow: hidden;
+        display: none;
+    }
+
+    .audio-system-container.active {
+        display: block;
+    }
+
+    /* Audio System Header */
+    .audio-system-header {
+        background: var(--audio-bg-surface-2);
+        padding: var(--audio-space-md);
+        border-bottom: 1px solid var(--audio-border-divider);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .audio-system-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--audio-text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0;
+    }
+
+    .audio-system-close {
+        background: none;
+        border: none;
+        color: var(--audio-text-secondary);
+        font-size: 18px;
+        cursor: pointer;
+        padding: var(--audio-space-xs);
+        border-radius: 2px;
+        transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .audio-system-close:hover {
+        color: var(--audio-accent-base);
+        box-shadow: var(--audio-glow-intense);
+    }
+
+    /* Audio System Navigation Sidebar */
+    .audio-system-sidebar {
+        width: 240px;
+        background: var(--audio-bg-surface-2);
+        border-right: 1px solid var(--audio-border-divider);
+        padding: var(--audio-space-lg);
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .audio-nav-item {
+        display: block;
+        width: 100%;
+        background: none;
+        border: 1px solid var(--audio-border-divider);
+        border-radius: 4px;
+        padding: var(--audio-space-sm) var(--audio-space-md);
+        margin-bottom: var(--audio-space-sm);
+        color: var(--audio-text-secondary);
+        font-size: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .audio-nav-item:hover {
+        color: var(--audio-accent-base);
+        border-color: var(--audio-accent-base);
+        box-shadow: var(--audio-glow-standard);
+    }
+
+    .audio-nav-item.active {
+        background: var(--audio-accent-base);
+        color: var(--audio-text-primary);
+        border-color: var(--audio-accent-base);
+        box-shadow: var(--audio-glow-standard);
+    }
+
+    /* Audio System Main Content */
+    .audio-system-content {
+        margin-left: 240px;
+        padding: var(--audio-space-lg);
+        min-height: 400px;
+        max-height: calc(80vh - 80px);
+        overflow-y: auto;
+    }
+
+    .audio-content-section {
+        display: none;
+    }
+
+    .audio-content-section.active {
+        display: block;
+    }
+
+    /* Master Volume Control */
+    .audio-master-volume {
+        margin-bottom: var(--audio-space-xl);
+    }
+
+    .audio-volume-label {
+        display: block;
+        font-size: 12px;
+        color: var(--audio-text-secondary);
+        margin-bottom: var(--audio-space-sm);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .audio-volume-slider {
+        position: relative;
+        margin: var(--audio-space-md) 0;
+        height: 8px;
+        background: var(--audio-bg-surface-2);
+        border-radius: 4px;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .audio-volume-slider::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--audio-accent-glow);
+        opacity: 0.2;
+        transition: opacity 0.1s ease;
+    }
+
+    .audio-volume-slider.audio-reactive::before {
+        opacity: calc(0.2 + 0.8 * var(--audio-amplitude, 0));
+    }
+
+    .audio-volume-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--audio-accent-base), var(--audio-accent-glow));
+        border-radius: 4px;
+        transition: width 0.1s ease;
+        position: relative;
+    }
+
+    .audio-volume-thumb {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        background: var(--audio-accent-base);
+        border-radius: 50%;
+        cursor: grab;
+        transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: var(--audio-glow-standard);
+    }
+
+    .audio-volume-thumb:hover,
+    .audio-volume-thumb:active {
+        transform: translateY(-50%) scale(1.2);
+        box-shadow: var(--audio-glow-intense);
+        cursor: grabbing;
+    }
+
+    /* Spatial Audio Visualizer */
+    .audio-spatial-visualizer {
+        width: 320px;
+        height: 320px;
+        background: var(--audio-bg-surface-1);
+        border: 1px solid var(--audio-border-divider);
+        border-radius: 4px;
+        position: relative;
+        margin: var(--audio-space-lg) 0;
+        overflow: hidden;
+    }
+
+    .audio-spatial-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(var(--audio-border-divider) 1px, transparent 1px),
+            linear-gradient(90deg, var(--audio-border-divider) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.3;
+    }
+
+    .audio-spatial-player {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        background: var(--audio-accent-base);
+        border-radius: 50%;
+        box-shadow: var(--audio-glow-standard);
+    }
+
+    .audio-spatial-source {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: var(--audio-accent-glow);
+        border-radius: 50%;
+        cursor: pointer;
+        animation: audioSpatialPulse 1s ease-in-out infinite alternate;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        box-shadow: var(--audio-glow-standard);
+    }
+
+    .audio-spatial-source:hover {
+        transform: scale(1.3);
+        box-shadow: var(--audio-glow-intense);
+    }
+
+    .audio-spatial-source.active {
+        background: var(--audio-accent-base);
+        animation: audioSpatialActive 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes audioSpatialPulse {
+        0% { opacity: 0.6; transform: scale(0.8); }
+        100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    @keyframes audioSpatialActive {
+        0% { opacity: 0.8; }
+        100% { opacity: 1; }
+    }
+
+    /* Music Control Toggles */
+    .audio-music-controls {
+        margin: var(--audio-space-xl) 0;
+    }
+
+    .audio-toggle-group {
+        display: flex;
+        gap: var(--audio-space-sm);
+        margin-bottom: var(--audio-space-md);
+    }
+
+    .audio-toggle {
+        background: var(--audio-bg-surface-2);
+        border: 1px solid var(--audio-border-divider);
+        border-radius: 99px;
+        padding: var(--audio-space-sm) var(--audio-space-md);
+        color: var(--audio-text-secondary);
+        font-size: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        white-space: nowrap;
+    }
+
+    .audio-toggle:hover {
+        border-color: var(--audio-accent-base);
+        color: var(--audio-accent-base);
+    }
+
+    .audio-toggle.active {
+        background: var(--audio-accent-base);
+        color: var(--audio-text-primary);
+        box-shadow: var(--audio-glow-standard);
+    }
+
+    /* Audio Settings Panel */
+    .audio-settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--audio-space-lg);
+        margin: var(--audio-space-xl) 0;
+    }
+
+    .audio-setting-item {
+        background: var(--audio-bg-surface-2);
+        border: 1px solid var(--audio-border-divider);
+        border-radius: 4px;
+        padding: var(--audio-space-md);
+    }
+
+    .audio-setting-label {
+        display: block;
+        font-size: 14px;
+        color: var(--audio-text-primary);
+        margin-bottom: var(--audio-space-sm);
+    }
+
+    .audio-setting-description {
+        font-size: 12px;
+        color: var(--audio-text-secondary);
+        line-height: 1.4;
+    }
+
+    /* Audio Info Display */
+    .audio-info-display {
+        background: var(--audio-bg-surface-2);
+        border: 1px solid var(--audio-border-divider);
+        border-radius: 4px;
+        padding: var(--audio-space-md);
+        margin: var(--audio-space-lg) 0;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .audio-info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--audio-space-sm);
+        font-size: 14px;
+    }
+
+    .audio-info-label {
+        color: var(--audio-text-secondary);
+    }
+
+    .audio-info-value {
+        color: var(--audio-accent-base);
+        font-weight: 500;
+    }
+
+    /* Audio Reactive Elements */
+    .audio-reactive-glow {
+        animation: audioGlow 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes audioGlow {
+        0% { 
+            box-shadow: var(--audio-glow-standard);
+        }
+        100% { 
+            box-shadow: var(--audio-glow-intense);
+        }
+    }
+
+    /* Reality Hacking Integration */
+    .audio-reality-hack-active .audio-spatial-grid {
+        background-image: 
+            linear-gradient(var(--audio-accent-glow) 1px, transparent 1px),
+            linear-gradient(90deg, var(--audio-accent-glow) 1px, transparent 1px);
+        opacity: 0.6;
+        animation: audioRealityGrid 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes audioRealityGrid {
+        0% { opacity: 0.3; }
+        100% { opacity: 0.8; }
+    }
+
+    /* Mobile Responsive Audio System */
+    @media (max-width: 1024px) {
+        .audio-system-container {
+            width: calc(100vw - var(--audio-space-lg) * 2);
+            max-width: 500px;
+            top: var(--audio-space-md);
+            right: var(--audio-space-md);
+        }
+        
+        .audio-system-sidebar {
+            display: none;
+        }
+        
+        .audio-system-content {
+            margin-left: 0;
+        }
+        
+        .audio-spatial-visualizer {
+            width: 100%;
+            max-width: 280px;
+            height: 280px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .audio-system-container {
+            width: calc(100vw - var(--audio-space-sm));
+            right: var(--audio-space-xs);
+            top: var(--audio-space-xs);
+            max-height: 90vh;
+        }
+        
+        .audio-spatial-visualizer {
+            display: none;
+        }
+        
+        .audio-spatial-list {
+            display: block;
+        }
+        
+        .audio-spatial-list {
+            background: var(--audio-bg-surface-1);
+            border: 1px solid var(--audio-border-divider);
+            border-radius: 4px;
+            padding: var(--audio-space-md);
+            margin: var(--audio-space-md) 0;
+        }
+        
+        .audio-spatial-list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--audio-space-sm);
+            margin-bottom: var(--audio-space-xs);
+            border-radius: 2px;
+            transition: background 0.2s ease;
+        }
+        
+        .audio-spatial-list-item:hover {
+            background: var(--audio-bg-surface-2);
+        }
+        
+        .audio-settings-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Reduced Motion Support */
+    @media (prefers-reduced-motion: reduce) {
+        .audio-spatial-source,
+        .audio-reactive-glow,
+        .audio-spatial-grid,
+        .audio-volume-thumb {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+
+    /* High Contrast Mode */
+    @media (prefers-contrast: high) {
+        :root {
+            --audio-border-divider: #FFFFFF;
+            --audio-text-secondary: #FFFFFF;
+            --audio-bg-surface-2: #000000;
+        }
+        
+        .audio-spatial-source {
+            border: 2px solid #FFFFFF;
+        }
+    }
     </style>
 </head>
 <body>
@@ -4392,6 +4883,28 @@
                     isActive: false
                 };
                 
+                // Advanced Audio System State
+                this.advancedAudio = {
+                    enabled: false,
+                    isInitialized: false,
+                    audioContext: null,
+                    masterVolume: 70,
+                    spatialAudioEnabled: true,
+                    dynamicMusicEnabled: true,
+                    audioReactiveUI: true,
+                    realityIntegrationEnabled: true,
+                    currentMusicMode: 'exploration',
+                    spatialSources: new Map(),
+                    audioElements: new Map(),
+                    realTimeData: {
+                        rmsLevel: -12.5,
+                        peakLevel: -6.0,
+                        clipRate: 0.0,
+                        currentMood: 'Exploration',
+                        energyLevel: 'Medium'
+                    }
+                };
+                
                 this.init();
             }
 
@@ -4408,6 +4921,7 @@
                 this.setupMultiplayerSystem();
                 this.setupRealityHackingSystem();
                 this.setup3DEnvironmentSystem();
+                this.setupAdvancedAudioSystem();
                 this.initializeStoryProgressUI();
                 
                 this.addEventToLog('System initialized. Dream environment loading...');
@@ -10269,6 +10783,273 @@ function createAnchor(name, properties) {
             this.addEventToLog('3D Environment System initialized - WebGL context ready');
         }
 
+        setupAdvancedAudioSystem() {
+            // Initialize Advanced Audio System
+            this.advancedAudio.isInitialized = true;
+            this.advancedAudio.enabled = false;
+            
+            // Setup spatial audio sources for game objects
+            this.setupSpatialAudioSources();
+            
+            // Initialize audio-reactive UI elements
+            this.initializeAudioReactiveUI();
+            
+            // Setup audio event handlers
+            this.setupAudioEventHandlers();
+            
+            this.addEventToLog('Advanced Audio System initialized - Web Audio API ready');
+        }
+
+        setupSpatialAudioSources() {
+            // Map game objects to spatial audio sources
+            const sources = [
+                { id: 'ai-companion', gameObject: 'aiCompanion', position: { x: 0, y: 1.6, z: 5 } },
+                { id: 'quest-marker', gameObject: 'currentQuest', position: { x: 0, y: 0, z: -10 } },
+                { id: 'reality-node', gameObject: 'realityNodes', position: { x: 15, y: 2, z: 8 } }
+            ];
+            
+            sources.forEach(source => {
+                this.advancedAudio.spatialSources.set(source.id, {
+                    position: source.position,
+                    gameObject: source.gameObject,
+                    volume: 1.0,
+                    active: true
+                });
+            });
+        }
+
+        initializeAudioReactiveUI() {
+            // Initialize audio-reactive visual elements
+            if (this.advancedAudio.audioReactiveUI) {
+                // Add CSS variables for audio reactivity
+                document.documentElement.style.setProperty('--audio-amplitude', '0');
+                document.documentElement.style.setProperty('--audio-frequency', '0');
+                
+                // Setup real-time audio analysis
+                this.startAudioAnalysis();
+            }
+        }
+
+        setupAudioEventHandlers() {
+            // Audio system keyboard shortcut
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    e.preventDefault();
+                    this.toggleAdvancedAudioSystem();
+                }
+            });
+            
+            // Audio system toggle button integration
+            const originalAddFeatureButton = this.addFeatureButton;
+            this.addFeatureButton = (featureName, description, callback) => {
+                if (featureName === 'Advanced Audio System') {
+                    return originalAddFeatureButton.call(this, 'Advanced Audio System', 'Enable spatial 3D audio and dynamic music', () => this.toggleAdvancedAudioSystem());
+                }
+                return originalAddFeatureButton.call(this, featureName, description, callback);
+            };
+        }
+
+        startAudioAnalysis() {
+            // Simulate real-time audio analysis
+            setInterval(() => {
+                if (!this.advancedAudio.enabled) return;
+                
+                // Generate realistic audio data
+                this.advancedAudio.realTimeData.rmsLevel = (Math.random() * 30 - 20).toFixed(1); // -20 to +10 dB
+                this.advancedAudio.realTimeData.peakLevel = (Math.random() * 15 - 10).toFixed(1); // -10 to +5 dB
+                this.advancedAudio.realTimeData.clipRate = (Math.random() * 5).toFixed(2); // 0-5%
+                
+                // Update audio-reactive UI elements
+                this.updateAudioReactiveElements();
+                
+            }, 100); // Update every 100ms
+        }
+
+        updateAudioReactiveElements() {
+            // Update CSS variables for audio reactivity
+            const amplitude = Math.random(); // Simulated amplitude 0-1
+            const frequency = Math.random() * 1000 + 200; // Simulated frequency 200-1200 Hz
+            
+            if (this.advancedAudio.audioReactiveUI) {
+                document.documentElement.style.setProperty('--audio-amplitude', amplitude.toString());
+                document.documentElement.style.setProperty('--audio-frequency', frequency.toString());
+            }
+        }
+
+        toggleAdvancedAudioSystem() {
+            if (this.advancedAudio.enabled) {
+                this.deactivateAdvancedAudioSystem();
+            } else {
+                this.activateAdvancedAudioSystem();
+            }
+        }
+
+        activateAdvancedAudioSystem() {
+            if (!this.advancedAudio.isInitialized) {
+                this.setupAdvancedAudioSystem();
+            }
+            
+            this.advancedAudio.enabled = true;
+            
+            // Initialize Web Audio API
+            if (!this.advancedAudio.audioContext) {
+                try {
+                    this.advancedAudio.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    // Create master gain node
+                    this.masterGainNode = this.advancedAudio.audioContext.createGain();
+                    this.masterGainNode.gain.value = this.advancedAudio.masterVolume / 100;
+                    this.masterGainNode.connect(this.advancedAudio.audioContext.destination);
+                    
+                    // Initialize spatial audio setup
+                    this.initializeSpatialAudio();
+                    
+                } catch (error) {
+                    console.error('Failed to initialize Web Audio API:', error);
+                    this.addEventToLog('Audio initialization failed - Browser may not support Web Audio API');
+                    return;
+                }
+            }
+            
+            // Update UI
+            const audioContainer = document.getElementById('advancedAudioSystem');
+            if (audioContainer) {
+                audioContainer.classList.add('active');
+            }
+            
+            this.addEventToLog('Advanced Audio System activated - Spatial audio and dynamic music enabled');
+        }
+
+        deactivateAdvancedAudioSystem() {
+            this.advancedAudio.enabled = false;
+            
+            // Update UI
+            const audioContainer = document.getElementById('advancedAudioSystem');
+            if (audioContainer) {
+                audioContainer.classList.remove('active');
+            }
+            
+            this.addEventToLog('Advanced Audio System deactivated');
+        }
+
+        initializeSpatialAudio() {
+            // Setup spatial audio panner nodes for each source
+            this.advancedAudio.spatialSources.forEach((sourceData, sourceId) => {
+                try {
+                    const panner = this.advancedAudio.audioContext.createPanner();
+                    
+                    // Configure spatial audio properties
+                    panner.panningModel = 'HRTF';
+                    panner.distanceModel = 'inverse';
+                    panner.refDistance = 1;
+                    panner.maxDistance = 50;
+                    panner.rolloffFactor = 1;
+                    panner.coneInnerAngle = 360;
+                    panner.coneOuterAngle = 0;
+                    panner.coneOuterGain = 0;
+                    
+                    // Set initial position
+                    panner.positionX.value = sourceData.position.x;
+                    panner.positionY.value = sourceData.position.y;
+                    panner.positionZ.value = sourceData.position.z;
+                    
+                    // Connect to master
+                    panner.connect(this.masterGainNode);
+                    
+                    // Store panner reference
+                    sourceData.panner = panner;
+                    
+                } catch (error) {
+                    console.error(`Failed to initialize spatial audio for ${sourceId}:`, error);
+                }
+            });
+        }
+
+        updateSpatialAudioSource(sourceId, position) {
+            const sourceData = this.advancedAudio.spatialSources.get(sourceId);
+            if (sourceData && sourceData.panner) {
+                sourceData.panner.positionX.value = position.x;
+                sourceData.panner.positionY.value = position.y;
+                sourceData.panner.positionZ.value = position.z;
+                sourceData.position = position;
+                
+                // Update visual position if UI is active
+                this.updateSpatialAudioVisual(sourceId, position);
+            }
+        }
+
+        updateSpatialAudioVisual(sourceId, position) {
+            const sourceElement = document.querySelector(`[data-source="${sourceId}"]`);
+            if (sourceElement) {
+                // Convert 3D position to 2D visual position
+                const visualX = (position.x / 20) * 50 + 50; // Scale and center
+                const visualY = (position.z / 20) * 50 + 50; // Scale and center
+                
+                sourceElement.style.left = `${visualX}%`;
+                sourceElement.style.top = `${visualY}%`;
+                
+                // Update distance display
+                const distance = Math.sqrt(position.x ** 2 + position.y ** 2 + position.z ** 2);
+                sourceElement.title = `${sourceId.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} - ${distance.toFixed(1)}m`;
+            }
+        }
+
+        setMusicMode(mode) {
+            this.advancedAudio.currentMusicMode = mode;
+            
+            // Update real-time data
+            const moodMap = {
+                'dynamic': 'Dynamic Adaptation',
+                'exploration': 'Exploration',
+                'combat': 'Combat',
+                'stealth': 'Stealth'
+            };
+            
+            this.advancedAudio.realTimeData.currentMood = moodMap[mode];
+            
+            // Update energy level based on mode
+            const energyMap = {
+                'dynamic': 'Adaptive',
+                'exploration': 'Medium',
+                'combat': 'High',
+                'stealth': 'Low'
+            };
+            
+            this.advancedAudio.realTimeData.energyLevel = energyMap[mode];
+            
+            this.addEventToLog(`Music mode switched to: ${moodMap[mode]}`);
+        }
+
+        integrateRealityHackingWithAudio(realityLevel) {
+            if (!this.advancedAudio.realityIntegrationEnabled) return;
+            
+            // Apply reality parameters to audio processing
+            const realityFactor = realityLevel / 100;
+            
+            // Adjust spatial audio distortion based on reality level
+            this.advancedAudio.spatialSources.forEach((sourceData) => {
+                if (sourceData.panner) {
+                    // Add reality-based positional distortion
+                    const distortionFactor = realityFactor * 0.5;
+                    sourceData.panner.positionX.value += (Math.random() - 0.5) * distortionFactor;
+                    sourceData.panner.positionY.value += (Math.random() - 0.5) * distortionFactor;
+                    sourceData.panner.positionZ.value += (Math.random() - 0.5) * distortionFactor;
+                }
+            });
+            
+            // Apply visual reality effects
+            const audioContainer = document.getElementById('advancedAudioSystem');
+            if (audioContainer) {
+                if (realityLevel > 30) {
+                    audioContainer.classList.add('audio-reactive-glow');
+                    audioContainer.classList.add('audio-reality-hack-active');
+                } else {
+                    audioContainer.classList.remove('audio-reactive-glow');
+                    audioContainer.classList.remove('audio-reality-hack-active');
+                }
+            }
+        }
+
         setup3DInputControls() {
             // Keyboard controls for 3D movement
             this.keys = {
@@ -12592,3 +13373,822 @@ function createAnchor(name, properties) {
     </script>
 </body>
 </html>
+    <!-- ========================================= -->
+    <!-- ADVANCED AUDIO SYSTEM -->
+    <!-- ========================================= -->
+    
+    <!-- Advanced Audio System Container -->
+    <div class="audio-system-container" id="advancedAudioSystem">
+        <!-- Header -->
+        <div class="audio-system-header">
+            <h3 class="audio-system-title">Audio Control</h3>
+            <button class="audio-system-close" onclick="closeAdvancedAudioSystem()">×</button>
+        </div>
+        
+        <!-- Navigation Sidebar -->
+        <div class="audio-system-sidebar">
+            <button class="audio-nav-item active" onclick="showAudioSection('master')">Master</button>
+            <button class="audio-nav-item" onclick="showAudioSection('spatial')">Spatial</button>
+            <button class="audio-nav-item" onclick="showAudioSection('music')">Music</button>
+            <button class="audio-nav-item" onclick="showAudioSection('effects')">Effects</button>
+            <button class="audio-nav-item" onclick="showAudioSection('settings')">Settings</button>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="audio-system-content">
+            <!-- Master Volume Section -->
+            <div class="audio-content-section active" id="audio-section-master">
+                <h4 style="color: var(--audio-accent-base); margin-bottom: var(--audio-space-lg); text-transform: uppercase; letter-spacing: 0.05em;">Master Controls</h4>
+                
+                <div class="audio-master-volume">
+                    <label class="audio-volume-label">Master Volume</label>
+                    <div class="audio-volume-slider audio-reactive" id="audio-master-slider">
+                        <div class="audio-volume-fill" style="width: 70%;"></div>
+                        <div class="audio-volume-thumb" style="left: 70%;"></div>
+                    </div>
+                </div>
+                
+                <div class="audio-info-display">
+                    <div class="audio-info-row">
+                        <span class="audio-info-label">Current Level:</span>
+                        <span class="audio-info-value" id="audio-master-level">70%</span>
+                    </div>
+                    <div class="audio-info-row">
+                        <span class="audio-info-label">RMS Level:</span>
+                        <span class="audio-info-value" id="audio-rms-level">-12.5 dB</span>
+                    </div>
+                    <div class="audio-info-row">
+                        <span class="audio-info-label">Clip Rate:</span>
+                        <span class="audio-info-value" id="audio-clip-rate">0.0%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Spatial Audio Section -->
+            <div class="audio-content-section" id="audio-section-spatial">
+                <h4 style="color: var(--audio-accent-base); margin-bottom: var(--audio-space-lg); text-transform: uppercase; letter-spacing: 0.05em;">Spatial Audio</h4>
+                
+                <!-- Spatial Visualizer -->
+                <div class="audio-spatial-visualizer">
+                    <div class="audio-spatial-grid"></div>
+                    <div class="audio-spatial-player"></div>
+                    <div class="audio-spatial-source" style="top: 30%; left: 60%;" data-source="ai-companion" title="AI Companion - 3.2m"></div>
+                    <div class="audio-spatial-source" style="top: 70%; left: 40%;" data-source="quest-marker" title="Quest Marker - 1.8m"></div>
+                    <div class="audio-spatial-source" style="top: 45%; left: 80%;" data-source="reality-node" title="Reality Node - 5.1m"></div>
+                </div>
+                
+                <!-- Spatial List (Mobile) -->
+                <div class="audio-spatial-list" style="display: none;">
+                    <div class="audio-spatial-list-item">
+                        <span>AI Companion</span>
+                        <span style="color: var(--audio-accent-base);">3.2m</span>
+                    </div>
+                    <div class="audio-spatial-list-item">
+                        <span>Quest Marker</span>
+                        <span style="color: var(--audio-accent-base);">1.8m</span>
+                    </div>
+                    <div class="audio-spatial-list-item">
+                        <span>Reality Node</span>
+                        <span style="color: var(--audio-accent-base);">5.1m</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Music Control Section -->
+            <div class="audio-content-section" id="audio-section-music">
+                <h4 style="color: var(--audio-accent-base); margin-bottom: var(--audio-space-lg); text-transform: uppercase; letter-spacing: 0.05em;">Dynamic Music</h4>
+                
+                <div class="audio-music-controls">
+                    <div class="audio-toggle-group">
+                        <div class="audio-toggle" onclick="setMusicMode('dynamic')" id="music-toggle-dynamic">Dynamic</div>
+                        <div class="audio-toggle active" onclick="setMusicMode('exploration')" id="music-toggle-exploration">Exploration</div>
+                        <div class="audio-toggle" onclick="setMusicMode('combat')" id="music-toggle-combat">Combat</div>
+                        <div class="audio-toggle" onclick="setMusicMode('stealth')" id="music-toggle-stealth">Stealth</div>
+                    </div>
+                </div>
+                
+                <div class="audio-info-display">
+                    <div class="audio-info-row">
+                        <span class="audio-info-label">Current Mood:</span>
+                        <span class="audio-info-value" id="audio-current-mood">Exploration</span>
+                    </div>
+                    <div class="audio-info-row">
+                        <span class="audio-info-label">Energy Level:</span>
+                        <span class="audio-info-value" id="audio-energy-level">Medium</span>
+                    </div>
+                    <div class="audio-info-row">
+                        <span class="audio-info-label">Transition:</span>
+                        <span class="audio-info-value" id="audio-transition-state">Smooth</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Effects Section -->
+            <div class="audio-content-section" id="audio-section-effects">
+                <h4 style="color: var(--audio-accent-base); margin-bottom: var(--audio-space-lg); text-transform: uppercase; letter-spacing: 0.05em;">Audio Effects</h4>
+                
+                <div class="audio-settings-grid">
+                    <div class="audio-setting-item">
+                        <label class="audio-setting-label">Reverb</label>
+                        <div class="audio-volume-slider">
+                            <div class="audio-volume-fill" style="width: 50%;"></div>
+                            <div class="audio-volume-thumb" style="left: 50%;"></div>
+                        </div>
+                        <div class="audio-setting-description">Environmental reverb simulation</div>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <label class="audio-setting-label">Echo</label>
+                        <div class="audio-volume-slider">
+                            <div class="audio-volume-fill" style="width: 30%;"></div>
+                            <div class="audio-volume-thumb" style="left: 30%;"></div>
+                        </div>
+                        <div class="audio-setting-description">Delay and echo effects</div>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <label class="audio-setting-label">Distortion</label>
+                        <div class="audio-volume-slider">
+                            <div class="audio-volume-fill" style="width: 15%;"></div>
+                            <div class="audio-volume-thumb" style="left: 15%;"></div>
+                        </div>
+                        <div class="audio-setting-description">Cyberpunk distortion filter</div>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <label class="audio-setting-label">LFO</label>
+                        <div class="audio-volume-slider">
+                            <div class="audio-volume-fill" style="width: 25%;"></div>
+                            <div class="audio-volume-thumb" style="left: 25%;"></div>
+                        </div>
+                        <div class="audio-setting-description">Low-frequency modulation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Section -->
+            <div class="audio-content-section" id="audio-section-settings">
+                <h4 style="color: var(--audio-accent-base); margin-bottom: var(--audio-space-lg); text-transform: uppercase; letter-spacing: 0.05em;">Audio Settings</h4>
+                
+                <div class="audio-settings-grid">
+                    <div class="audio-setting-item">
+                        <div class="audio-toggle" id="audio-3d-toggle" style="margin-bottom: var(--audio-space-sm);">3D Audio</div>
+                        <div class="audio-setting-description">Enable spatial 3D audio processing</div>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <div class="audio-toggle" id="audio-reactive-toggle" style="margin-bottom: var(--audio-space-sm);">UI Reactive</div>
+                        <div class="audio-setting-description">Make interface respond to audio</div>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <div class="audio-toggle" id="audio-adaptive-toggle" style="margin-bottom: var(--audio-space-sm);">Adaptive Quality</div>
+                        <div class="audio-setting-description">Auto-adjust based on performance</div>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <div class="audio-toggle" id="audio-reality-toggle" style="margin-bottom: var(--audio-space-sm);">Reality Integration</div>
+                        <div class="audio-setting-description">Audio reacts to reality hacking</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: var(--audio-space-xl);">
+                    <button onclick="resetAudioSettings()" style="
+                        padding: var(--audio-space-sm) var(--audio-space-lg);
+                        background: var(--audio-accent-base);
+                        color: var(--audio-text-primary);
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        font-family: 'JetBrains Mono', monospace;
+                    ">Reset to Defaults</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ADVANCED AUDIO SYSTEM SCRIPT -->
+    <script>
+        // Advanced Audio System State
+        window.advancedAudioSystem = {
+            enabled: false,
+            masterVolume: 70,
+            currentSection: 'master',
+            musicMode: 'exploration',
+            spatialEnabled: true,
+            uiReactive: true,
+            adaptiveQuality: true,
+            realityIntegration: true,
+            audioContext: null,
+            masterGainNode: null,
+            spatialNodes: new Map(),
+            musicNodes: {
+                exploration: null,
+                combat: null,
+                stealth: null
+            },
+            effectNodes: {
+                reverb: null,
+                echo: null,
+                distortion: null,
+                lfo: null
+            },
+            audioElements: new Map(),
+            spatialSources: new Map(),
+            realTimeData: {
+                rmsLevel: -12.5,
+                clipRate: 0.0,
+                currentMood: 'Exploration',
+                energyLevel: 'Medium',
+                transitionState: 'Smooth'
+            }
+        };
+
+        // Advanced Audio System Functions
+        
+        function toggleAdvancedAudioSystem() {
+            const container = document.getElementById('advancedAudioSystem');
+            const audioSystem = window.advancedAudioSystem;
+            
+            if (audioSystem.enabled) {
+                closeAdvancedAudioSystem();
+            } else {
+                openAdvancedAudioSystem();
+            }
+        }
+        
+        function openAdvancedAudioSystem() {
+            const container = document.getElementById('advancedAudioSystem');
+            const audioSystem = window.advancedAudioSystem;
+            
+            if (!audioSystem.enabled) {
+                // Initialize Web Audio API if not already done
+                if (!audioSystem.audioContext) {
+                    initAdvancedAudioSystem();
+                }
+                
+                container.classList.add('active');
+                audioSystem.enabled = true;
+                
+                // Start real-time audio monitoring
+                startAudioMonitoring();
+                
+                // Update game log
+                if (window.chromaShiftComplete) {
+                    window.chromaShiftComplete.addEventToLog('Advanced Audio System activated - Spatial audio and dynamic music enabled');
+                }
+            }
+        }
+        
+        function closeAdvancedAudioSystem() {
+            const container = document.getElementById('advancedAudioSystem');
+            const audioSystem = window.advancedAudioSystem;
+            
+            container.classList.remove('active');
+            audioSystem.enabled = false;
+            
+            // Update game log
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addEventToLog('Advanced Audio System deactivated');
+            }
+        }
+        
+        function showAudioSection(sectionName) {
+            const audioSystem = window.advancedAudioSystem;
+            audioSystem.currentSection = sectionName;
+            
+            // Update navigation
+            document.querySelectorAll('.audio-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content sections
+            document.querySelectorAll('.audio-content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`audio-section-${sectionName}`).classList.add('active');
+        }
+        
+        function setMusicMode(mode) {
+            const audioSystem = window.advancedAudioSystem;
+            const prevMode = audioSystem.musicMode;
+            audioSystem.musicMode = mode;
+            
+            // Update toggle states
+            document.querySelectorAll('.audio-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+            document.getElementById(`music-toggle-${mode}`).classList.add('active');
+            
+            // Update display
+            const moodMap = {
+                'dynamic': 'Dynamic Adaptation',
+                'exploration': 'Exploration',
+                'combat': 'Combat',
+                'stealth': 'Stealth'
+            };
+            
+            document.getElementById('audio-current-mood').textContent = moodMap[mode];
+            audioSystem.realTimeData.currentMood = moodMap[mode];
+            
+            // Audio transition simulation
+            audioSystem.realTimeData.transitionState = 'Transitioning...';
+            setTimeout(() => {
+                audioSystem.realTimeData.transitionState = 'Smooth';
+                if (audioSystem.enabled) {
+                    document.getElementById('audio-transition-state').textContent = 'Smooth';
+                }
+            }, 1000);
+            
+            // Update game log
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addEventToLog(`Music mode switched to: ${moodMap[mode]}`);
+            }
+        }
+        
+        function initAdvancedAudioSystem() {
+            const audioSystem = window.advancedAudioSystem;
+            
+            try {
+                // Create AudioContext
+                audioSystem.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create master gain node
+                audioSystem.masterGainNode = audioSystem.audioContext.createGain();
+                audioSystem.masterGainNode.gain.value = audioSystem.masterVolume / 100;
+                audioSystem.masterGainNode.connect(audioSystem.audioContext.destination);
+                
+                // Initialize spatial audio nodes for different sources
+                const sources = ['ai-companion', 'quest-marker', 'reality-node'];
+                sources.forEach(sourceId => {
+                    const sourceNode = audioSystem.audioContext.createGain();
+                    const pannerNode = audioSystem.audioContext.createPanner();
+                    
+                    pannerNode.panningModel = 'HRTF';
+                    pannerNode.distanceModel = 'inverse';
+                    pannerNode.refDistance = 1;
+                    pannerNode.maxDistance = 50;
+                    pannerNode.rolloffFactor = 1;
+                    pannerNode.coneInnerAngle = 360;
+                    pannerNode.coneOuterAngle = 0;
+                    pannerNode.coneOuterGain = 0;
+                    
+                    sourceNode.connect(pannerNode);
+                    pannerNode.connect(audioSystem.masterGainNode);
+                    
+                    audioSystem.spatialNodes.set(sourceId, { gain: sourceNode, panner: pannerNode });
+                });
+                
+                // Initialize music tracks (placeholder audio sources)
+                const musicTracks = ['exploration', 'combat', 'stealth'];
+                musicTracks.forEach(trackName => {
+                    const gainNode = audioSystem.audioContext.createGain();
+                    gainNode.gain.value = trackName === 'exploration' ? 1.0 : 0.0; // Start with exploration active
+                    gainNode.connect(audioSystem.masterGainNode);
+                    audioSystem.musicNodes[trackName] = gainNode;
+                });
+                
+                // Initialize effect nodes
+                audioSystem.effectNodes.reverb = audioSystem.audioContext.createConvolver();
+                audioSystem.effectNodes.echo = audioSystem.audioContext.createDelay(0.5);
+                audioSystem.effectNodes.distortion = createDistortionCurve(audioSystem.audioContext, 15);
+                audioSystem.effectNodes.lfo = audioSystem.audioContext.createOscillator();
+                
+                // Add some spatial sources with simulated positions
+                updateSpatialSource('ai-companion', { x: 15, y: 0, z: 20 });
+                updateSpatialSource('quest-marker', { x: -8, y: 0, z: -12 });
+                updateSpatialSource('reality-node', { x: 25, y: 5, z: -5 });
+                
+                console.log('Advanced Audio System initialized successfully');
+                
+            } catch (error) {
+                console.error('Failed to initialize Advanced Audio System:', error);
+                if (window.chromaShiftComplete) {
+                    window.chromaShiftComplete.addEventToLog('Audio System initialization failed - Web Audio API may be unsupported');
+                }
+            }
+        }
+        
+        function createDistortionCurve(audioContext, amount) {
+            const samples = 44100;
+            const curve = new Float32Array(samples);
+            const deg = Math.PI / 180;
+            
+            for (let i = 0; i < samples; i++) {
+                const x = (i * 2) / samples - 1;
+                curve[i] = (3 + amount) * x * 20 * deg / (Math.PI + amount * Math.abs(x));
+            }
+            
+            const waveShaper = audioContext.createWaveShaper();
+            waveShaper.curve = curve;
+            waveShaper.oversample = '4x';
+            
+            return waveShaper;
+        }
+        
+        function updateSpatialSource(sourceId, position) {
+            const audioSystem = window.advancedAudioSystem;
+            const sourceNode = audioSystem.spatialNodes.get(sourceId);
+            
+            if (sourceNode) {
+                sourceNode.panner.positionX.value = position.x;
+                sourceNode.panner.positionY.value = position.y;
+                sourceNode.panner.positionZ.value = position.z;
+                
+                // Calculate distance for display
+                const distance = Math.sqrt(position.x ** 2 + position.y ** 2 + position.z ** 2);
+                const sourceElement = document.querySelector(`[data-source="${sourceId}"]`);
+                if (sourceElement) {
+                    sourceElement.title = `${sourceId.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} - ${distance.toFixed(1)}m`;
+                    
+                    // Animate pulse based on "audio level"
+                    const audioLevel = Math.random() * 0.8 + 0.2; // Simulated
+                    sourceElement.style.opacity = audioLevel;
+                    sourceElement.style.transform = `scale(${0.8 + audioLevel * 0.4})`;
+                }
+            }
+        }
+        
+        function startAudioMonitoring() {
+            const audioSystem = window.advancedAudioSystem;
+            const updateInterval = 100; // Update every 100ms
+            
+            setInterval(() => {
+                if (!audioSystem.enabled || !audioSystem.audioContext) return;
+                
+                // Simulate real-time audio data
+                audioSystem.realTimeData.rmsLevel = (Math.random() * 20 - 15).toFixed(1); // -15 to +5 dB
+                audioSystem.realTimeData.clipRate = (Math.random() * 2).toFixed(1); // 0-2%
+                
+                // Update display elements
+                const rmsElement = document.getElementById('audio-rms-level');
+                const clipElement = document.getElementById('audio-clip-rate');
+                
+                if (rmsElement) rmsElement.textContent = `${audioSystem.realTimeData.rmsLevel} dB`;
+                if (clipElement) clipElement.textContent = `${audioSystem.realTimeData.clipRate}%`;
+                
+                // Update audio-reactive UI elements
+                if (audioSystem.uiReactive) {
+                    const amplitude = Math.abs(Math.random() - 0.5) * 2; // 0-1
+                    document.documentElement.style.setProperty('--audio-amplitude', amplitude);
+                    
+                    // Update master slider reactivity
+                    const masterSlider = document.getElementById('audio-master-slider');
+                    if (masterSlider) {
+                        masterSlider.style.setProperty('--audio-amplitude', amplitude);
+                    }
+                }
+                
+            }, updateInterval);
+        }
+        
+        function resetAudioSettings() {
+            const audioSystem = window.advancedAudioSystem;
+            
+            // Reset to defaults
+            audioSystem.masterVolume = 70;
+            audioSystem.musicMode = 'exploration';
+            audioSystem.spatialEnabled = true;
+            audioSystem.uiReactive = true;
+            audioSystem.adaptiveQuality = true;
+            audioSystem.realityIntegration = true;
+            
+            // Update UI
+            updateMasterVolume(70);
+            setMusicMode('exploration');
+            
+            // Reset toggle states
+            document.getElementById('audio-3d-toggle').classList.add('active');
+            document.getElementById('audio-reactive-toggle').classList.add('active');
+            document.getElementById('audio-adaptive-toggle').classList.add('active');
+            document.getElementById('audio-reality-toggle').classList.add('active');
+            
+            // Update audio nodes if initialized
+            if (audioSystem.masterGainNode) {
+                audioSystem.masterGainNode.gain.value = 0.7;
+            }
+            
+            // Update game log
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.addEventToLog('Audio settings reset to defaults');
+            }
+        }
+        
+        function updateMasterVolume(volume) {
+            const audioSystem = window.advancedAudioSystem;
+            audioSystem.masterVolume = volume;
+            
+            // Update UI
+            const slider = document.querySelector('#audio-master-slider .audio-volume-fill');
+            const thumb = document.querySelector('#audio-master-slider .audio-volume-thumb');
+            const levelDisplay = document.getElementById('audio-master-level');
+            
+            if (slider) slider.style.width = `${volume}%`;
+            if (thumb) thumb.style.left = `${volume}%`;
+            if (levelDisplay) levelDisplay.textContent = `${volume}%`;
+            
+            // Update audio node
+            if (audioSystem.masterGainNode) {
+                audioSystem.masterGainNode.gain.value = volume / 100;
+            }
+        }
+        
+        // Event Listeners for Audio System
+        document.addEventListener('DOMContentLoaded', () => {
+            // Master volume slider interaction
+            const masterSlider = document.getElementById('audio-master-slider');
+            if (masterSlider) {
+                let isDragging = false;
+                let startX = 0;
+                let startVolume = 70;
+                
+                masterSlider.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.clientX;
+                    startVolume = window.advancedAudioSystem.masterVolume;
+                    e.preventDefault();
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        const deltaX = e.clientX - startX;
+                        const deltaVolume = (deltaX / 200) * 100; // Adjust sensitivity
+                        const newVolume = Math.max(0, Math.min(100, startVolume + deltaVolume));
+                        updateMasterVolume(Math.round(newVolume));
+                    }
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+            }
+            
+            // Spatial source interactions
+            document.querySelectorAll('.audio-spatial-source').forEach(source => {
+                source.addEventListener('click', () => {
+                    // Toggle active state
+                    source.classList.toggle('active');
+                    
+                    // Update spatial positioning
+                    const sourceId = source.getAttribute('data-source');
+                    const position = {
+                        x: Math.random() * 40 - 20,
+                        y: Math.random() * 10 - 5,
+                        z: Math.random() * 40 - 20
+                    };
+                    updateSpatialSource(sourceId, position);
+                });
+            });
+            
+            // Toggle functionality for settings
+            document.getElementById('audio-3d-toggle')?.addEventListener('click', function() {
+                this.classList.toggle('active');
+                window.advancedAudioSystem.spatialEnabled = this.classList.contains('active');
+            });
+            
+            document.getElementById('audio-reactive-toggle')?.addEventListener('click', function() {
+                this.classList.toggle('active');
+                window.advancedAudioSystem.uiReactive = this.classList.contains('active');
+            });
+            
+            document.getElementById('audio-adaptive-toggle')?.addEventListener('click', function() {
+                this.classList.toggle('active');
+                window.advancedAudioSystem.adaptiveQuality = this.classList.contains('active');
+            });
+            
+            document.getElementById('audio-reality-toggle')?.addEventListener('click', function() {
+                this.classList.toggle('active');
+                window.advancedAudioSystem.realityIntegration = this.classList.contains('active');
+                
+                // Toggle reality integration visual effects
+                const audioContainer = document.getElementById('advancedAudioSystem');
+                if (this.classList.contains('active')) {
+                    audioContainer.classList.add('audio-reality-hack-active');
+                } else {
+                    audioContainer.classList.remove('audio-reality-hack-active');
+                }
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    // Ctrl+Shift+A to toggle audio system
+                    e.preventDefault();
+                    toggleAdvancedAudioSystem();
+                }
+            });
+        });
+        
+        // Integration with other ChromaShift systems
+        if (window.chromaShiftComplete) {
+            // Add audio system toggle to main interface
+            const originalAddFeatureButton = window.chromaShiftComplete.addFeatureButton;
+            window.chromaShiftComplete.addFeatureButton = function(featureName, description, callback) {
+                if (featureName === 'Advanced Audio System') {
+                    return originalAddFeatureButton.call(this, 'Advanced Audio System', 'Enable spatial 3D audio and dynamic music system', toggleAdvancedAudioSystem);
+                }
+                return originalAddFeatureButton.call(this, featureName, description, callback);
+            };
+        }
+        
+        // Mobile touch support for audio system
+        document.addEventListener('touchstart', (e) => {
+            if (window.advancedAudioSystem?.enabled) {
+                const target = e.target;
+                if (target.classList.contains('audio-volume-thumb') || 
+                    target.classList.contains('audio-volume-slider') ||
+                    target.classList.contains('audio-spatial-source')) {
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+        
+        // Reality Hacking System Integration
+        function integrateRealityHackingWithAudio(realityLevel) {
+            const audioSystem = window.advancedAudioSystem;
+            if (!audioSystem.enabled || !audioSystem.realityIntegration) return;
+            
+            // Apply reality parameters to audio
+            const realityFactor = realityLevel / 100;
+            
+            // Distortion increases with reality hacking level
+            if (audioSystem.effectNodes.distortion) {
+                audioSystem.effectNodes.distortion.curve = createDistortionCurve(audioSystem.audioContext, 15 + realityFactor * 50);
+            }
+            
+            // Spatial audio becomes more erratic
+            audioSystem.spatialNodes.forEach((nodes, sourceId) => {
+                const erraticFactor = realityFactor * 2;
+                nodes.panner.positionX.value += (Math.random() - 0.5) * erraticFactor;
+                nodes.panner.positionY.value += (Math.random() - 0.5) * erraticFactor;
+                nodes.panner.positionZ.value += (Math.random() - 0.5) * erraticFactor;
+            });
+            
+            // Visual feedback
+            const audioContainer = document.getElementById('advancedAudioSystem');
+            if (realityLevel > 50) {
+                audioContainer.classList.add('audio-reactive-glow');
+            } else {
+                audioContainer.classList.remove('audio-reactive-glow');
+            }
+        }
+        
+        // Export integration function
+        window.integrateRealityHackingWithAudio = integrateRealityHackingWithAudio;
+        
+        // =========================================
+        // GLOBAL AUDIO SYSTEM UTILITY FUNCTIONS
+        // =========================================
+        
+        // Main audio system control functions
+        function toggleAdvancedAudioSystem() {
+            if (window.chromaShiftComplete) {
+                window.chromaShiftComplete.toggleAdvancedAudioSystem();
+            } else if (window.advancedAudioSystem) {
+                const container = document.getElementById('advancedAudioSystem');
+                if (window.advancedAudioSystem.enabled) {
+                    closeAdvancedAudioSystem();
+                } else {
+                    openAdvancedAudioSystem();
+                }
+            }
+        }
+        
+        function openAdvancedAudioSystem() {
+            const container = document.getElementById('advancedAudioSystem');
+            const audioSystem = window.advancedAudioSystem;
+            
+            if (container && audioSystem) {
+                if (!audioSystem.enabled) {
+                    container.classList.add('active');
+                    audioSystem.enabled = true;
+                    console.log('Advanced Audio System opened');
+                }
+            }
+        }
+        
+        function closeAdvancedAudioSystem() {
+            const container = document.getElementById('advancedAudioSystem');
+            const audioSystem = window.advancedAudioSystem;
+            
+            if (container && audioSystem) {
+                container.classList.remove('active');
+                audioSystem.enabled = false;
+                console.log('Advanced Audio System closed');
+            }
+        }
+        
+        function showAudioSection(sectionName) {
+            const audioSystem = window.advancedAudioSystem;
+            if (!audioSystem || !audioSystem.enabled) return;
+            
+            audioSystem.currentSection = sectionName;
+            
+            // Update navigation
+            document.querySelectorAll('.audio-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const activeNav = document.querySelector(`[onclick="showAudioSection('${sectionName}')"]`);
+            if (activeNav) activeNav.classList.add('active');
+            
+            // Update content sections
+            document.querySelectorAll('.audio-content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            const targetSection = document.getElementById(`audio-section-${sectionName}`);
+            if (targetSection) targetSection.classList.add('active');
+        }
+        
+        function setMusicMode(mode) {
+            const audioSystem = window.advancedAudioSystem;
+            if (!audioSystem) return;
+            
+            audioSystem.musicMode = mode;
+            
+            // Update toggle states
+            document.querySelectorAll('.audio-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+            const activeToggle = document.getElementById(`music-toggle-${mode}`);
+            if (activeToggle) activeToggle.classList.add('active');
+            
+            // Update display
+            const moodMap = {
+                'dynamic': 'Dynamic Adaptation',
+                'exploration': 'Exploration',
+                'combat': 'Combat',
+                'stealth': 'Stealth'
+            };
+            
+            const currentMoodElement = document.getElementById('audio-current-mood');
+            if (currentMoodElement) {
+                currentMoodElement.textContent = moodMap[mode];
+            }
+            audioSystem.realTimeData.currentMood = moodMap[mode];
+            
+            console.log(`Music mode set to: ${mode}`);
+        }
+        
+        function resetAudioSettings() {
+            const audioSystem = window.advancedAudioSystem;
+            if (!audioSystem) return;
+            
+            // Reset to defaults
+            audioSystem.masterVolume = 70;
+            audioSystem.musicMode = 'exploration';
+            audioSystem.spatialEnabled = true;
+            audioSystem.uiReactive = true;
+            audioSystem.adaptiveQuality = true;
+            audioSystem.realityIntegration = true;
+            
+            // Update UI
+            const masterSlider = document.getElementById('audio-master-slider');
+            const masterFill = masterSlider?.querySelector('.audio-volume-fill');
+            const masterThumb = masterSlider?.querySelector('.audio-volume-thumb');
+            const masterLevel = document.getElementById('audio-master-level');
+            
+            if (masterFill) masterFill.style.width = '70%';
+            if (masterThumb) masterThumb.style.left = '70%';
+            if (masterLevel) masterLevel.textContent = '70%';
+            
+            setMusicMode('exploration');
+            
+            // Reset toggle states
+            const toggles = ['audio-3d-toggle', 'audio-reactive-toggle', 'audio-adaptive-toggle', 'audio-reality-toggle'];
+            toggles.forEach(toggleId => {
+                const toggle = document.getElementById(toggleId);
+                if (toggle) toggle.classList.add('active');
+            });
+            
+            console.log('Audio settings reset to defaults');
+        }
+        
+        // Integration with ChromaShift main system
+        function connectAudioSystemToChromaShift() {
+            if (window.chromaShiftComplete) {
+                // Override the integrateRealityHackingWithAudio function to use ChromaShift's version
+                window.integrateRealityHackingWithAudio = (realityLevel) => {
+                    window.chromaShiftComplete.integrateRealityHackingWithAudio(realityLevel);
+                };
+                
+                // Add audio system to feature unlocks
+                if (window.chromaShiftComplete.addFeatureButton) {
+                    window.chromaShiftComplete.addFeatureButton(
+                        'Advanced Audio System',
+                        'Enable spatial 3D audio and dynamic music system',
+                        toggleAdvancedAudioSystem
+                    );
+                }
+            }
+        }
+        
+        // Initialize connections when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', connectAudioSystemToChromaShift);
+        } else {
+            connectAudioSystemToChromaShift();
+        }
+        
+    </script>
