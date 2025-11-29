@@ -208,7 +208,25 @@ async function executeTransitionSequence(sceneData, isInitial = false) {
                     playerUI.recordNarrative(sceneData.narrativeDescription || '');
                     playerUI.recordSceneVisit();
 
-                    await startNarrator(sceneData.narrativeDescription || '');
+                    try {
+                        // Race the narrator against a timeout to ensure we don't hang
+                        const narratorPromise = startNarrator(sceneData.narrativeDescription || '');
+                        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 3000));
+                        await Promise.race([narratorPromise, timeoutPromise]);
+                    } catch (err) {
+                        console.warn('Narrator failed or timed out during intro:', err);
+                    }
+
+                    // Update text to prompt the user to click again
+                    if (prologTextEl) {
+                        prologTextEl.insertAdjacentHTML('beforeend', `
+                            <div class="crt-prolog" style="margin-top:20px; color: var(--electric-cyan); animation: glitch-pulse 1s infinite;">
+                                [SYSTEM READY]
+                                <br>
+                                PRESS POWER BUTTON TO WAKE UP
+                            </div>
+                        `);
+                    }
 
                     powerBtn.disabled = false;
                     initialPowerStage = 1;
