@@ -12,6 +12,11 @@ export const gameState = {
         coherence: 30,
         perception: 75
     },
+    statBoosts: {
+        lucidity: 0,
+        coherence: 0,
+        perception: 0
+    },
     chromaKeysCollected: [],
     startTime: Date.now(),
     conversationHistory: [],
