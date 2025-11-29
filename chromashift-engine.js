@@ -208,7 +208,14 @@ async function executeTransitionSequence(sceneData, isInitial = false) {
                     playerUI.recordNarrative(sceneData.narrativeDescription || '');
                     playerUI.recordSceneVisit();
 
-                    await startNarrator(sceneData.narrativeDescription || '');
+                    try {
+                        // Race the narrator against a timeout to ensure we don't hang
+                        const narratorPromise = startNarrator(sceneData.narrativeDescription || '');
+                        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 3000));
+                        await Promise.race([narratorPromise, timeoutPromise]);
+                    } catch (err) {
+                        console.warn('Narrator failed or timed out during intro:', err);
+                    }
 
                     powerBtn.disabled = false;
                     initialPowerStage = 1;
