@@ -22,73 +22,73 @@ let preloadedTrackPath = null;
 let lastPreloadedObjectUrl = null;
 
 
-const musicPlaylist = [
-    '/Journey to the interweb.mp3',
-    '/Rhythm of the Reef.mp3',
-    '/WhoIsThisDiva.mp3',
-    '/BratSummer.mp3',
-    '/Portal of Peace.mp3',
-    '/Midnight at the Virtual Mall.mp3',
-    '/Vaporwave Sunset Cruise.mp3',
-    '/Lost Signals on Windows 95.mp3',
-    '/1-800-dreamscape.mp3',
-    '/Where the Ocean Ends.mp3',
-    '/Slow Burn Waves.mp3',
-    '/You Were Never Really Here.mp3',
-    '/VeryDemure.mp3',
-    '/Timeless Analog Tides.mp3',
-    '/The Quiet Space.mp3',
-    '/Supermarket Nostalgia.mp3',
-    '/Subliminal Drift.mp3',
-    '/Sleepwalk Through the Stars.mp3',
-    '/Shimmering Shores.mp3',
-    '/Palm Trees & Neon Reflections.mp3',
-    '/GoblinMode.mp3',
-    '/turned up on this one.mp3',
-    '/Dreamcatcher Beats.mp3',
-    '/Coral Chords.mp3',
-    '/BananaForScale.mp3',
-    '/Ａｆｔｅｒｈｏｕｒｓ Ａｅｒｏｂｉｃｓ.mp3',
-    '/(  D--- S a V e Y o U R T e a R S---b  ).mp3',
-    '/Vintage Currents.mp3',
-    '/Oceanfront Oldies.mp3',
-    '/Lost Wave Loops.mp3',
-    '/Lost in the Algorithm.mp3',
-    '/Kaleidoscope Dreams.mp3',
-    '/Golden Clouds.mp3',
-    '/Wavelengths of Yesterday.mp3',
-    '/WaterTok.mp3',
-    '/Sand Between the Bars.mp3',
-    '/Relaxing on Another Plane.mp3',
-    '/Pier to Nowhere.mp3',
-    '/Nostalgia for a Future That Never Was.mp3',
-    '/Late Night Online Shopping.mp3',
-    '/journey through stillness.mp3',
-    '/infinite Peace.mp3',
-    '/Floating Through Sound.mp3',
-    '/FairyGrunge.mp3',
-    '/Echoes of the Unseen.mp3',
-    '/Dial-up Dreams.mp3',
-    '/Datastream Sunset.mp3',
-    '/1Tales from the Womp.mp3',
-    '/sofa king sad boi-smile .mp3',
-    '/Voices in the Datacloud.mp3',
-    '/Weirdcore.mp3',
-    '/The Sound of Abandoned Websites.mp3',
-    '/Simulated Emotions.mp3',
-    '/Saltwater Echoes.mp3',
-    '/Rizz.mp3',
-    '/QuietLuxury.mp3',
-    '/Pretty Anime Girl.mp3',
-    '/Old Film Filters.mp3',
-    '/Nostalgic Currents.mp3',
-    '/MootUp.mp3',
-    '/Geeeee Wiz.mp3',
-    '/Endless Summer on Betamax.mp3',
-    '/DopamineDecor.mp3',
-    '/DAYDREAMERS SURF.mp3',
-    '/Beyond the Ordinary.mp3',
-    '/AñoNuevo.mp3'
+export const musicPlaylist = [
+    'Journey to the interweb.mp3',
+    'Rhythm of the Reef.mp3',
+    'WhoIsThisDiva.mp3',
+    'BratSummer.mp3',
+    'Portal of Peace.mp3',
+    'Midnight at the Virtual Mall.mp3',
+    'Vaporwave Sunset Cruise.mp3',
+    'Lost Signals on Windows 95.mp3',
+    '1-800-dreamscape.mp3',
+    'Where the Ocean Ends.mp3',
+    'Slow Burn Waves.mp3',
+    'You Were Never Really Here.mp3',
+    'VeryDemure.mp3',
+    'Timeless Analog Tides.mp3',
+    'The Quiet Space.mp3',
+    'Supermarket Nostalgia.mp3',
+    'Subliminal Drift.mp3',
+    'Sleepwalk Through the Stars.mp3',
+    'Shimmering Shores.mp3',
+    'Palm Trees & Neon Reflections.mp3',
+    'GoblinMode.mp3',
+    'turned up on this one.mp3',
+    'Dreamcatcher Beats.mp3',
+    'Coral Chords.mp3',
+    'BananaForScale.mp3',
+    'Ａｆｔｅｒｈｏｕｒｓ Ａｅｒｏｂｉｃｓ.mp3',
+    '(  D--- S a V e Y o U R T e a R S---b  ).mp3',
+    'Vintage Currents.mp3',
+    'Oceanfront Oldies.mp3',
+    'Lost Wave Loops.mp3',
+    'Lost in the Algorithm.mp3',
+    'Kaleidoscope Dreams.mp3',
+    'Golden Clouds.mp3',
+    'Wavelengths of Yesterday.mp3',
+    'WaterTok.mp3',
+    'Sand Between the Bars.mp3',
+    'Relaxing on Another Plane.mp3',
+    'Pier to Nowhere.mp3',
+    'Nostalgia for a Future That Never Was.mp3',
+    'Late Night Online Shopping.mp3',
+    'journey through stillness.mp3',
+    'infinite Peace.mp3',
+    'Floating Through Sound.mp3',
+    'FairyGrunge.mp3',
+    'Echoes of the Unseen.mp3',
+    'Dial-up Dreams.mp3',
+    'Datastream Sunset.mp3',
+    '1Tales from the Womp.mp3',
+    'sofa king sad boi-smile .mp3',
+    'Voices in the Datacloud.mp3',
+    'Weirdcore.mp3',
+    'The Sound of Abandoned Websites.mp3',
+    'Simulated Emotions.mp3',
+    'Saltwater Echoes.mp3',
+    'Rizz.mp3',
+    'QuietLuxury.mp3',
+    'Pretty Anime Girl.mp3',
+    'Old Film Filters.mp3',
+    'Nostalgic Currents.mp3',
+    'MootUp.mp3',
+    'Geeeee Wiz.mp3',
+    'Endless Summer on Betamax.mp3',
+    'DopamineDecor.mp3',
+    'DAYDREAMERS SURF.mp3',
+    'Beyond the Ordinary.mp3',
+    'AñoNuevo.mp3'
 ];
 
 /**
@@ -203,7 +203,8 @@ const goToNextTrack = async (autoPlay = true) => {
             await backgroundMusic.play();
             preloadNextTrack(); // Preload the next track
         } catch (error) {
-            console.warn('Failed to auto-play next track:', error);
+            // Ignore auto-play errors (likely due to user interaction policies or missing file)
+            console.warn('Failed to auto-play next track (ignoring):', error);
         }
     }
     updatePlayPauseIcon();
@@ -328,7 +329,7 @@ export const initMusicPlayer = () => {
     backgroundMusic.volume = 0.5;
     audioIsReady = true;
 
-    const firstTrackName = '/Journey to the interweb.mp3';
+    const firstTrackName = 'Journey to the interweb.mp3';
     const firstTrackIndex = musicPlaylist.indexOf(firstTrackName);
     currentTrackIndex = firstTrackIndex !== -1 ? firstTrackIndex : 0;
     if (musicPlaylist.length > 0) {
@@ -475,7 +476,14 @@ export const playTTS = async (text) => {
             stepEffectsTimeout = setTimeout(stepEffects, 1500);
         };
 
-        const audioPromise = new Promise((resolve, reject) => {
+        const audioPromise = new Promise((resolve) => {
+            // Add a safety timeout to prevent hanging forever
+            const safetyTimeout = setTimeout(() => {
+                console.warn('[TTS] Playback timed out, forcing progress.');
+                clearTimeout(stepEffectsTimeout);
+                resolve();
+            }, 10000); // 10 second max for TTS
+
             ttsAudio.onplaying = () => {
                 setTTSIndicatorVisible(false);
                 console.log('[TTS] Playback started.');
@@ -483,11 +491,14 @@ export const playTTS = async (text) => {
             };
             ttsAudio.onended = () => {
                 clearTimeout(stepEffectsTimeout);
+                clearTimeout(safetyTimeout);
                 resolve();
             };
             ttsAudio.onerror = (err) => {
+                console.warn('[TTS] Audio playback error:', err);
                 clearTimeout(stepEffectsTimeout);
-                reject(err);
+                clearTimeout(safetyTimeout);
+                resolve(); // Resolve anyway to not block the game
             };
         });
 
