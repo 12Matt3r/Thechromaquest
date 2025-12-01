@@ -187,31 +187,44 @@ async function executeTransitionSequence(sceneData, isInitial = false) {
                     initialPowerStage = 1;
                     powerBtn.disabled = true;
 
+                    // Immediately re-enable button after a short delay so user isn't locked out if audio hangs
+                    setTimeout(() => {
+                        powerBtn.disabled = false;
+                    }, 500);
+
+                    // Show visual feedback immediately
+                    if (screenOffEl) screenOffEl.style.display = 'none';
+                    if (glitchEl) glitchEl.style.display = 'block';
+                    if (prologTextEl) prologTextEl.innerHTML = prologContent;
+
+                    // Show prompt immediately
+                    if (prologTextEl) {
+                        prologTextEl.insertAdjacentHTML('beforeend', `
+                            <div class="crt-prolog" style="margin-top:20px; color: var(--electric-cyan); animation: glitch-pulse 1s infinite;">
+                                [SYSTEM READY]
+                                <br>
+                                PRESS POWER BUTTON TO WAKE UP
+                            </div>
+                        `);
+                    }
+
+                    // Fire and forget audio/narrator - DO NOT AWAIT
+                    // This ensures the UI is responsive even if the network or API is dead
                     try {
                         startDreamAudio();
-                        setInteractionEnabled(true); // Enable controls as soon as music starts
+                        setInteractionEnabled(true);
                     } catch (e) {
                         console.warn('Failed to start music on power click:', e);
                     }
 
-                    if (screenOffEl) {
-                        screenOffEl.style.display = 'none';
-                    }
-                    if (glitchEl) {
-                        glitchEl.style.display = 'block';
-                    }
-                    if (prologTextEl) {
-                        prologTextEl.innerHTML = prologContent;
-                    }
-
-                    // Track narrative display
                     playerUI.recordNarrative(sceneData.narrativeDescription || '');
                     playerUI.recordSceneVisit();
 
-                    await startNarrator(sceneData.narrativeDescription || '');
+                    startNarrator(sceneData.narrativeDescription || '').catch(err => {
+                        console.warn('Narrator failed (non-blocking):', err);
+                    });
 
-                    powerBtn.disabled = false;
-                    initialPowerStage = 1;
+                    // initialPowerStage remains 1, ready for the next click
                     return;
                 }
 
