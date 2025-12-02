@@ -108,13 +108,52 @@ export function pushToConversation(role, content) {
     }
 }
 
+// --- FALLBACK MOCK FOR OFFLINE MODE ---
+const mockWebsim = {
+    chat: {
+        completions: {
+            create: async ({ messages }) => {
+                console.log('[MockWebsim] Generating procedural scene based on:', messages);
+                const lastUserMessage = messages.findLast(m => m.role === 'user')?.content || 'Unknown Action';
+
+                // Simple procedural response
+                const response = {
+                    title: `DREAM ECHO [${lastUserMessage.toUpperCase().slice(0, 15)}...]`,
+                    narrativeDescription: `You attempted to "${lastUserMessage}". The dream shifts and warps in response. Without the full connection to the neural cloud, your reality is generated from the fragments of your own subconscious. The walls breathe with a low-fidelity static, and the geometry feels... approximate.`,
+                    ticker: "OFFLINE MODE: NEURAL CONNECTION LOST",
+                    lucidity: gameState.stats.lucidity,
+                    coherence: Math.max(0, gameState.stats.coherence - 5),
+                    perception: gameState.stats.perception,
+                    imagePrompt: "offline fallback glitch scene",
+                    choices: [
+                        { text: "Examine the glitching static" },
+                        { text: "Try to reconnect" },
+                        { text: "Walk into the void" },
+                        { text: "Wake up" }
+                    ],
+                    prologText: ""
+                };
+
+                return { content: JSON.stringify(response) };
+            }
+        }
+    },
+    imageGen: async ({ prompt }) => {
+        console.log('[MockWebsim] Mock image generation for:', prompt);
+        // Return a local fallback image or null (engine handles nulls)
+        return { url: 'CRTV-removebg-preview.png' };
+    },
+    textToSpeech: async ({ text }) => {
+        console.log('[MockWebsim] Mock TTS:', text);
+        // Return a dummy audio object or URL
+        return { url: '' };
+    }
+};
+
 export function ensureWebsimAvailable() {
     if (typeof window === 'undefined' || typeof window.websim === 'undefined') {
-        console.error('websim API is not available. The dream engine cannot manifest scenes.');
-        if (typeof showToast === 'function') {
-            showToast('The dream engine is offline. Refresh or try again later.');
-        }
-        return null;
+        console.warn('websim API is not available. Using OFFLINE FALLBACK MODE.');
+        return mockWebsim;
     }
     return window.websim;
 }
